@@ -1,0 +1,33 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor", "Reactor\Reactor.csproj", "{91906039-9753-472B-ACC3-12C0561FFAD8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.OxygenFilter", "Reactor.OxygenFilter\Reactor.OxygenFilter.csproj", "{154C08E6-8F9F-43A3-86C3-A3A606316D2B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Debugger", "Reactor.Debugger\Reactor.Debugger.csproj", "{68589B4D-9EF5-40DD-8D6D-10977ED07259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Greenhouse", "Reactor.Greenhouse\Reactor.Greenhouse.csproj", "{00BF8959-652F-46B8-AA0F-891B4DA1112B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{91906039-9753-472B-ACC3-12C0561FFAD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91906039-9753-472B-ACC3-12C0561FFAD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91906039-9753-472B-ACC3-12C0561FFAD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91906039-9753-472B-ACC3-12C0561FFAD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{154C08E6-8F9F-43A3-86C3-A3A606316D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{154C08E6-8F9F-43A3-86C3-A3A606316D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{154C08E6-8F9F-43A3-86C3-A3A606316D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{154C08E6-8F9F-43A3-86C3-A3A606316D2B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68589B4D-9EF5-40DD-8D6D-10977ED07259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68589B4D-9EF5-40DD-8D6D-10977ED07259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68589B4D-9EF5-40DD-8D6D-10977ED07259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68589B4D-9EF5-40DD-8D6D-10977ED07259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

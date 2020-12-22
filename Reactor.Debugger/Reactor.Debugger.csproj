@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+
+        <Version>0.1.0</Version>
+        <Description>Debugging mod for Reactor</Description>
+        <Authors>NuclearPowered</Authors>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Reactor\Reactor.csproj" />
+    </ItemGroup>
+
+    <Import Project="../AmongUs.props" />
+</Project>

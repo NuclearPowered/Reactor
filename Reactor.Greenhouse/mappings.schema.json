@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://reactor.gg/schemas/mappings.schema.json",
+  "title": "Reactor.OxygenFilter - Mappings",
+  "type": "object",
+  "definitions": {
+    "member": {
+      "type": "object",
+      "properties": {
+        "original": {
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "index": {
+                  "type": "number"
+                },
+                "signature": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "const": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            }
+          ]
+        },
+        "mapped": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "additionalProperties": false
+      },
+      "required": [
+        "original"
+      ],
+      "additionalProperties": false
+    },
+    "type": {
+      "type": "object",
+      "$ref": "#/definitions/member",
+      "properties": {
+        "nested": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/type"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/member"
+          }
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/member"
+          }
+        },
+        "methods": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/member",
+            "properties": {
+              "parameters": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "properties": {
+    "types": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "$ref": "#/definitions/type"
+      },
+      "required": [
+        "original"
+      ]
+    }
+  },
+  "required": [
+    "types"
+  ]
+}

@@ -1,0 +1,809 @@
+{
+  "$schema": "../mappings.schema.json",
+  "types": [
+    {
+      "original": "^",
+      "mapped": "Constants",
+      "methods": [
+        {
+          "original": {
+            "signature": "System.Byte[] ()"
+          },
+          "mapped": "GetBroadcastVersion"
+        }
+      ],
+      "fields": [
+        {
+          "original": 0,
+          "mapped": "GamePlayPort"
+        },
+        {
+          "original": 1,
+          "mapped": "AnnouncementPort"
+        },
+        {
+          "original": 2,
+          "mapped": "ShipOnlyMask"
+        },
+        {
+          "original": 3,
+          "mapped": "ShipAndObjectsMask"
+        },
+        {
+          "original": 4,
+          "mapped": "ShipAndAllObjectsMask"
+        },
+        {
+          "original": 5,
+          "mapped": "NotShipMask"
+        },
+        {
+          "original": 6,
+          "mapped": "Usables"
+        },
+        {
+          "original": 7,
+          "mapped": "PlayersOnlyMask"
+        },
+        {
+          "original": 8,
+          "mapped": "ShadowMask"
+        },
+        {
+          "original": 9,
+          "mapped": "CompatVersions"
+        },
+        {
+          "original": 10,
+          "mapped": "Year"
+        },
+        {
+          "original": 11,
+          "mapped": "Month"
+        },
+        {
+          "original": 12,
+          "mapped": "Day"
+        },
+        {
+          "original": 13,
+          "mapped": "Revision"
+        },
+        {
+          "original": 14,
+          "mapped": "field_14"
+        },
+        {
+          "original": 15,
+          "mapped": "LocalNetAddress"
+        },
+        {
+          "original": 16,
+          "mapped": "InfinitySymbol"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "SaveManager",
+      "fields": [
+        {
+          "original": {
+            "signature": "System.Collections.Generic.HashSet`1<System.String>",
+            "index": 23
+          },
+          "mapped": "purchases"
+        }
+      ],
+      "properties": [
+        {
+          "mapped": "LastAnnouncement",
+          "original": 0
+        },
+        {
+          "mapped": "BoughtNoAds",
+          "original": 1
+        },
+        {
+          "mapped": "VSync",
+          "original": 2
+        },
+        {
+          "mapped": "CensorChat",
+          "original": 3
+        },
+        {
+          "mapped": "ShowAdsScreen",
+          "original": 4
+        },
+        {
+          "mapped": "ShowMinPlayerWarning",
+          "original": 6
+        },
+        {
+          "mapped": "ShowOnlineHelp",
+          "original": 7
+        },
+        {
+          "mapped": "SfxVolume",
+          "original": 8
+        },
+        {
+          "mapped": "MusicVolume",
+          "original": 9
+        },
+        {
+          "mapped": "TouchConfig",
+          "original": 10
+        },
+        {
+          "mapped": "JoystickSize",
+          "original": 11
+        },
+        {
+          "mapped": "PlayerName",
+          "original": 12
+        },
+        {
+          "mapped": "LastPet",
+          "original": 13
+        },
+        {
+          "mapped": "LastHat",
+          "original": 14
+        },
+        {
+          "mapped": "LastSkin",
+          "original": 15
+        },
+        {
+          "mapped": "LastLanguage",
+          "original": 16
+        },
+        {
+          "mapped": "BodyColor",
+          "original": 17
+        },
+        {
+          "mapped": "GameHostOptions",
+          "original": 18
+        },
+        {
+          "mapped": "GameSearchOptions",
+          "original": 19
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "InnerNetClient",
+      "methods": [
+        {
+          "original": {
+            "signature": "System.Byte[] ()"
+          },
+          "mapped": "GetConnectionData"
+        },
+        {
+          "original": {
+            "signature": "System.Void ({{GameOverReason}},System.Boolean)"
+          },
+          "mapped": "OnGameEnd"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "GameOptionsData",
+      "fields": [
+        {
+          "original": 22,
+          "mapped": "isDefaults"
+        },
+        {
+          "original": 23,
+          "mapped": "ConfirmEjects"
+        },
+        {
+          "original": 24,
+          "mapped": "VisualTasks"
+        },
+        {
+          "original": 25,
+          "mapped": "TaskBarUpdate"
+        },
+        {
+          "original": 26,
+          "mapped": "AnonymousVotes"
+        },
+        {
+          "original": 27,
+          "mapped": "RecommendedKillCooldown"
+        },
+        {
+          "original": 28,
+          "mapped": "RecommendedImpostors"
+        },
+        {
+          "original": 29,
+          "mapped": "MaxImpostors"
+        },
+        {
+          "original": 30,
+          "mapped": "MinPlayers"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "VersionShower",
+      "methods": [
+        {
+          "original": {
+            "name": "Start",
+            "signature": "System.Void ()"
+          }
+        }
+      ],
+      "fields": [
+        {
+          "original": {
+            "index": 0,
+            "name": "text"
+          }
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "PingTracker",
+      "methods": [
+        {
+          "original": {
+            "name": "Update",
+            "signature": "System.Void ()"
+          }
+        }
+      ],
+      "fields": [
+        {
+          "original": {
+            "index": 0,
+            "name": "text"
+          }
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "GameStartManager",
+      "fields": [
+        {
+          "original": 3,
+          "mapped": "LastPlayerCount"
+        },
+        {
+          "original": 12,
+          "mapped": "startState"
+        },
+        {
+          "original": 13,
+          "mapped": "countDownTimer"
+        }
+      ],
+      "nested": [
+        {
+          "original": 0,
+          "mapped": "StartingStates"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "GameData",
+      "nested": [
+        {
+          "original": 1,
+          "mapped": "PlayerInfo",
+          "fields": [
+            {
+              "original": 0,
+              "mapped": "PlayerId"
+            },
+            {
+              "original": 1,
+              "mapped": "PlayerName"
+            },
+            {
+              "original": 2,
+              "mapped": "ColorId"
+            },
+            {
+              "original": 3,
+              "mapped": "HatId"
+            },
+            {
+              "original": 4,
+              "mapped": "PetId"
+            },
+            {
+              "original": 5,
+              "mapped": "SkinId"
+            },
+            {
+              "original": 6,
+              "mapped": "Disconnected"
+            },
+            {
+              "original": 7,
+              "mapped": "Tasks"
+            },
+            {
+              "original": 8,
+              "mapped": "IsImpostor"
+            },
+            {
+              "original": 9,
+              "mapped": "IsDead"
+            },
+            {
+              "original": 10,
+              "mapped": "_object"
+            }
+          ],
+          "properties": [
+            {
+              "original": 0,
+              "mapped": "Object"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "RegionInfo",
+      "fields": [
+        {
+          "original": {
+            "index": 0,
+            "signature": "System.String"
+          },
+          "mapped": "Name"
+        },
+        {
+          "original": {
+            "index": 1,
+            "signature": "System.String"
+          },
+          "mapped": "PingServer"
+        },
+        {
+          "original": {
+            "index": 2,
+            "signature": "{{ServerInfo}}[]"
+          },
+          "mapped": "Servers"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "PlayerPhysics",
+      "fields": [
+        {
+          "original": {
+            "signature": "UnityEngine.Rigidbody2D"
+          },
+          "mapped": "body"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "PlayerControl",
+      "fields": [
+        {
+          "original": {
+            "signature": "UnityEngine.SpriteRenderer"
+          },
+          "mapped": "myRend"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "MapBehaviour",
+      "methods": [
+        {
+          "original": {
+            "name": "ShowInfectedMap",
+            "signature": "System.Void ()"
+          }
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "IntroCutscene",
+      "nested": [
+        {
+          "original": 0,
+          "mapped": "CoBegin__d"
+        }
+      ],
+      "fields": [
+        {
+          "original": {
+            "name": "IntroStinger",
+            "signature": "UnityEngine.AudioClip"
+          }
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "GameOptionsMenu",
+      "fields": [
+        {
+          "original": 2,
+          "mapped": "Children"
+        },
+        {
+          "original": {
+            "name": "ResetButton",
+            "signature": "UnityEngine.GameObject"
+          }
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "GameSettingMenu",
+      "fields": [
+        {
+          "original": {
+            "name": "HideForOnline",
+            "signature": "UnityEngine.Transform[]"
+          }
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "AmongUsClient",
+      "nested": [
+        {
+          "original": 0,
+          "mapped": "CoStartGame__d"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "Minigame",
+      "methods": [
+        {
+          "original": {
+            "name": "ForceClose",
+            "signature": "System.Void ()"
+          }
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "KeyboardJoystick",
+      "methods": [
+        {
+          "original": "Update"
+        },
+        {
+          "original": "get_Delta"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "PlayerVoteArea",
+      "methods": [
+        {
+          "original": {
+            "name": "CoAnimateOverlay",
+            "signature": "System.Collections.IEnumerator ()"
+          }
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "PlayerTab",
+      "fields": [
+        {
+          "original": {
+            "signature": "System.Collections.Generic.HashSet`1<System.Int32>"
+          },
+          "mapped": "AvailableColors"
+        }
+      ],
+      "nested": [
+        {
+          "original": 0,
+          "mapped": "OnEnable__0"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "MeetingHud",
+      "nested": [
+        {
+          "original": 0,
+          "mapped": "VoteStates"
+        }
+      ],
+      "fields": [
+        {
+          "original": 0,
+          "mapped": "ResultsTime"
+        },
+        {
+          "original": 1,
+          "mapped": "Depth"
+        },
+        {
+          "original": 7,
+          "mapped": "CounterOrigin"
+        },
+        {
+          "original": 8,
+          "mapped": "CounterOffsets"
+        },
+        {
+          "original": 10,
+          "mapped": "playerStates"
+        },
+        {
+          "original": 19,
+          "mapped": "state"
+        },
+        {
+          "original": 23,
+          "mapped": "exiledPlayer"
+        },
+        {
+          "original": 24,
+          "mapped": "wasTie"
+        },
+        {
+          "original": 27,
+          "mapped": "reporterId"
+        },
+        {
+          "original": 28,
+          "mapped": "amDead"
+        },
+        {
+          "original": 29,
+          "mapped": "resultsStartedAt"
+        },
+        {
+          "original": 30,
+          "mapped": "lastSecond"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "MessageExtensions",
+      "methods": [
+        {
+          "original": 0,
+          "mapped": "WriteNetObject"
+        },
+        {
+          "original": 1,
+          "mapped": "ReadNetObject"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "PhysicsHelpers",
+      "methods": [
+        {
+          "original": {
+            "signature": "System.Boolean (UnityEngine.Vector2,UnityEngine.Vector2,System.Single,System.Int32)"
+          },
+          "mapped": "AnyNonTriggersBetween"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "AspectPosition",
+      "nested": [
+        {
+          "original": 0,
+          "mapped": "EdgeAlignments"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "GameCode",
+      "methods": [
+        {
+          "original": 0,
+          "mapped": "IntToGameName"
+        },
+        {
+          "original": 1,
+          "mapped": "GameNameToInt"
+        },
+        {
+          "original": 2,
+          "mapped": "CreateGameId"
+        },
+        {
+          "original": 3,
+          "mapped": "IntToGameNameV2"
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "Effects",
+      "methods": [
+        {
+          "original": {
+            "signature": "System.Collections.IEnumerator (System.Single,UnityEngine.Transform,System.Single,System.Single)"
+          },
+          "mapped": "Bloop"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "StringOption",
+      "fields": [
+        {
+          "original": {
+            "name": "Values",
+            "signature": "StringNames[]"
+          }
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "PlainShipRoom",
+      "fields": [
+        {
+          "original": {
+            "index": 0,
+            "name": "RoomId"
+          }
+        },
+        {
+          "original": {
+            "index": 1,
+            "name": "survCamera"
+          }
+        },
+        {
+          "original": {
+            "index": 2,
+            "name": "roomArea"
+          }
+        }
+      ]
+    },
+    {
+      "original": "^",
+      "mapped": "CooldownHelpers",
+      "methods": [
+        {
+          "original": {
+            "index": 0,
+            "signature": "System.Void (UnityEngine.SpriteRenderer)"
+          },
+          "mapped": "SetCooldownNormalizedUvs"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "WinningPlayerData",
+      "fields": [
+        {
+          "original": {
+            "index": 0,
+            "signature": "System.String"
+          },
+          "mapped": "Name"
+        },
+        {
+          "original": {
+            "index": 1,
+            "signature": "System.Boolean"
+          },
+          "mapped": "IsDead"
+        },
+        {
+          "original": {
+            "index": 2,
+            "signature": "System.Boolean"
+          },
+          "mapped": "IsImpostor"
+        },
+        {
+          "original": {
+            "index": 3,
+            "signature": "System.Int32"
+          },
+          "mapped": "ColorId"
+        },
+        {
+          "original": {
+            "index": 4,
+            "signature": "System.UInt32"
+          },
+          "mapped": "SkinId"
+        },
+        {
+          "original": {
+            "index": 5,
+            "signature": "System.UInt32"
+          },
+          "mapped": "HatId"
+        },
+        {
+          "original": {
+            "index": 6,
+            "signature": "System.UInt32"
+          },
+          "mapped": "PetId"
+        },
+        {
+          "original": {
+            "index": 7,
+            "signature": "System.Boolean"
+          },
+          "mapped": "IsYou"
+        }
+      ]
+    },
+    {
+      "original": {},
+      "mapped": "TempData",
+      "methods": [
+        {
+          "original": {
+            "index": 0,
+            "signature": "System.Boolean ({{GameOverReason}})"
+          },
+          "mapped": "DidHumansWin"
+        }
+      ],
+      "fields": [
+        {
+          "original": 0,
+          "mapped": "LastDeathReason"
+        },
+        {
+          "original": 1,
+          "mapped": "EndReason"
+        },
+        {
+          "original": 2,
+          "mapped": "showAd"
+        },
+        {
+          "original": 3,
+          "mapped": "winners"
+        }
+      ]
+    }
+  ]
+}

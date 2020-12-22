@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net472</TargetFramework>
+        <LangVersion>latest</LangVersion>
+
+        <Version>0.2.0</Version>
+        <Description>Core mod and API for Among Us</Description>
+        <Authors>NuclearPowered</Authors>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Include="Assets\**\*" />
+    </ItemGroup>
+
+    <Import Project="../AmongUs.props" />
+</Project>
