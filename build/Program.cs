@@ -24,7 +24,7 @@ public static class Program
 public class BuildContext : FrostingContext
 {
     public string TempPath { get; } = "bin/temp";
-    public string AmongUsPath { get; } = "bin/AmongUs";
+    public string AmongUsPath { get; } = "bin/Among Us";
 
     public BuildContext(ICakeContext context) : base(context)
     {
