@@ -121,7 +121,7 @@ public sealed class BuildTask : FrostingTask<BuildContext>
 {
     public override void Run(BuildContext context)
     {
-        context.DotNetCoreBuild("./Reactor.sln", new DotNetCoreBuildSettings
+        context.DotNetCoreBuild("./Reactor/Reactor.csproj", new DotNetCoreBuildSettings
         {
             Configuration = "Release",
             EnvironmentVariables =
