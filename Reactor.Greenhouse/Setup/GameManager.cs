@@ -22,11 +22,11 @@ namespace Reactor.Greenhouse.Setup
             Itch = new Game(new ItchProvider(), "itch", Path.Combine(WorkPath, "itch"));
         }
 
-        public async Task SetupAsync()
+        public async Task SetupAsync(bool setupSteam, bool setupItch)
         {
             var preObfuscation = PreObfuscation.Provider.IsUpdateNeeded();
-            var steam = Steam.Provider.IsUpdateNeeded();
-            var itch = Itch.Provider.IsUpdateNeeded();
+            var steam = setupSteam && Steam.Provider.IsUpdateNeeded();
+            var itch = setupItch && Itch.Provider.IsUpdateNeeded();
 
             if (preObfuscation || steam || itch)
             {
@@ -54,8 +54,16 @@ namespace Reactor.Greenhouse.Setup
             ContentDownloader.ShutdownSteam3();
 
             PreObfuscation.UpdateVersion();
-            Steam.UpdateVersion();
-            Itch.UpdateVersion();
+
+            if (setupSteam)
+            {
+                Steam.UpdateVersion();
+            }
+
+            if (setupItch)
+            {
+                Itch.UpdateVersion();
+            }
 
             if (PreObfuscation.Version != "2020.9.9")
             {
@@ -63,8 +71,16 @@ namespace Reactor.Greenhouse.Setup
             }
 
             PreObfuscation.Dump();
-            Steam.Dump();
-            Itch.Dump();
+
+            if (setupSteam)
+            {
+                Steam.Dump();
+            }
+
+            if (setupItch)
+            {
+                Itch.Dump();
+            }
         }
     }
 }

@@ -7,6 +7,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Debugger", "Reactor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Greenhouse", "Reactor.Greenhouse\Reactor.Greenhouse.csproj", "{00BF8959-652F-46B8-AA0F-891B4DA1112B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Build", "build\Build.csproj", "{58AC4924-AC3D-45EA-80D7-E9F860FD1DD2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E2F4DAFA-E98C-4A7D-BA47-AAB0271A769D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyUnhollower", "lib/Il2CppAssemblyUnhollower\AssemblyUnhollower\AssemblyUnhollower.csproj", "{64ABFD11-CE06-4220-A626-55B39AB85B62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnhollowerBaseLib", "lib/Il2CppAssemblyUnhollower\UnhollowerBaseLib\UnhollowerBaseLib.csproj", "{17B4E6AE-EA5A-43BE-9184-5BBB6594C5E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,5 +37,27 @@ Global
 		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{00BF8959-652F-46B8-AA0F-891B4DA1112B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58AC4924-AC3D-45EA-80D7-E9F860FD1DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58AC4924-AC3D-45EA-80D7-E9F860FD1DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58AC4924-AC3D-45EA-80D7-E9F860FD1DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58AC4924-AC3D-45EA-80D7-E9F860FD1DD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64ABFD11-CE06-4220-A626-55B39AB85B62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64ABFD11-CE06-4220-A626-55B39AB85B62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64ABFD11-CE06-4220-A626-55B39AB85B62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64ABFD11-CE06-4220-A626-55B39AB85B62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17B4E6AE-EA5A-43BE-9184-5BBB6594C5E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17B4E6AE-EA5A-43BE-9184-5BBB6594C5E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17B4E6AE-EA5A-43BE-9184-5BBB6594C5E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17B4E6AE-EA5A-43BE-9184-5BBB6594C5E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78FD0EDA-0F47-44E9-8FB1-6B4E64E21AD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78FD0EDA-0F47-44E9-8FB1-6B4E64E21AD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78FD0EDA-0F47-44E9-8FB1-6B4E64E21AD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78FD0EDA-0F47-44E9-8FB1-6B4E64E21AD7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{64ABFD11-CE06-4220-A626-55B39AB85B62} = {E2F4DAFA-E98C-4A7D-BA47-AAB0271A769D}
+		{58AC4924-AC3D-45EA-80D7-E9F860FD1DD2} = {E2F4DAFA-E98C-4A7D-BA47-AAB0271A769D}
+		{17B4E6AE-EA5A-43BE-9184-5BBB6594C5E7} = {E2F4DAFA-E98C-4A7D-BA47-AAB0271A769D}
+		{78FD0EDA-0F47-44E9-8FB1-6B4E64E21AD7} = {E2F4DAFA-E98C-4A7D-BA47-AAB0271A769D}
 	EndGlobalSection
 EndGlobal

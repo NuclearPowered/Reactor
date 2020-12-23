@@ -19,17 +19,21 @@ namespace Reactor.Greenhouse
     {
         private static Task<int> Main(string[] args)
         {
-            var rootCommand = new RootCommand();
+            var rootCommand = new RootCommand
+            {
+                new Option<bool>("steam"),
+                new Option<bool>("itch"),
+            };
 
-            rootCommand.Handler = CommandHandler.Create(SearchAsync);
+            rootCommand.Handler = CommandHandler.Create<bool, bool>(GenerateAsync);
 
             return rootCommand.InvokeAsync(args);
         }
 
-        private static async Task SearchAsync()
+        private static async Task GenerateAsync(bool steam, bool itch)
         {
             var gameManager = new GameManager();
-            await gameManager.SetupAsync();
+            await gameManager.SetupAsync(steam, itch);
 
             JsonConvert.DefaultSettings = () => new JsonSerializerSettings
             {
@@ -42,8 +46,15 @@ namespace Reactor.Greenhouse
             Console.WriteLine($"Generating mappings from {gameManager.PreObfuscation.Name} ({gameManager.PreObfuscation.Version})");
             using var old = ModuleDefinition.ReadModule(File.OpenRead(gameManager.PreObfuscation.Dll));
 
-            await GenerateAsync(gameManager.Steam, old);
-            await GenerateAsync(gameManager.Itch, old);
+            if (steam)
+            {
+                await GenerateAsync(gameManager.Steam, old);
+            }
+
+            if (itch)
+            {
+                await GenerateAsync(gameManager.Itch, old);
+            }
         }
 
         private static async Task GenerateAsync(Game game, ModuleDefinition old)
