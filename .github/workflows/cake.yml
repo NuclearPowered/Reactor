@@ -31,7 +31,7 @@ jobs:
           repo: NuclearPowered/BepInEx
 
       - name: Cake Action
-        uses: cake-build/cake-action@v1.2.0
+        run: ./build.sh
         env:
           STEAM: ${{ secrets.STEAM }}
 
