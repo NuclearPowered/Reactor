@@ -36,4 +36,7 @@ jobs:
         env:
           STEAM: ${{ secrets.STEAM }}
 
-#       - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Reactor.dll
+          path: Reactor/bin/Release/Reactor.dll

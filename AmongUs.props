@@ -57,6 +57,7 @@
         </Reference>
         <Reference Include="UnityEngine.IMGUIModule">
             <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
+            <Private>False</Private>
         </Reference>
         <Reference Include="UnityEngine.UI">
             <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
@@ -64,6 +65,7 @@
         </Reference>
         <Reference Include="UnityEngine.UIModule">
             <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.UIModule.dll</HintPath>
+            <Private>False</Private>
         </Reference>
     </ItemGroup>
 
