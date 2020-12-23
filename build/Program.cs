@@ -6,6 +6,7 @@ using Cake.Common.Diagnostics;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Build;
+using Cake.Common.Tools.DotNetCore.Run;
 using Cake.Core;
 using Cake.Frosting;
 using DepotDownloader;
@@ -77,6 +78,12 @@ public sealed class GenerateProxyAssemblyTask : FrostingTask<BuildContext>
             context.TempPath, dumperConfig, context.Debug
         );
 
+        context.Information("Executing Reactor.Greenhouse");
+
+        context.DotNetCoreRun(".", "steam", new DotNetCoreRunSettings
+        {
+            WorkingDirectory = "Reactor.Greenhouse"
+        });
 
         context.Information("Executing Reactor.OxygenFilter");
 
@@ -91,7 +98,6 @@ public sealed class GenerateProxyAssemblyTask : FrostingTask<BuildContext>
         UnhollowerBaseLib.LogSupport.WarningHandler += context.Warning;
         UnhollowerBaseLib.LogSupport.TraceHandler += context.Debug;
         UnhollowerBaseLib.LogSupport.ErrorHandler += context.Error;
-
 
         var unityBaseLibDir = Path.Combine(context.AmongUsPath, "BepInEx", "unhollowed", "base");
 

@@ -62,21 +62,31 @@ namespace Reactor.Greenhouse.Setup.Provider
 
             AccountSettingsStore.LoadFromFile("account.config");
 
-            ContentDownloader.Config.RememberPassword = true;
+            var environmentVariable = Environment.GetEnvironmentVariable("STEAM");
 
-            Console.Write("Steam username: ");
-            var username = Console.ReadLine();
-
-            string password = null;
-
-            if (!AccountSettingsStore.Instance.LoginKeys.ContainsKey(username))
+            if (environmentVariable != null)
             {
-                Console.Write("Steam password: ");
-                password = ContentDownloader.Config.SuppliedPassword = Util.ReadPassword();
-                Console.WriteLine();
+                var split = environmentVariable.Split(":");
+                ContentDownloader.InitializeSteam3(split[0], split[1]);
             }
+            else
+            {
+                ContentDownloader.Config.RememberPassword = true;
 
-            ContentDownloader.InitializeSteam3(username, password);
+                Console.Write("Steam username: ");
+                var username = Console.ReadLine();
+
+                string password = null;
+
+                if (!AccountSettingsStore.Instance.LoginKeys.ContainsKey(username))
+                {
+                    Console.Write("Steam password: ");
+                    password = ContentDownloader.Config.SuppliedPassword = Util.ReadPassword();
+                    Console.WriteLine();
+                }
+
+                ContentDownloader.InitializeSteam3(username, password);
+            }
 
             ContentDownloader.Config.UsingFileList = true;
             ContentDownloader.Config.FilesToDownload = new List<string>
