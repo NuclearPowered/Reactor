@@ -52,9 +52,6 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
         context.Information("Downloading the game from steam");
         await ContentDownloader.DownloadAppAsync(AppId, DepotId);
         ContentDownloader.ShutdownSteam3();
-
-        context.Information("Downloading BepInEx");
-        context.Unzip("BepInEx-reactor.zip", context.AmongUsPath);
     }
 }
 
@@ -129,20 +126,6 @@ public sealed class BuildTask : FrostingTask<BuildContext>
     }
 }
 
-[TaskName("Clean")]
-public sealed class CleanTask : FrostingTask<BuildContext>
-{
-    public override void Run(BuildContext context)
-    {
-        context.DeleteDirectory(context.Directory("bin"), new DeleteDirectorySettings
-        {
-            Force = true,
-            Recursive = true
-        });
-    }
-}
-
-[IsDependentOn(typeof(CleanTask))]
 [IsDependentOn(typeof(BuildTask))]
 public sealed class Default : FrostingTask<BuildContext>
 {
