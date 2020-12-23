@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AssemblyUnhollower;
 using Cake.Common;
@@ -53,6 +54,8 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
         context.Information("Downloading the game from steam");
         await ContentDownloader.DownloadAppAsync(AppId, DepotId);
         ContentDownloader.ShutdownSteam3();
+
+        context.Unzip(context.GetFiles("BepInEx_UnityIL2CPP_x86_*.zip").Single(), Path.Combine(context.AmongUsPath));
     }
 }
 

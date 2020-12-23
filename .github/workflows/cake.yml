@@ -29,7 +29,6 @@ jobs:
           branch: github-action
           name: BepInEx-reactor
           repo: NuclearPowered/BepInEx
-          path: bin/Among Us
 
       - name: Cake Action
         run: sh build.sh
