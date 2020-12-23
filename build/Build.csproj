@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RunWorkingDirectory>$(MSBuildProjectDirectory)/..</RunWorkingDirectory>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Cake.Frosting" Version="1.0.0-rc0002" />
+        <PackageReference Include="DepotDownloader.Library" Version="0.1.2" />
+        <Reference Include="Il2CppDumper">
+            <HintPath>..\lib\Il2CppDumper.dll</HintPath>
+        </Reference>
+        <ProjectReference Include="..\Reactor.OxygenFilter\Reactor.OxygenFilter.csproj" />
+        <ProjectReference Include="..\Il2CppAssemblyUnhollower\AssemblyUnhollower\AssemblyUnhollower.csproj" />
+        <ProjectReference Include="..\Il2CppAssemblyUnhollower\UnhollowerBaseLib\UnhollowerBaseLib.csproj" />
+    </ItemGroup>
+</Project>

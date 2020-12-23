@@ -13,7 +13,7 @@
         <PackageReference Include="System.CommandLine" Version="2.0.0-beta1.20478.1" />
         <ProjectReference Include="..\Reactor.OxygenFilter\Reactor.OxygenFilter.csproj" />
         <Reference Include="Il2CppDumper">
-            <HintPath>lib\Il2CppDumper.dll</HintPath>
+            <HintPath>..\lib\Il2CppDumper.dll</HintPath>
         </Reference>
     </ItemGroup>
 </Project>
