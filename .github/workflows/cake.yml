@@ -1,0 +1,38 @@
+name: Cake
+
+on:
+  push:
+    branches: [ reactor ]
+  pull_request:
+    branches: [ reactor ]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.101
+
+      - name: Download artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: cake.yml
+          workflow_conclusion: success
+          branch: github-action
+          name: BepInEx-reactor
+          repo: NuclearPowered/BepInEx
+
+      - name: Cake Action
+        uses: cake-build/cake-action@v1.2.0
+        env:
+          STEAM: ${{ secrets.STEAM }}
+
+#       - uses: actions/upload-artifact@v2
