@@ -46,12 +46,12 @@ namespace Reactor.Unstrip
             }
         }
 
-        [HarmonyPatch(typeof(GUILayoutEntry), nameof(GUILayoutEntry.CalcWidth))]
+        // [HarmonyPatch(typeof(GUILayoutEntry), nameof(GUILayoutEntry.CalcWidth))]
         public static class CalcWidthPatch
         {
             public static bool Prefix(GUILayoutEntry __instance)
             {
-                var cast = __instance.TryCast<GUIWordWrapSizer>();
+                var cast = __instance?.TryCast<GUIWordWrapSizer>();
                 if (cast != null)
                 {
                     cast.CalcWidth();
@@ -62,12 +62,12 @@ namespace Reactor.Unstrip
             }
         }
 
-        [HarmonyPatch(typeof(GUILayoutEntry), nameof(GUILayoutEntry.CalcHeight))]
+        // [HarmonyPatch(typeof(GUILayoutEntry), nameof(GUILayoutEntry.CalcHeight))]
         public static class CalcHeightPatch
         {
             public static bool Prefix(GUILayoutEntry __instance)
             {
-                var cast = __instance.TryCast<GUIWordWrapSizer>();
+                var cast = __instance?.TryCast<GUIWordWrapSizer>();
                 if (cast != null)
                 {
                     cast.CalcHeight();
