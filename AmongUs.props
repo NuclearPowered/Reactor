@@ -1,78 +1,14 @@
 <Project>
+    <PropertyGroup>
+        <TargetGamePlatform>Steam</TargetGamePlatform>
+        <Mappings>NuclearPowered/Mappings:0.1.0-alpha.1</Mappings>
+    </PropertyGroup>
+
     <ItemGroup>
-        <!-- Among Us -->
-        <Reference Include="Assembly-CSharp">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\Assembly-CSharp.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Hazel">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\Hazel.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-
-        <!-- BepInEx -->
-        <Reference Include="0Harmony">
-            <HintPath>$(AmongUs)\BepInEx\core\0Harmony.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="BepInEx">
-            <HintPath>$(AmongUs)\BepInEx\core\BepInEx.Core.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="BepInEx.IL2CPP">
-            <HintPath>$(AmongUs)\BepInEx\core\BepInEx.IL2CPP.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="SemVer">
-            <HintPath>$(AmongUs)\BepInEx\core\SemVer.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-
-        <!-- IL2CPP Unhollower -->
-        <Reference Include="UnhollowerBaseLib">
-            <HintPath>$(AmongUs)\BepInEx\core\UnhollowerBaseLib.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Il2Cppmscorlib">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\Il2Cppmscorlib.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="Il2CppSystem.Core">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\Il2CppSystem.Core.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-
-        <!-- UnityEngine -->
-        <Reference Include="UnityEngine">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.CoreModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.InputLegacyModule">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.InputLegacyModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.IMGUIModule">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.IMGUIModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UI">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.UI.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
-        <Reference Include="UnityEngine.UIModule">
-            <HintPath>$(AmongUs)\BepInEx\unhollowed\UnityEngine.UIModule.dll</HintPath>
-            <Private>False</Private>
-        </Reference>
+        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.1.1" />
     </ItemGroup>
 
-    <Target Name="Copy" AfterTargets="Build">
-        <ItemGroup>
-            <OutputFiles Include="$(OutputPath)$(AssemblyName).dll" />
-        </ItemGroup>
-        <Copy SourceFiles="@(OutputFiles)" DestinationFolder="$(AmongUs)/BepInEx/plugins/" Condition="'$(Configuration)' == 'Debug'" />
+    <Target Name="Copy" AfterTargets="Reobfuscate">
+        <Copy SourceFiles="$(OutputPath)reobfuscated/$(AssemblyName).dll" DestinationFolder="$(AmongUs)/BepInEx/plugins/" Condition="'$(Configuration)' == 'Debug'" />
     </Target>
 </Project>

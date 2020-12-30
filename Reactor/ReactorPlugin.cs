@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
@@ -26,7 +27,7 @@ namespace Reactor
             ClassInjector.RegisterTypeInIl2Cpp<Unstrip.Patches.GUIWordWrapSizer>();
 
             var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
-            gameObject.AddComponent<ReactorComponent>();
+            gameObject.AddComponent<ReactorComponent>().Plugin = this;
 
             Harmony.PatchAll();
             ReactorVersionShower.Initialize();
@@ -42,19 +43,72 @@ namespace Reactor
 
         public class ReactorComponent : MonoBehaviour
         {
+            public ReactorPlugin Plugin { get; internal set; }
+
             public ReactorComponent(IntPtr ptr) : base(ptr)
             {
             }
 
+            public void Start()
+            {
+                Camera.onPostRender = Camera.onPostRender == null
+                    ? new Action<Camera>(OnPostRenderM)
+                    : Il2CppSystem.Delegate.Combine(Camera.onPostRender, Il2CppSystem.Delegate.CreateDelegate(GetIl2CppType(), GetIl2CppType().GetMethod(nameof(OnPostRenderM), Il2CppSystem.Reflection.BindingFlags.Static | Il2CppSystem.Reflection.BindingFlags.Public))).Cast<Camera.CameraCallback>();
+            }
+
+            public static Camera OnPostRenderCam { get; private set; }
+
+            private static void OnPostRenderM(Camera camera)
+            {
+                if (OnPostRenderCam == null)
+                {
+                    OnPostRenderCam = camera;
+                }
+
+                if (OnPostRenderCam == camera)
+                {
+                    Coroutines.ProcessWaitForEndOfFrame();
+                }
+            }
+
             private void Update()
             {
-                var watcher = PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher;
-                if (watcher.Reload)
+                Coroutines.Process();
+
+                if (Plugin.RegionInfoWatcher.Reload)
                 {
-                    watcher.Reload = false;
+                    Plugin.RegionInfoWatcher.Reload = false;
                     ServerManager.Instance.LoadServers();
-                    PluginSingleton<ReactorPlugin>.Instance.Log.LogInfo("Region file reloaded");
+                    Plugin.Log.LogInfo("Region file reloaded");
                 }
+
+                if (Input.GetKeyDown(KeyCode.F5))
+                {
+                    Plugin.Log.LogInfo("Reloading all configs");
+
+                    foreach (var pluginInfo in Preloader.Chainloader.Plugins.Values)
+                    {
+                        var config = ((BasePlugin) pluginInfo.Instance).Config;
+                        if (!config.Any())
+                        {
+                            continue;
+                        }
+
+                        try
+                        {
+                            config.Reload();
+                        }
+                        catch (Exception e)
+                        {
+                            Plugin.Log.LogWarning($"Exception occured during reload of {pluginInfo.Metadata.Name}: {e}");
+                        }
+                    }
+                }
+            }
+
+            private void FixedUpdate()
+            {
+                Coroutines.ProcessWaitForFixedUpdate();
             }
         }
     }

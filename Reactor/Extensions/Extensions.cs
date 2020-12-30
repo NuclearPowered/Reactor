@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
@@ -69,6 +71,9 @@ namespace Reactor.Extensions
             return ((Color32) color).ToHtmlStringRGBA();
         }
 
+        /// <summary>
+        /// Fully read <paramref name="input"/> stream, can be used as workaround for il2cpp streams.
+        /// </summary>
         public static byte[] ReadFully(this Stream input)
         {
             using (var ms = new MemoryStream())
@@ -76,6 +81,21 @@ namespace Reactor.Extensions
                 input.CopyTo(ms);
                 return ms.ToArray();
             }
+        }
+
+        /// <summary>
+        /// Sends <see cref="UnityWebRequest"/> and return task that finishes on <paramref name="request"/> completion.
+        /// </summary>
+        public static Task SendAsync(this UnityWebRequest request)
+        {
+            var task = new TaskCompletionSource<object>();
+
+            request.Send().m_completeCallback = (Action<AsyncOperation>) (x =>
+            {
+                task.SetResult(null);
+            });
+
+            return task.Task;
         }
     }
 }

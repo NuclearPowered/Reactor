@@ -11,7 +11,6 @@ using Cake.Common.Tools.DotNetCore.Run;
 using Cake.Core;
 using Cake.Frosting;
 using DepotDownloader;
-using Reactor.OxygenFilter;
 
 public static class Program
 {
@@ -80,20 +79,6 @@ public sealed class GenerateProxyAssemblyTask : FrostingTask<BuildContext>
             Path.Combine(context.AmongUsPath, "Among Us_Data", "il2cpp_data", "Metadata", "global-metadata.dat"),
             context.TempPath, dumperConfig, context.Debug
         );
-
-        context.Information("Executing Reactor.Greenhouse");
-
-        context.DotNetCoreRun(".", "steam", new DotNetCoreRunSettings
-        {
-            WorkingDirectory = "Reactor.Greenhouse"
-        });
-
-        context.Information("Executing Reactor.OxygenFilter");
-
-        var oxygenFilter = new OxygenFilter();
-
-        var dumpedDll = new FileInfo(Path.Combine(context.TempPath, "DummyDll", "Assembly-CSharp.dll"));
-        oxygenFilter.Start(new FileInfo(Path.Combine("Reactor.Greenhouse", "work", "2020.12.9s.json")), dumpedDll, dumpedDll);
 
         context.Information("Executing Il2CppUnhollower generator");
 

@@ -7,11 +7,8 @@
     <ItemGroup>
         <PackageReference Include="Cake.Frosting" Version="1.0.0-rc0002" />
         <PackageReference Include="DepotDownloader.Library" Version="0.1.2" />
-        <Reference Include="Il2CppDumper">
-            <HintPath>..\lib\Il2CppDumper.dll</HintPath>
-        </Reference>
-        <ProjectReference Include="..\Reactor.OxygenFilter\Reactor.OxygenFilter.csproj" />
-        <ProjectReference Include="..\lib\Il2CppAssemblyUnhollower\AssemblyUnhollower\AssemblyUnhollower.csproj" />
-        <ProjectReference Include="..\lib\Il2CppAssemblyUnhollower\UnhollowerBaseLib\UnhollowerBaseLib.csproj" />
+        <PackageReference Include="Reactor.OxygenFilter" Version="0.1.0" />
+        <PackageReference Include="js6pak.Il2CppDumper" Version="6.4.20" />
+        <PackageReference Include="NuclearPowered.AssemblyUnhollower" Version="0.4.12" />
     </ItemGroup>
 </Project>
