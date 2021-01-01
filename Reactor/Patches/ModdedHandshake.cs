@@ -9,6 +9,40 @@ namespace Reactor.Patches
 {
     internal static class ModdedHandshake
     {
+        // TODO add back when vent issue is fixed
+        // [HarmonyPatch(typeof(InnerNetServer), nameof(InnerNetServer.OnServerConnect))]
+        // public static class FreeplayPatch
+        // {
+        //     public static void Prefix([HarmonyArgument(0)] NewConnectionEventArgs evt)
+        //     {
+        //         var handshakeData = evt.HandshakeData;
+        //
+        //         var protocolVersion = handshakeData.ReadInt32();
+        //         if (protocolVersion != -1)
+        //         {
+        //             // reset position if vanilla
+        //             handshakeData._position -= sizeof(int);
+        //             handshakeData.readHead -= sizeof(int);
+        //         }
+        //     }
+        // }
+
+        // workaround for ^
+        [HarmonyPatch(typeof(InnerNetServer), nameof(InnerNetServer.IsCompatibleVersion))]
+        public static class FreeplayPatch
+        {
+            public static bool Prefix([HarmonyArgument(0)] int version, ref bool __result)
+            {
+                if (version == -1)
+                {
+                    __result = true;
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
         [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.GetConnectionData))]
         public static class HandshakePatch
         {
