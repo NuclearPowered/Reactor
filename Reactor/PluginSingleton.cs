@@ -14,7 +14,7 @@ namespace Reactor
             {
                 if (_instance == null)
                 {
-                    _instance = Preloader.Chainloader.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
+                    _instance = IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
                 }
 
                 return _instance;

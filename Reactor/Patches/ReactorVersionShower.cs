@@ -48,7 +48,7 @@ namespace Reactor.Patches
         {
             Text.Text = "Reactor " + typeof(ReactorPlugin).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
             Text.Text += "\nBepInEx: " + Paths.BepInExVersion;
-            Text.Text += "\nMods: " + Preloader.Chainloader.Plugins.Count;
+            Text.Text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
             TextUpdated?.Invoke(Text);
         }
     }

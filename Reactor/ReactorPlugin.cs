@@ -86,7 +86,7 @@ namespace Reactor
                 {
                     Plugin.Log.LogInfo("Reloading all configs");
 
-                    foreach (var pluginInfo in Preloader.Chainloader.Plugins.Values)
+                    foreach (var pluginInfo in IL2CPPChainloader.Instance.Plugins.Values)
                     {
                         var config = ((BasePlugin) pluginInfo.Instance).Config;
                         if (!config.Any())

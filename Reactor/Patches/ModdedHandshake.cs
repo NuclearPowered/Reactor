@@ -50,7 +50,7 @@ namespace Reactor.Patches
             {
                 var handshake = MessageWriter.Get(SendOption.Reliable);
 
-                var plugins = Preloader.Chainloader.Plugins;
+                var plugins = IL2CPPChainloader.Instance.Plugins;
 
                 if (plugins.Values
                     .Select(pluginInfo => pluginInfo.Instance.GetType().GetCustomAttribute<ReactorPluginSideAttribute>())
