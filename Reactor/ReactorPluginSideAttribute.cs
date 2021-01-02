@@ -12,7 +12,7 @@ namespace Reactor
 
         public ReactorPluginSideAttribute(PluginSide side)
         {
-            if (side == PluginSide.Server)
+            if (side == PluginSide.ServerOnly)
             {
                 throw new ArgumentException("BepInEx plugin can't be server only!");
             }
@@ -34,11 +34,11 @@ namespace Reactor
         /// <summary>
         /// Required only by client
         /// </summary>
-        Client,
+        ClientOnly,
 
         /// <summary>
         /// Required only by server
         /// </summary>
-        Server
+        ServerOnly
     }
 }

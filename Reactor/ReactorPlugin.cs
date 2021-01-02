@@ -13,7 +13,7 @@ namespace Reactor
 {
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
-    [ReactorPluginSide(PluginSide.Client)]
+    [ReactorPluginSide(PluginSide.ClientOnly)]
     public class ReactorPlugin : BasePlugin
     {
         public const string Id = "gg.reactor.api";

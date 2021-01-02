@@ -12,7 +12,7 @@ namespace Reactor.Debugger
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
     [BepInDependency(ReactorPlugin.Id, "^0.2.0")]
-    [ReactorPluginSide(PluginSide.Client)]
+    [ReactorPluginSide(PluginSide.ClientOnly)]
     public class DebuggerPlugin : BasePlugin
     {
         public const string Id = "gg.reactor.debugger";
