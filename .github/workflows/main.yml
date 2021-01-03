@@ -33,4 +33,4 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: Reactor.Debugger.dll
-          path: Reactor.Debugger/bin/Release/netstandard2/reobfuscated/Reactor.Debugger.dll
+          path: Reactor.Debugger/bin/Release/netstandard2.1/reobfuscated/Reactor.Debugger.dll
