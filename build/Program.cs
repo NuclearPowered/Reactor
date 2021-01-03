@@ -7,7 +7,6 @@ using Cake.Common.Diagnostics;
 using Cake.Common.IO;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Build;
-using Cake.Common.Tools.DotNetCore.Run;
 using Cake.Core;
 using Cake.Frosting;
 using DepotDownloader;
@@ -109,7 +108,7 @@ public sealed class BuildTask : FrostingTask<BuildContext>
 {
     public override void Run(BuildContext context)
     {
-        context.DotNetCoreBuild("./Reactor/Reactor.csproj", new DotNetCoreBuildSettings
+        context.DotNetCoreBuild("./Reactor.sln", new DotNetCoreBuildSettings
         {
             Configuration = "Release",
             EnvironmentVariables =
