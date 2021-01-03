@@ -117,9 +117,9 @@ public sealed class CleanTask : FrostingTask<BuildContext>
 [IsDependentOn(typeof(GenerateProxyAssemblyTask))]
 public sealed class BuildTask : FrostingTask<BuildContext>
 {
-    public override void Run(BuildContext context)
+    private void Build(BuildContext context, string project)
     {
-        context.DotNetCoreBuild("./Reactor.sln", new DotNetCoreBuildSettings
+        context.DotNetCoreBuild(project, new DotNetCoreBuildSettings
         {
             Configuration = "Release",
             EnvironmentVariables =
@@ -127,6 +127,12 @@ public sealed class BuildTask : FrostingTask<BuildContext>
                 ["AmongUs"] = Path.GetFullPath(context.AmongUsPath)
             }
         });
+    }
+
+    public override void Run(BuildContext context)
+    {
+        Build(context, "Reactor/Reactor.csproj");
+        Build(context, "Reactor.Debugger/Reactor.Debugger.csproj");
     }
 }
 
