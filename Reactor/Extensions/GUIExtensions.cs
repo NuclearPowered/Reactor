@@ -1,4 +1,5 @@
 using System;
+using UnhollowerBaseLib;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -25,6 +26,16 @@ namespace Reactor.Extensions
         {
             rect.x = Mathf.Clamp(rect.x, 0, Screen.width - rect.width);
             rect.y = Mathf.Clamp(rect.y, 0, Screen.height - rect.height);
+
+            return rect;
+        }
+
+        /// <summary>
+        /// Reset Rect size
+        /// </summary>
+        public static Rect ResetSize(this Rect rect)
+        {
+            rect.width = rect.height = 0;
 
             return rect;
         }
@@ -103,7 +114,8 @@ namespace Reactor.Extensions
         {
             if (Enabled)
             {
-                Rect = GUI.Window(Id, Rect, Func, Title);
+                Rect = Rect.ResetSize();
+                Rect = GUILayout.Window(Id, Rect, Func, Title, new Il2CppReferenceArray<GUILayoutOption>(0));
             }
         }
     }

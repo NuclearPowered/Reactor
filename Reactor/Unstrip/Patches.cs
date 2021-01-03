@@ -13,9 +13,64 @@ namespace Reactor.Unstrip
         [HarmonyPatch(typeof(GUIUtility), nameof(GUIUtility.HasKeyFocus))]
         public static class HasKeyFocusPatch
         {
-            public static bool Prefix(int controlID, ref bool __result)
+            public static bool Prefix(int controlID, out bool __result)
             {
                 __result = controlID == GUIUtility.keyboardControl;
+                return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(GUILayout), nameof(GUILayout.DoWindow), typeof(int), typeof(Rect), typeof(GUI.WindowFunction), typeof(GUIContent), typeof(GUIStyle), typeof(Il2CppReferenceArray<GUILayoutOption>))]
+        public static class DoWindowPatch
+        {
+            private sealed class LayoutedWindow
+            {
+                internal LayoutedWindow(GUI.WindowFunction f, Rect screenRect, GUIContent content, GUILayoutOption[] options, GUIStyle style)
+                {
+                    this.m_Func = f;
+                    this.m_ScreenRect = screenRect;
+                    this.m_Options = options;
+                    this.m_Style = style;
+                }
+
+                public void DoWindow(int windowID)
+                {
+                    var topLevel = GUILayoutUtility.current.topLevel;
+                    var type = Event.current.type;
+                    if (type != EventType.Layout)
+                    {
+                        topLevel.ResetCursor();
+                    }
+                    else
+                    {
+                        topLevel.resetCoords = true;
+                        topLevel.rect = this.m_ScreenRect;
+                        var flag = this.m_Options != null;
+                        if (flag)
+                        {
+                            topLevel.ApplyOptions(this.m_Options);
+                        }
+
+                        topLevel.isWindow = true;
+                        topLevel.windowID = windowID;
+                        topLevel.style = this.m_Style;
+                    }
+
+                    this.m_Func.Invoke(windowID);
+                }
+
+                private readonly GUI.WindowFunction m_Func;
+                private readonly Rect m_ScreenRect;
+                private readonly GUILayoutOption[] m_Options;
+                private readonly GUIStyle m_Style;
+            }
+
+            public static bool Prefix(int id, Rect screenRect, GUI.WindowFunction func, GUIContent content, GUIStyle style, Il2CppReferenceArray<GUILayoutOption> options, out Rect __result)
+            {
+                GUIUtility.CheckOnGUI();
+                var @object = new LayoutedWindow(func, screenRect, content, options, style);
+                __result = GUI.Window(id, screenRect, (GUI.WindowFunction) @object.DoWindow, content, style);
+
                 return false;
             }
         }

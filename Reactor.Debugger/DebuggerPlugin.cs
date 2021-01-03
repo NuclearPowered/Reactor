@@ -43,7 +43,7 @@ namespace Reactor.Debugger
 
             public DebuggerComponent(IntPtr ptr) : base(ptr)
             {
-                TestWindow = new DragWindow(new Rect(20, 20, 120, 120), "Debugger", () =>
+                TestWindow = new DragWindow(new Rect(20, 20, 0, 0), "Debugger", () =>
                 {
                     GUILayout.Label("Name: " + SaveManager.PlayerName, new Il2CppReferenceArray<GUILayoutOption>(0));
                     DisableGameEnd = GUILayout.Toggle(DisableGameEnd, "Disable game end", new Il2CppReferenceArray<GUILayoutOption>(0));
