@@ -1,10 +1,10 @@
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using AssemblyUnhollower;
 using Cake.Common;
 using Cake.Common.Diagnostics;
 using Cake.Common.IO;
+using Cake.Common.Net;
 using Cake.Common.Tools.DotNetCore;
 using Cake.Common.Tools.DotNetCore.Build;
 using Cake.Core;
@@ -53,7 +53,8 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
         await ContentDownloader.DownloadAppAsync(AppId, DepotId);
         ContentDownloader.ShutdownSteam3();
 
-        context.Unzip(context.GetFiles("BepInEx_UnityIL2CPP_x86_*.zip").Single(), Path.Combine(context.AmongUsPath));
+        var bepinexZip = context.DownloadFile("https://github.com/NuclearPowered/BepInEx/releases/download/6.0.0-reactor.10/BepInEx-6.0.0-reactor.10.zip");
+        context.Unzip(bepinexZip, Path.Combine(context.AmongUsPath));
     }
 }
 
@@ -102,7 +103,17 @@ public sealed class GenerateProxyAssemblyTask : FrostingTask<BuildContext>
     }
 }
 
+[TaskName("Clean")]
+public sealed class CleanTask : FrostingTask<BuildContext>
+{
+    public override void Run(BuildContext context)
+    {
+        context.CleanDirectory("bin");
+    }
+}
+
 [TaskName("Build")]
+[IsDependentOn(typeof(CleanTask))]
 [IsDependentOn(typeof(GenerateProxyAssemblyTask))]
 public sealed class BuildTask : FrostingTask<BuildContext>
 {

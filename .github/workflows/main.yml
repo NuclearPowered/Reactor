@@ -20,16 +20,6 @@ jobs:
         with:
           dotnet-version: 5.0.101
 
-      - name: Download artifact
-        uses: dawidd6/action-download-artifact@v2
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: main.yml
-          workflow_conclusion: success
-          branch: reactor
-          name: BepInEx-reactor
-          repo: NuclearPowered/BepInEx
-
       - name: Cake Action
         run: sh build.sh
         env:
