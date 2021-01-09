@@ -33,6 +33,8 @@ namespace Reactor.Unstrip
                 standard = sprite,
                 inputField = sprite
             };
+
+            bundle.Unload();
         }
     }
 }

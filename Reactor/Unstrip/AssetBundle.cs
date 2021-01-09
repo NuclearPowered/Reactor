@@ -59,5 +59,14 @@ namespace Reactor.Unstrip
 
             return ptr == IntPtr.Zero ? null : new UnityEngine.Object(ptr).TryCast<T>();
         }
+
+        private delegate IntPtr d_Unload(IntPtr __instance, bool unloadAllLoadedObjects);
+
+        private static readonly d_Unload i_Unload = IL2CPP.ResolveICall<d_Unload>("UnityEngine.AssetBundle::Unload");
+
+        public void Unload(bool unloadAllLoadedObjects = false)
+        {
+            i_Unload.Invoke(Pointer, unloadAllLoadedObjects);
+        }
     }
 }
