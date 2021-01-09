@@ -97,5 +97,23 @@ namespace Reactor.Extensions
 
             return task.Task;
         }
+
+        private static readonly int _outline = Shader.PropertyToID("_Outline");
+        private static readonly int _outlineColor = Shader.PropertyToID("_OutlineColor");
+        private static readonly int _addColor = Shader.PropertyToID("_AddColor");
+
+        /// <summary>
+        /// Sets color outline for renderers using default Among Us shader
+        /// </summary>
+        public static void SetOutline(this Renderer renderer, Color? color)
+        {
+            renderer.material.SetFloat(_outline, color.HasValue ? 1 : 0);
+
+            if (color.HasValue)
+            {
+                renderer.material.SetColor(_outlineColor, color.Value);
+                renderer.material.SetColor(_addColor, color.Value);
+            }
+        }
     }
 }
