@@ -24,7 +24,7 @@ namespace Reactor
 
         private static readonly List<IEnumerator> _tempList = new List<IEnumerator>();
 
-        public static object Start(IEnumerator routine)
+        public static IEnumerator Start(IEnumerator routine)
         {
             if (routine != null) ProcessNextOfCoroutine(routine);
             return routine;
