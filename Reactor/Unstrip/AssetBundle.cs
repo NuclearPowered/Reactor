@@ -6,7 +6,7 @@ using UnhollowerRuntimeLib;
 
 namespace Reactor.Unstrip
 {
-    public class AssetBundle
+    public class AssetBundle : IDisposable
     {
         private delegate IntPtr d_LoadFromFile(IntPtr path, uint crc, ulong offset);
 
@@ -67,6 +67,11 @@ namespace Reactor.Unstrip
         public void Unload(bool unloadAllLoadedObjects = false)
         {
             i_Unload.Invoke(Pointer, unloadAllLoadedObjects);
+        }
+
+        public void Dispose()
+        {
+            Unload();
         }
     }
 }
