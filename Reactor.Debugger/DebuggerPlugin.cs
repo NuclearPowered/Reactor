@@ -4,7 +4,7 @@ using BepInEx.IL2CPP;
 using HarmonyLib;
 using Reactor.Extensions;
 using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace Reactor.Debugger
@@ -22,7 +22,7 @@ namespace Reactor.Debugger
 
         public override void Load()
         {
-            ClassInjector.RegisterTypeInIl2Cpp<DebuggerComponent>();
+            RegisterInIl2CppAttribute.Register();
 
             var gameObject = new GameObject(nameof(DebuggerPlugin)).DontDestroy();
             Component = gameObject.AddComponent<DebuggerComponent>();
@@ -35,10 +35,13 @@ namespace Reactor.Debugger
             });
         }
 
+        [RegisterInIl2Cpp]
         public class DebuggerComponent : MonoBehaviour
         {
+            [HideFromIl2Cpp]
             public bool DisableGameEnd { get; set; }
 
+            [HideFromIl2Cpp]
             public DragWindow TestWindow { get; }
 
             public DebuggerComponent(IntPtr ptr) : base(ptr)

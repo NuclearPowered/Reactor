@@ -6,7 +6,7 @@ using HarmonyLib;
 using Reactor.Extensions;
 using Reactor.Patches;
 using Reactor.Unstrip;
-using UnhollowerRuntimeLib;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace Reactor
@@ -23,8 +23,7 @@ namespace Reactor
 
         public override void Load()
         {
-            ClassInjector.RegisterTypeInIl2Cpp<ReactorComponent>();
-            ClassInjector.RegisterTypeInIl2Cpp<Unstrip.Patches.GUIWordWrapSizer>();
+            RegisterInIl2CppAttribute.Register();
 
             var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
             gameObject.AddComponent<ReactorComponent>().Plugin = this;
@@ -41,8 +40,10 @@ namespace Reactor
             return base.Unload();
         }
 
+        [RegisterInIl2Cpp]
         public class ReactorComponent : MonoBehaviour
         {
+            [HideFromIl2Cpp]
             public ReactorPlugin Plugin { get; internal set; }
 
             public ReactorComponent(IntPtr ptr) : base(ptr)

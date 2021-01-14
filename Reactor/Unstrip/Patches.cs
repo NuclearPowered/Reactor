@@ -133,6 +133,7 @@ namespace Reactor.Unstrip
             }
         }
 
+        [RegisterInIl2Cpp]
         internal sealed class GUIWordWrapSizer : GUILayoutEntry
         {
             private readonly GUIContent m_Content;

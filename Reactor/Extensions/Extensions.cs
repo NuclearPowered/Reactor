@@ -28,6 +28,13 @@ namespace Reactor.Extensions
 
             return obj;
         }
+        
+        public static T DontUnload<T>(this T obj) where T : Object
+        {
+            obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
+
+            return obj;
+        }
 
         /// <summary>
         /// Adds a delegate to get one notification when a scene has loaded.
