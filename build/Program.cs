@@ -87,15 +87,13 @@ public sealed class GenerateProxyAssemblyTask : FrostingTask<BuildContext>
         UnhollowerBaseLib.LogSupport.TraceHandler += context.Debug;
         UnhollowerBaseLib.LogSupport.ErrorHandler += context.Error;
 
-        var unityBaseLibDir = Path.Combine(context.AmongUsPath, "BepInEx", "unhollowed", "base");
-
         var unhollowerOptions = new UnhollowerOptions
         {
             GameAssemblyPath = gameAssemblyPath,
             MscorlibPath = Path.Combine(context.AmongUsPath, "mono", "Managed", "mscorlib.dll"),
             SourceDir = Path.Combine(context.TempPath, "DummyDll"),
             OutputDir = Path.Combine(context.AmongUsPath, "BepInEx", "unhollowed"),
-            UnityBaseLibsDir = unityBaseLibDir,
+            UnityBaseLibsDir = Path.Combine(context.AmongUsPath, "BepInEx", "unity-libs"),
             NoCopyUnhollowerLibs = true
         };
 
