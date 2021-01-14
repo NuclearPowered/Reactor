@@ -53,7 +53,7 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
         await ContentDownloader.DownloadAppAsync(AppId, DepotId);
         ContentDownloader.ShutdownSteam3();
 
-        var bepinexZip = context.DownloadFile("https://github.com/NuclearPowered/BepInEx/releases/download/6.0.0-reactor.10/BepInEx-6.0.0-reactor.10.zip");
+        var bepinexZip = context.DownloadFile("https://github.com/NuclearPowered/BepInEx/releases/download/6.0.0-reactor.13/BepInEx-6.0.0-reactor.13.zip");
         context.Unzip(bepinexZip, Path.Combine(context.AmongUsPath));
     }
 }
