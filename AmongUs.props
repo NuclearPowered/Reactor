@@ -1,11 +1,11 @@
 <Project>
     <PropertyGroup>
         <GameVersion>2020.12.9s</GameVersion>
-        <Mappings>NuclearPowered/Mappings:0.1.0-alpha.1</Mappings>
+        <Mappings>NuclearPowered/Mappings:0.1.0-alpha.2</Mappings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.2.1" />
+        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.2.3" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Reobfuscate">
