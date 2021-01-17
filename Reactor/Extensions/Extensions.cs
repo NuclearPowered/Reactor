@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -121,6 +123,11 @@ namespace Reactor.Extensions
                 renderer.material.SetColor(_outlineColor, color.Value);
                 renderer.material.SetColor(_addColor, color.Value);
             }
+        }
+
+        public static IEnumerable<MethodBase> GetMethods(this Type type, Type returnType, params Type[] parameterTypes)
+        {
+            return type.GetMethods(AccessTools.all).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));
         }
 
         public static void Send<TCustomRpc>(this InnerNetObject netObject, object data, bool immediately = false)
