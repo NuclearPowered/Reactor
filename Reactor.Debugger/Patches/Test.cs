@@ -32,7 +32,7 @@ namespace Reactor.Debugger.Patches
         [HarmonyPatch(typeof(StatsManager), nameof(StatsManager.AmBanned), MethodType.Getter)]
         public static class AmBannedPatch
         {
-            public static bool Prefix(ref bool __result)
+            public static bool Postfix(ref bool __result)
             {
                 return __result = false;
             }
