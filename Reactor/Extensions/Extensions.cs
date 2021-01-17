@@ -28,7 +28,7 @@ namespace Reactor.Extensions
 
             return obj;
         }
-        
+
         public static T DontUnload<T>(this T obj) where T : Object
         {
             obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
@@ -121,6 +121,11 @@ namespace Reactor.Extensions
                 renderer.material.SetColor(_outlineColor, color.Value);
                 renderer.material.SetColor(_addColor, color.Value);
             }
+        }
+
+        public static void Send<TCustomRpc>(this InnerNetObject netObject, object data, bool immediately = false)
+        {
+            PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Send<TCustomRpc>(netObject, data, immediately);
         }
     }
 }

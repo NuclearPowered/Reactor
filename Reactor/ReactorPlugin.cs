@@ -19,6 +19,8 @@ namespace Reactor
         public const string Id = "gg.reactor.api";
 
         public Harmony Harmony { get; } = new Harmony(Id);
+        public CustomRpcManager CustomRpcManager { get; } = new CustomRpcManager();
+
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
         public override void Load()
