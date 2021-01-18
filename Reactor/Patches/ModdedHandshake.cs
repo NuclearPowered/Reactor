@@ -64,10 +64,10 @@ namespace Reactor.Patches
 
                 handshake.WritePacked(plugins.Count);
 
-                foreach (var plugin in plugins)
+                foreach (var (pluginId, plugin) in plugins)
                 {
-                    handshake.Write(plugin.Key);
-                    handshake.Write(plugin.Value.Metadata.Version.ToString());
+                    handshake.Write(pluginId);
+                    handshake.Write(plugin.Metadata.Version.ToString());
                 }
 
                 __result = handshake.ToByteArray(false);

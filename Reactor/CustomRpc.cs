@@ -9,6 +9,13 @@ using Hazel;
 
 namespace Reactor
 {
+    public enum RpcLocalHandling
+    {
+        None,
+        Before,
+        After
+    }
+
     public abstract class UnsafeCustomRpc
     {
         public int? Id { get; internal set; }
@@ -18,7 +25,7 @@ namespace Reactor
 
         public abstract Type InnerNetObjectType { get; }
 
-        public abstract bool ShouldHandleLocally { get; }
+        public abstract RpcLocalHandling LocalHandling { get; }
 
         protected UnsafeCustomRpc(BasePlugin plugin)
         {
@@ -106,7 +113,7 @@ namespace Reactor
                 throw new InvalidOperationException("Can't send unregistered CustomRpc");
             }
 
-            if (customRpc.ShouldHandleLocally)
+            if (customRpc.LocalHandling == RpcLocalHandling.Before)
             {
                 customRpc.UnsafeHandle(netObject, data);
             }
@@ -118,7 +125,7 @@ namespace Reactor
             };
 
             writer.Write(customRpc.PluginId);
-            writer.Write(customRpc.Id.Value);
+            writer.Write(customRpc.Id!.Value);
             customRpc.UnsafeWrite(writer, data);
 
             if (immediately)
@@ -128,6 +135,11 @@ namespace Reactor
             else
             {
                 writer.EndMessage();
+            }
+
+            if (customRpc.LocalHandling == RpcLocalHandling.After)
+            {
+                customRpc.UnsafeHandle(netObject, data);
             }
         }
 

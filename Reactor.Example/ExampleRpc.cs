@@ -19,7 +19,7 @@ namespace Reactor.Example
             }
         }
 
-        public override bool ShouldHandleLocally => true;
+        public override RpcLocalHandling LocalHandling => RpcLocalHandling.Before;
 
         public override void Write(MessageWriter writer, Data data)
         {
