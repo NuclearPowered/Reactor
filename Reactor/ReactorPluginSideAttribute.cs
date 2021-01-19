@@ -24,7 +24,7 @@ namespace Reactor
     /// <summary>
     /// Plugin side used in modded handshake
     /// </summary>
-    public enum PluginSide
+    public enum PluginSide : byte
     {
         /// <summary>
         /// Required by both sides, reject connection if missing on the other side

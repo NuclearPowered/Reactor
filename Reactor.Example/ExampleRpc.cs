@@ -11,7 +11,7 @@ namespace Reactor.Example
 
         public readonly struct Data
         {
-            public string Message { get; }
+            public readonly string Message;
 
             public Data(string message)
             {
