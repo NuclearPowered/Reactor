@@ -101,7 +101,7 @@ namespace Reactor
 
             var i = -1;
 
-            foreach (var mod in ModList.GetCurrent())
+            foreach (var mod in ModList.GetCurrent().OrderBy(x => x.Id))
             {
                 if (mod.Side == PluginSide.Both)
                 {
