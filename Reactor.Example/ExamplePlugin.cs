@@ -35,10 +35,11 @@ namespace Reactor.Example
 
             private void Update()
             {
-                if (Input.GetKeyDown(KeyCode.F3))
+                if (Input.GetKeyDown(KeyCode.F3) && AmongUsClient.Instance && PlayerControl.LocalPlayer)
                 {
                     Plugin.Log.LogWarning("Sending example rpc");
                     PlayerControl.LocalPlayer.Send<ExampleRpc>(new ExampleRpc.Data("Cześć :)"));
+                    PlayerControl.LocalPlayer.SendTo<ExampleRpc>(AmongUsClient.Instance.HostId, new ExampleRpc.Data("host :O"));
                 }
             }
         }

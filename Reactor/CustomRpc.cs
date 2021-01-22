@@ -126,7 +126,12 @@ namespace Reactor
             UnsafeSend(netObject, List.Single(x => x.GetType() == typeof(TCustomRpc)), data, immediately);
         }
 
-        public void UnsafeSend(InnerNetObject netObject, UnsafeCustomRpc customRpc, object data, bool immediately = false)
+        public void SendTo<TCustomRpc>(InnerNetObject netObject, int targetId, object data)
+        {
+            UnsafeSend(netObject, List.Single(x => x.GetType() == typeof(TCustomRpc)), data, true, targetId);
+        }
+
+        public void UnsafeSend(InnerNetObject netObject, UnsafeCustomRpc customRpc, object data, bool immediately = false, int targetClientId = -1)
         {
             if (netObject == null) throw new ArgumentNullException(nameof(netObject));
             if (customRpc == null) throw new ArgumentNullException(nameof(customRpc));
@@ -145,7 +150,7 @@ namespace Reactor
             var writer = immediately switch
             {
                 false => AmongUsClient.Instance.StartRpc(netObject.NetId, CallId, SendOption.Reliable),
-                true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CallId, SendOption.Reliable, -1)
+                true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CallId, SendOption.Reliable, targetClientId)
             };
 
             if (PluginIdMap.TryGetValue(customRpc.PluginId, out var pluginId))

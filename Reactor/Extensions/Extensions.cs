@@ -134,5 +134,10 @@ namespace Reactor.Extensions
         {
             PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Send<TCustomRpc>(netObject, data, immediately);
         }
+
+        public static void SendTo<TCustomRpc>(this InnerNetObject netObject, int targetId, object data)
+        {
+            PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.SendTo<TCustomRpc>(netObject, targetId, data);
+        }
     }
 }

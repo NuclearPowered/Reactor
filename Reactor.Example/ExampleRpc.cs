@@ -19,7 +19,7 @@ namespace Reactor.Example
             }
         }
 
-        public override RpcLocalHandling LocalHandling => RpcLocalHandling.Before;
+        public override RpcLocalHandling LocalHandling => RpcLocalHandling.None;
 
         public override void Write(MessageWriter writer, Data data)
         {
