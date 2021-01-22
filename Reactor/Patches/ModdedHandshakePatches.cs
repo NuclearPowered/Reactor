@@ -49,7 +49,7 @@ namespace Reactor.Patches
                 {
                     var serverBrand = reader.ReadString();
 
-                    __instance.Field_23.State = ConnectionState.Connected;
+                    __instance.connection.State = ConnectionState.Connected;
 
                     PluginSingleton<ReactorPlugin>.Instance.Log.LogDebug($"Connected to modded server ({serverBrand})");
 
@@ -65,7 +65,7 @@ namespace Reactor.Patches
         {
             public static void Prefix(UdpConnection __instance, byte sendOption, ref Il2CppSystem.Action ackCallback)
             {
-                if (sendOption != 8 || AmongUsClient.Instance == null || AmongUsClient.Instance.Field_23 == null || !AmongUsClient.Instance.Field_23.Equals(__instance))
+                if (sendOption != 8 || AmongUsClient.Instance == null || AmongUsClient.Instance.connection == null || !AmongUsClient.Instance.connection.Equals(__instance))
                 {
                     return;
                 }
@@ -95,7 +95,7 @@ namespace Reactor.Patches
 
             var client = AmongUsClient.Instance;
 
-            if (client != null && client.Field_23 != null && client.Field_23.State == ConnectionState.Connecting)
+            if (client != null && client.connection != null && client.connection.State == ConnectionState.Connecting)
             {
                 client.LastDisconnectReason = DisconnectReasons.Custom;
                 client.LastCustomDisconnect = "Server didn't respond to modded handshake";
@@ -112,7 +112,7 @@ namespace Reactor.Patches
 
                 ModdedHandshakeC2S.Serialize(
                     handshake,
-                    Constants.GetBroadcastVersion(),
+                    Constants.GetBroadcastVersionBytes(),
                     SaveManager.PlayerName,
                     ModList.GetCurrent()
                 );

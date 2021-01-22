@@ -122,6 +122,7 @@ public sealed class BuildTask : FrostingTask<BuildContext>
             Configuration = "Release",
             EnvironmentVariables =
             {
+                ["GamePlatform"] = "Steam",
                 ["AmongUs"] = Path.GetFullPath(context.AmongUsPath)
             }
         });
