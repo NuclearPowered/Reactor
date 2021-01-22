@@ -129,5 +129,10 @@ namespace Reactor.Extensions
         {
             return type.GetMethods(AccessTools.all).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));
         }
+
+        public static void Send<TCustomRpc>(this InnerNetObject netObject, object data, bool immediately = false)
+        {
+            PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Send<TCustomRpc>(netObject, data, immediately);
+        }
     }
 }

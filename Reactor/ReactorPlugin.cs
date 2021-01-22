@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Reactor.Extensions;
@@ -19,11 +20,17 @@ namespace Reactor
         public const string Id = "gg.reactor.api";
 
         public Harmony Harmony { get; } = new Harmony(Id);
+        public CustomRpcManager CustomRpcManager { get; } = new CustomRpcManager();
+
+        public ConfigEntry<bool> ModdedHandshake;
+
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
         public override void Load()
         {
             RegisterInIl2CppAttribute.Register();
+
+            ModdedHandshake = Config.Bind("Features", "Modded handshake", true);
 
             var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
             gameObject.AddComponent<ReactorComponent>().Plugin = this;
@@ -52,6 +59,8 @@ namespace Reactor
 
             public void Start()
             {
+                Plugin.CustomRpcManager.ReloadPluginIdMap();
+
                 Camera.onPostRender = Camera.onPostRender == null
                     ? new Action<Camera>(OnPostRenderM)
                     : Il2CppSystem.Delegate.Combine(Camera.onPostRender, Il2CppSystem.Delegate.CreateDelegate(GetIl2CppType(), GetIl2CppType().GetMethod(nameof(OnPostRenderM), Il2CppSystem.Reflection.BindingFlags.Static | Il2CppSystem.Reflection.BindingFlags.Public))).Cast<Camera.CameraCallback>();

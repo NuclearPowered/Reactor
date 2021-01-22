@@ -1,3 +1,4 @@
+#if STEAM
 using System.IO;
 using HarmonyLib;
 using Steamworks;
@@ -23,3 +24,4 @@ namespace Reactor.Patches
         }
     }
 }
+#endif
