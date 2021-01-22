@@ -34,6 +34,7 @@ namespace Reactor
 
             var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
             gameObject.AddComponent<ReactorComponent>().Plugin = this;
+            gameObject.AddComponent<Coroutines.Component>();
 
             Harmony.PatchAll();
             ReactorVersionShower.Initialize();
@@ -57,34 +58,13 @@ namespace Reactor
             {
             }
 
-            public void Start()
+            private void Start()
             {
                 Plugin.CustomRpcManager.ReloadPluginIdMap();
-
-                Camera.onPostRender = Camera.onPostRender == null
-                    ? new Action<Camera>(OnPostRenderM)
-                    : Il2CppSystem.Delegate.Combine(Camera.onPostRender, Il2CppSystem.Delegate.CreateDelegate(GetIl2CppType(), GetIl2CppType().GetMethod(nameof(OnPostRenderM), Il2CppSystem.Reflection.BindingFlags.Static | Il2CppSystem.Reflection.BindingFlags.Public))).Cast<Camera.CameraCallback>();
-            }
-
-            public static Camera OnPostRenderCam { get; private set; }
-
-            private static void OnPostRenderM(Camera camera)
-            {
-                if (OnPostRenderCam == null)
-                {
-                    OnPostRenderCam = camera;
-                }
-
-                if (OnPostRenderCam == camera)
-                {
-                    Coroutines.ProcessWaitForEndOfFrame();
-                }
             }
 
             private void Update()
             {
-                Coroutines.Process();
-
                 if (Plugin.RegionInfoWatcher.Reload)
                 {
                     Plugin.RegionInfoWatcher.Reload = false;
@@ -114,11 +94,6 @@ namespace Reactor
                         }
                     }
                 }
-            }
-
-            private void FixedUpdate()
-            {
-                Coroutines.ProcessWaitForFixedUpdate();
             }
         }
     }
