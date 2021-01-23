@@ -3,7 +3,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
 
-        <Version>0.2.0</Version>
+        <VersionPrefix>0.3.0</VersionPrefix>
         <Description>Core mod and API for Among Us</Description>
         <Authors>NuclearPowered</Authors>
     </PropertyGroup>

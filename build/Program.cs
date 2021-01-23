@@ -53,7 +53,7 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
         await ContentDownloader.DownloadAppAsync(AppId, DepotId);
         ContentDownloader.ShutdownSteam3();
 
-        var bepinexZip = context.DownloadFile("https://github.com/NuclearPowered/BepInEx/releases/download/6.0.0-reactor.13/BepInEx-6.0.0-reactor.13.zip");
+        var bepinexZip = context.DownloadFile("https://github.com/NuclearPowered/BepInEx/releases/download/6.0.0-reactor.16/BepInEx-6.0.0-reactor.16.zip");
         context.Unzip(bepinexZip, Path.Combine(context.AmongUsPath));
     }
 }
@@ -117,9 +117,12 @@ public sealed class BuildTask : FrostingTask<BuildContext>
 {
     private void Build(BuildContext context, string project)
     {
+        var buildId = context.EnvironmentVariable<string>("GITHUB_RUN_NUMBER", null);
+
         context.DotNetCoreBuild(project, new DotNetCoreBuildSettings
         {
             Configuration = "Release",
+            VersionSuffix = buildId == null ? "dev" : "ci." + buildId,
             EnvironmentVariables =
             {
                 ["GamePlatform"] = "Steam",
