@@ -1,4 +1,3 @@
-using System;
 using Reactor.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,20 +17,15 @@ namespace Reactor.Unstrip
                 Graphic.defaultGraphicMaterial.shader = backupShader;
             }
 
-            var tex = new Texture2D(1, 1, TextureFormat.RGBA32, Texture.GenerateAllMips, false, IntPtr.Zero);
-            tex.SetPixel(0, 0, Color.red);
-
-            var sprite = tex.CreateSprite();
-
             GUIExtensions.StandardResources = new DefaultControls.Resources
             {
-                background = sprite,
-                checkmark = sprite,
-                dropdown = sprite,
-                knob = sprite,
-                mask = sprite,
-                standard = sprite,
-                inputField = sprite
+                background = bundle.LoadAsset<Sprite>("Background").DontUnload(),
+                checkmark = bundle.LoadAsset<Sprite>("Checkmark").DontUnload(),
+                dropdown = bundle.LoadAsset<Sprite>("DropdownArrow").DontUnload(),
+                knob = bundle.LoadAsset<Sprite>("Knob").DontUnload(),
+                mask = bundle.LoadAsset<Sprite>("UIMask").DontUnload(),
+                standard = bundle.LoadAsset<Sprite>("UISprite").DontUnload(),
+                inputField = bundle.LoadAsset<Sprite>("InputFieldBackground").DontUnload()
             };
         }
     }

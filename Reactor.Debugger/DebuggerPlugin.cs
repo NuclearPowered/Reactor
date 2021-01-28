@@ -11,7 +11,7 @@ namespace Reactor.Debugger
 {
     [BepInPlugin(Id)]
     [BepInProcess("Among Us.exe")]
-    [BepInDependency(ReactorPlugin.Id, "^0.2.0")]
+    [BepInDependency(ReactorPlugin.Id)]
     [ReactorPluginSide(PluginSide.ClientOnly)]
     public class DebuggerPlugin : BasePlugin
     {
@@ -55,6 +55,20 @@ namespace Reactor.Debugger
                     {
                         ShipStatus.Instance.enabled = false;
                         ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
+                    }
+
+                    if (TutorialManager.InstanceExists && GUILayout.Button("Spawn a dummy", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                    {
+                        var playerControl = Instantiate(TutorialManager.Instance.PlayerPrefab);
+                        var i = playerControl.PlayerId = (byte) GameData.Instance.GetAvailableId();
+                        GameData.Instance.AddPlayer(playerControl);
+                        AmongUsClient.Instance.Spawn(playerControl, -2, SpawnFlags.None);
+                        playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
+                        playerControl.GetComponent<DummyBehaviour>().enabled = true;
+                        playerControl.NetTransform.enabled = false;
+                        playerControl.SetName("Dummy " + (i + 1));
+                        playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
+                        GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
                     }
 
                     if (PlayerControl.LocalPlayer)

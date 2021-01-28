@@ -77,6 +77,9 @@ namespace Reactor.Patches
 
                 ackCallback = (Action) (() =>
                 {
+                    if (__instance.State == ConnectionState.Connected)
+                        return;
+
                     PluginSingleton<ReactorPlugin>.Instance.Log.LogDebug("Hello was acked, waiting for modded handshake response");
 
                     Coroutines.Start(Coroutine());

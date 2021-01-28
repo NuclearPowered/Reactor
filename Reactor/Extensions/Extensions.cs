@@ -18,24 +18,16 @@ namespace Reactor.Extensions
     /// </summary>
     public static class Extensions
     {
-        /// <summary>
-        /// Stops <paramref name="obj"/> from being destroyed
-        /// </summary>
-        /// <param name="obj">Object to stop from being destroyed</param>
-        /// <returns>Passed <paramref name="obj"/></returns>
-        public static T DontDestroy<T>(this T obj) where T : Object
+        [Obsolete]
+        public static T DontDestroy<T>(T obj) where T : Object
         {
-            obj.hideFlags |= HideFlags.HideAndDontSave;
-            Object.DontDestroyOnLoad(obj);
-
-            return obj;
+            return UnityObjectExtensions.DontDestroy(obj);
         }
 
-        public static T DontUnload<T>(this T obj) where T : Object
+        [Obsolete]
+        public static T DontUnload<T>(T obj) where T : Object
         {
-            obj.hideFlags |= HideFlags.DontUnloadUnusedAsset;
-
-            return obj;
+            return UnityObjectExtensions.DontUnload(obj);
         }
 
         /// <summary>

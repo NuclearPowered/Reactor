@@ -2,6 +2,8 @@ using System;
 using System.Reflection;
 using BepInEx;
 using BepInEx.IL2CPP;
+using Reactor.Extensions;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Reactor.Patches
@@ -16,30 +18,30 @@ namespace Reactor.Patches
 
         internal static void Initialize()
         {
-            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, loadMode) =>
+            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((_, _) =>
             {
                 var original = UnityEngine.Object.FindObjectOfType<VersionShower>();
                 if (!original)
                     return;
 
-                var gameObject = UnityEngine.Object.Instantiate(original.gameObject);
-                gameObject.name = "ReactorVersion";
+                TextRendererExtensions.Prefab ??= new TextRendererPrefab(original.gameObject.GetComponentInChildren<TextRenderer>());
 
-                var versionShower = gameObject.GetComponent<VersionShower>();
-                if (versionShower)
-                {
-                    versionShower.enabled = false;
-                }
+                var gameObject = new GameObject("ReactorVersion");
+                gameObject.transform.parent = original.transform.parent;
 
-                var aspectPosition = gameObject.GetComponent<AspectPosition>();
+                var aspectPosition = gameObject.AddComponent<AspectPosition>();
 
-                var position = aspectPosition.DistanceFromEdge;
+                aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
+
+                var position = original.GetComponent<AspectPosition>().DistanceFromEdge;
                 position.y += 0.2f;
                 aspectPosition.DistanceFromEdge = position;
 
                 aspectPosition.AdjustPosition();
 
-                Text = gameObject.GetComponentInChildren<TextRenderer>();
+                Text = gameObject.AddTextRenderer();
+                Text.scale = 0.65f;
+
                 UpdateText();
             }));
         }
