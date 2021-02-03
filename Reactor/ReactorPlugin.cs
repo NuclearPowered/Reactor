@@ -24,6 +24,7 @@ namespace Reactor
 
         public ConfigEntry<bool> ModdedHandshake;
 
+        private GameObject _gameObject;
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
         public override void Load()
@@ -32,9 +33,9 @@ namespace Reactor
 
             ModdedHandshake = Config.Bind("Features", "Modded handshake", true);
 
-            var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
-            gameObject.AddComponent<ReactorComponent>().Plugin = this;
-            gameObject.AddComponent<Coroutines.Component>();
+            _gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
+            _gameObject.AddComponent<ReactorComponent>().Plugin = this;
+            _gameObject.AddComponent<Coroutines.Component>();
 
             Harmony.PatchAll();
             ReactorVersionShower.Initialize();
@@ -43,6 +44,8 @@ namespace Reactor
 
         public override bool Unload()
         {
+            Harmony.UnpatchSelf();
+            _gameObject.Destroy();
             RegionInfoWatcher?.Dispose();
 
             return base.Unload();

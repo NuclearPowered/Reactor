@@ -3,7 +3,7 @@ using Hazel;
 namespace Reactor.Example
 {
     [RegisterCustomRpc]
-    public class ExampleRpc : CustomRpc<ExamplePlugin, PlayerControl, ExampleRpc.Data>
+    public class ExampleRpc : PlayerCustomRpc<ExamplePlugin, ExampleRpc.Data>
     {
         public ExampleRpc(ExamplePlugin plugin) : base(plugin)
         {

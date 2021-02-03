@@ -122,14 +122,16 @@ namespace Reactor.Extensions
             return type.GetMethods(AccessTools.all).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));
         }
 
-        public static void Send<TCustomRpc>(this InnerNetObject netObject, object data, bool immediately = false)
+        [Obsolete("Use Rpc<TCustomRpc>.Instance.Send", true)]
+        public static void Send<TCustomRpc>(this InnerNetObject netObject, object data, bool immediately = false) where TCustomRpc : UnsafeCustomRpc
         {
-            PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Send<TCustomRpc>(netObject, data, immediately);
+            Rpc<TCustomRpc>.Instance.UnsafeSend(netObject, data, immediately);
         }
 
-        public static void SendTo<TCustomRpc>(this InnerNetObject netObject, int targetId, object data)
+        [Obsolete("Use Rpc<TCustomRpc>.Instance.SendTo", true)]
+        public static void SendTo<TCustomRpc>(this InnerNetObject netObject, int targetId, object data) where TCustomRpc : UnsafeCustomRpc
         {
-            PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.SendTo<TCustomRpc>(netObject, targetId, data);
+            Rpc<TCustomRpc>.Instance.UnsafeSend(netObject, data, true, targetId);
         }
     }
 }

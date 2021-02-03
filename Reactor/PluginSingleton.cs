@@ -4,7 +4,7 @@ using BepInEx.IL2CPP;
 
 namespace Reactor
 {
-    public class PluginSingleton<T> where T : BasePlugin
+    public static class PluginSingleton<T> where T : BasePlugin
     {
         private static T _instance;
 

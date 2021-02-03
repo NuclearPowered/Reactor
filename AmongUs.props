@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Mappings>NuclearPowered/Mappings:0.1.0</Mappings>
+        <Mappings>NuclearPowered/Mappings:0.1.1</Mappings>
     </PropertyGroup>
 
     <ItemGroup>

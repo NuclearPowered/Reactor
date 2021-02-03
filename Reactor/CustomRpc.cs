@@ -23,11 +23,13 @@ namespace Reactor
     {
         public int? Id { get; internal set; }
 
+        internal CustomRpcManager Manager { get; set; }
         public BasePlugin UnsafePlugin { get; }
         public string PluginId { get; }
 
         public abstract Type InnerNetObjectType { get; }
 
+        public virtual SendOption SendOption { get; } = SendOption.Reliable;
         public abstract RpcLocalHandling LocalHandling { get; }
 
         protected UnsafeCustomRpc(BasePlugin plugin)
@@ -39,6 +41,54 @@ namespace Reactor
         public abstract void UnsafeWrite(MessageWriter writer, object data);
         public abstract object UnsafeRead(MessageReader reader);
         public abstract void UnsafeHandle(InnerNetObject innerNetObject, object data);
+
+        public void UnsafeSend(InnerNetObject netObject, object data, bool immediately = false, int targetClientId = -1)
+        {
+            if (netObject == null) throw new ArgumentNullException(nameof(netObject));
+            if (data == null) throw new ArgumentNullException(nameof(data));
+
+            if (Id == null)
+            {
+                throw new InvalidOperationException("Can't send unregistered CustomRpc");
+            }
+
+            if (LocalHandling == RpcLocalHandling.Before)
+            {
+                UnsafeHandle(netObject, data);
+            }
+
+            var writer = immediately switch
+            {
+                false => AmongUsClient.Instance.StartRpc(netObject.NetId, CustomRpcManager.CallId, SendOption),
+                true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId)
+            };
+
+            if (Manager.PluginIdMap.TryGetValue(PluginId, out var pluginId))
+            {
+                writer.WritePacked(pluginId);
+            }
+            else
+            {
+                writer.Write(PluginId);
+            }
+
+            writer.WritePacked(Id!.Value);
+            UnsafeWrite(writer, data);
+
+            if (immediately)
+            {
+                AmongUsClient.Instance.FinishRpcImmediately(writer);
+            }
+            else
+            {
+                writer.EndMessage();
+            }
+
+            if (LocalHandling == RpcLocalHandling.After)
+            {
+                UnsafeHandle(netObject, data);
+            }
+        }
     }
 
     public abstract class CustomRpc<TPlugin, TInnerNetObject, TData> : UnsafeCustomRpc where TPlugin : BasePlugin where TInnerNetObject : InnerNetObject
@@ -67,6 +117,33 @@ namespace Reactor
         public override void UnsafeHandle(InnerNetObject innerNetObject, object data)
         {
             Handle((TInnerNetObject) innerNetObject, (TData) data);
+        }
+
+        public void Send(InnerNetObject netObject, TData data, bool immediately = false)
+        {
+            UnsafeSend(netObject, data, immediately);
+        }
+
+        public void SendTo(InnerNetObject netObject, int targetId, TData data)
+        {
+            UnsafeSend(netObject, data, true, targetId);
+        }
+    }
+
+    public abstract class PlayerCustomRpc<TPlugin, TData> : CustomRpc<TPlugin, PlayerControl, TData> where TPlugin : BasePlugin
+    {
+        protected PlayerCustomRpc(TPlugin plugin) : base(plugin)
+        {
+        }
+
+        public void Send(TData data, bool immediately = false)
+        {
+            Send(PlayerControl.LocalPlayer, data, immediately);
+        }
+
+        public void SendTo(int targetId, TData data)
+        {
+            SendTo(PlayerControl.LocalPlayer, targetId, data);
         }
     }
 
@@ -114,70 +191,14 @@ namespace Reactor
 
         public UnsafeCustomRpc Register(UnsafeCustomRpc customRpc)
         {
+            customRpc.Manager = this;
             customRpc.Id = List.Count(x => x.UnsafePlugin == customRpc.UnsafePlugin);
             _list.Add(customRpc);
             _map[customRpc.InnerNetObjectType].Add(customRpc);
 
+            typeof(Rpc<>).MakeGenericType(customRpc.GetType()).GetProperty("Instance")!.SetValue(null, customRpc);
+
             return customRpc;
-        }
-
-        public void Send<TCustomRpc>(InnerNetObject netObject, object data, bool immediately = false)
-        {
-            UnsafeSend(netObject, List.Single(x => x.GetType() == typeof(TCustomRpc)), data, immediately);
-        }
-
-        public void SendTo<TCustomRpc>(InnerNetObject netObject, int targetId, object data)
-        {
-            UnsafeSend(netObject, List.Single(x => x.GetType() == typeof(TCustomRpc)), data, true, targetId);
-        }
-
-        public void UnsafeSend(InnerNetObject netObject, UnsafeCustomRpc customRpc, object data, bool immediately = false, int targetClientId = -1)
-        {
-            if (netObject == null) throw new ArgumentNullException(nameof(netObject));
-            if (customRpc == null) throw new ArgumentNullException(nameof(customRpc));
-            if (data == null) throw new ArgumentNullException(nameof(data));
-
-            if (customRpc.Id == null)
-            {
-                throw new InvalidOperationException("Can't send unregistered CustomRpc");
-            }
-
-            if (customRpc.LocalHandling == RpcLocalHandling.Before)
-            {
-                customRpc.UnsafeHandle(netObject, data);
-            }
-
-            var writer = immediately switch
-            {
-                false => AmongUsClient.Instance.StartRpc(netObject.NetId, CallId, SendOption.Reliable),
-                true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CallId, SendOption.Reliable, targetClientId)
-            };
-
-            if (PluginIdMap.TryGetValue(customRpc.PluginId, out var pluginId))
-            {
-                writer.WritePacked(pluginId);
-            }
-            else
-            {
-                writer.Write(customRpc.PluginId);
-            }
-
-            writer.WritePacked(customRpc.Id!.Value);
-            customRpc.UnsafeWrite(writer, data);
-
-            if (immediately)
-            {
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-            }
-            else
-            {
-                writer.EndMessage();
-            }
-
-            if (customRpc.LocalHandling == RpcLocalHandling.After)
-            {
-                customRpc.UnsafeHandle(netObject, data);
-            }
         }
 
         [HarmonyPatch]
@@ -222,6 +243,34 @@ namespace Reactor
                 }
 
                 return true;
+            }
+        }
+    }
+
+    public static class Rpc<T> where T : UnsafeCustomRpc
+    {
+        private static T _instance;
+
+        public static T Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    throw new Exception($"{typeof(T).FullName} isn't registered");
+                }
+
+                return _instance;
+            }
+
+            internal set
+            {
+                if (_instance != null)
+                {
+                    throw new Exception($"{typeof(T).FullName} is already registered");
+                }
+
+                _instance = value;
             }
         }
     }

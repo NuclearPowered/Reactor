@@ -38,8 +38,8 @@ namespace Reactor.Example
                 if (Input.GetKeyDown(KeyCode.F3) && AmongUsClient.Instance && PlayerControl.LocalPlayer)
                 {
                     Plugin.Log.LogWarning("Sending example rpc");
-                    PlayerControl.LocalPlayer.Send<ExampleRpc>(new ExampleRpc.Data("Cześć :)"));
-                    PlayerControl.LocalPlayer.SendTo<ExampleRpc>(AmongUsClient.Instance.HostId, new ExampleRpc.Data("host :O"));
+                    Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data("Cześć :)"));
+                    Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data("host :O"));
                 }
             }
         }
