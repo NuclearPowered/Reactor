@@ -5,12 +5,6 @@ namespace Reactor.Debugger.Patches
 {
     public static class Test
     {
-        static Test()
-        {
-            GameOptionsData.MaxImpostors = GameOptionsData.RecommendedImpostors = Enumerable.Repeat((int) byte.MaxValue, byte.MaxValue).ToArray();
-            GameOptionsData.MinPlayers = Enumerable.Repeat(1, 4).ToArray();
-        }
-
         [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
         public static class UpdatePatch
         {
