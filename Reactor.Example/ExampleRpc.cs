@@ -9,7 +9,7 @@ namespace Reactor.Example
         {
         }
 
-        public readonly struct Data
+        public struct Data
         {
             public readonly string Message;
 
