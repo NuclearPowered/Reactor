@@ -1,4 +1,3 @@
-using System.Linq;
 using HarmonyLib;
 
 namespace Reactor.Debugger.Patches
