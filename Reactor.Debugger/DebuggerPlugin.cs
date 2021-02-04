@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
@@ -26,6 +27,9 @@ namespace Reactor.Debugger
 
             var gameObject = new GameObject(nameof(DebuggerPlugin)).DontDestroy();
             Component = gameObject.AddComponent<DebuggerComponent>();
+
+            GameOptionsData.MaxImpostors = GameOptionsData.RecommendedImpostors = Enumerable.Repeat((int) byte.MaxValue, byte.MaxValue).ToArray();
+            GameOptionsData.MinPlayers = Enumerable.Repeat(1, 4).ToArray();
 
             Harmony.PatchAll();
 
