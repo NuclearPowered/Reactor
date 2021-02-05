@@ -17,11 +17,15 @@ namespace Reactor.Patches
                 // Patched because of this - game doesn't check if you're the killer
                 if (__instance.AmOwner)
                 {
-                    HudManager.Instance.KillButton.SetCoolDown(
-                        time,
-                        PlayerControl.GameOptions.KillCooldown == 0 ? 0.01f : PlayerControl.GameOptions.KillCooldown
-                        // SetCooldown does timer/maxTimer, so if MaxTimer is 0 kill button disappears
-                    );
+                    // SetCooldown does timer/maxTimer, so if MaxTimer is 0 kill button disappears
+                    if (PlayerControl.GameOptions.KillCooldown == 0)
+                    {
+                        HudManager.Instance.KillButton.SetCoolDown(0, 1);
+                    }
+                    else
+                    {
+                        HudManager.Instance.KillButton.SetCoolDown(time, PlayerControl.GameOptions.KillCooldown);
+                    }
                 }
 
                 return false;
