@@ -8,7 +8,7 @@ namespace Reactor.Patches
 {
     internal static class UiFocusPatch
     {
-        // [HarmonyPatch(typeof(PassiveButtonManager), nameof(PassiveButtonManager.HandleFocus))]
+        // [HarmonyPatch(typeof(PassiveButtonManager), nameof(PassiveButtonManager.HandleMouseOver))]
         [HarmonyPatch]
         public static class HandleFocusPatch
         {
