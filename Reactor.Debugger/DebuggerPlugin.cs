@@ -32,11 +32,6 @@ namespace Reactor.Debugger
             GameOptionsData.MinPlayers = Enumerable.Repeat(1, 4).ToArray();
 
             Harmony.PatchAll();
-
-            Extensions.Extensions.once_sceneLoaded((_, _) =>
-            {
-                Dumping.Dump();
-            });
         }
 
         [RegisterInIl2Cpp]
@@ -101,18 +96,4 @@ namespace Reactor.Debugger
             }
         }
     }
-
-    // [HarmonyPatch]
-    // public static class TracePatch
-    // {
-    //     public static IEnumerable<MethodBase> TargetMethods()
-    //     {
-    //         return typeof(AmongUsClient).GetMethods(AccessTools.all).Where(x => x.ReturnType == typeof(Il2CppStructArray<byte>) && !x.GetParameters().Any());
-    //     }
-    //
-    //     public static void Postfix(MethodBase __originalMethod)
-    //     {
-    //         PluginSingleton<DebuggerPlugin>.Instance.Log.LogInfo(__originalMethod.FullDescription());
-    //     }
-    // }
 }

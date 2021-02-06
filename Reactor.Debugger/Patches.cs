@@ -1,8 +1,8 @@
 using HarmonyLib;
 
-namespace Reactor.Debugger.Patches
+namespace Reactor.Debugger
 {
-    public static class Test
+    internal static class Patches
     {
         [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Update))]
         public static class UpdatePatch
