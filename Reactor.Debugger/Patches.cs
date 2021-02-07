@@ -1,4 +1,7 @@
+using System.Linq;
 using HarmonyLib;
+using UnhollowerBaseLib;
+using UnityEngine;
 
 namespace Reactor.Debugger
 {
@@ -38,6 +41,29 @@ namespace Reactor.Debugger
             public static bool Prefix()
             {
                 return !PluginSingleton<DebuggerPlugin>.Instance.Component.DisableGameEnd;
+            }
+        }
+
+        [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
+        public static class GameSettingMenuPatch
+        {
+            public static void Prefix(GameSettingMenu __instance)
+            {
+                // Unlocks map/impostor amount changing in online (for testing on your custom servers)
+                __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
+            }
+        }
+
+        [HarmonyPatch(typeof(GameOptionsMenu), nameof(GameOptionsMenu.Start))]
+        [HarmonyPriority(Priority.First)]
+        public static class GameOptionsMenuPatch
+        {
+            public static void Postfix(GameOptionsMenu __instance)
+            {
+                __instance.Children
+                    .Single(o => o.Title == StringNames.GameNumImpostors)
+                    .Cast<NumberOption>()
+                    .ValidRange = new FloatRange(0, byte.MaxValue);
             }
         }
     }
