@@ -60,13 +60,10 @@ namespace Reactor.Debugger
         {
             public static void Postfix(GameOptionsMenu __instance)
             {
-                NumberOption numImpostorsOption = __instance.GetComponentsInChildren<NumberOption>()
-                    .FirstOrDefault(o => o.Title == StringNames.GameNumImpostors);
-
-                if (numImpostorsOption != null)
-                {
-                    numImpostorsOption.ValidRange = new FloatRange(0, 10);
-                }
+                __instance.Children
+                    .Single(o => o.Title == StringNames.GameNumImpostors)
+                    .Cast<NumberOption>()
+                    .ValidRange = new FloatRange(0, byte.MaxValue);
             }
         }
     }
