@@ -5,6 +5,7 @@ using System.Reflection;
 using HarmonyLib;
 using Hazel;
 using Hazel.Udp;
+using InnerNet;
 using Reactor.Extensions;
 using Reactor.Net;
 using UnhollowerBaseLib;

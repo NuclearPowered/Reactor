@@ -1,20 +1,20 @@
 <Project>
     <PropertyGroup Condition="'$(GamePlatform)' == 'Steam'">
-        <GameVersion>2020.12.9s</GameVersion>
+        <GameVersion>2021.3.5s</GameVersion>
         <DefineConstants>$(DefineConstants);STEAM</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(GamePlatform)' == 'Itch'">
-        <GameVersion>2020.11.17i</GameVersion>
+        <GameVersion>2021.3.5i</GameVersion>
         <DefineConstants>$(DefineConstants);ITCH</DefineConstants>
     </PropertyGroup>
 
     <PropertyGroup>
-        <Mappings>NuclearPowered/Mappings:0.1.1</Mappings>
+        <Mappings>NuclearPowered/Mappings:0.2.0</Mappings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.2.4" />
+        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.2.9" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Reobfuscate">

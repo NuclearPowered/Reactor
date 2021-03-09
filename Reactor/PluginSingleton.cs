@@ -10,15 +10,7 @@ namespace Reactor
 
         public static T Instance
         {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
-                }
-
-                return _instance;
-            }
+            get => _instance ??= IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
 
             set
             {

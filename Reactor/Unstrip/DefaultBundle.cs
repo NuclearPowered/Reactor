@@ -8,7 +8,7 @@ namespace Reactor.Unstrip
     {
         public static void Load()
         {
-            using var bundle = AssetBundle.LoadFromMemory(typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle").ReadFully());
+            var bundle = AssetBundle.LoadFromMemory(typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle").ReadFully());
 
             var backupShader = bundle.LoadAsset<Shader>("UI-Default");
 
@@ -27,6 +27,8 @@ namespace Reactor.Unstrip
                 standard = bundle.LoadAsset<Sprite>("UISprite").DontUnload(),
                 inputField = bundle.LoadAsset<Sprite>("InputFieldBackground").DontUnload()
             };
+
+            bundle.Unload(false);
         }
     }
 }

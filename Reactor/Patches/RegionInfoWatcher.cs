@@ -13,7 +13,7 @@ namespace Reactor.Patches
         {
             Watcher = new FileSystemWatcher(
                 string.IsNullOrEmpty(Application.persistentDataPath) ? Directory.GetCurrentDirectory() : Application.persistentDataPath,
-                "regionInfo.dat"
+                "regionInfo.json"
             );
 
             Watcher.Changed += (s, e) =>

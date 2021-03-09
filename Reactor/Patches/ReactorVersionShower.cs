@@ -26,7 +26,7 @@ namespace Reactor.Patches
 
                 TextRendererExtensions.Prefab ??= new TextRendererPrefab(original.gameObject.GetComponentInChildren<TextRenderer>());
 
-                var gameObject = new GameObject("ReactorVersion");
+                var gameObject = new GameObject("ReactorVersion " + Guid.NewGuid());
                 gameObject.transform.parent = original.transform.parent;
 
                 var aspectPosition = gameObject.AddComponent<AspectPosition>();

@@ -8,6 +8,7 @@ using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Hazel;
+using InnerNet;
 using Reactor.Net;
 
 namespace Reactor
@@ -45,7 +46,6 @@ namespace Reactor
         public void UnsafeSend(InnerNetObject netObject, object data, bool immediately = false, int targetClientId = -1)
         {
             if (netObject == null) throw new ArgumentNullException(nameof(netObject));
-            if (data == null) throw new ArgumentNullException(nameof(data));
 
             if (Id == null)
             {

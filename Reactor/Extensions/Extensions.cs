@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
+using Il2CppType = UnhollowerRuntimeLib.Il2CppType;
 
 namespace Reactor.Extensions
 {
@@ -18,18 +18,6 @@ namespace Reactor.Extensions
     /// </summary>
     public static class Extensions
     {
-        [Obsolete]
-        public static T DontDestroy<T>(T obj) where T : Object
-        {
-            return UnityObjectExtensions.DontDestroy(obj);
-        }
-
-        [Obsolete]
-        public static T DontUnload<T>(T obj) where T : Object
-        {
-            return UnityObjectExtensions.DontUnload(obj);
-        }
-
         /// <summary>
         /// Adds a delegate to get one notification when a scene has loaded.
         /// </summary>
@@ -122,16 +110,9 @@ namespace Reactor.Extensions
             return type.GetMethods(AccessTools.all).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));
         }
 
-        [Obsolete("Use Rpc<TCustomRpc>.Instance.Send", true)]
-        public static void Send<TCustomRpc>(this InnerNetObject netObject, object data, bool immediately = false) where TCustomRpc : UnsafeCustomRpc
+        public static T LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityEngine.Object
         {
-            Rpc<TCustomRpc>.Instance.UnsafeSend(netObject, data, immediately);
-        }
-
-        [Obsolete("Use Rpc<TCustomRpc>.Instance.SendTo", true)]
-        public static void SendTo<TCustomRpc>(this InnerNetObject netObject, int targetId, object data) where TCustomRpc : UnsafeCustomRpc
-        {
-            Rpc<TCustomRpc>.Instance.UnsafeSend(netObject, data, true, targetId);
+            return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>();
         }
     }
 }
