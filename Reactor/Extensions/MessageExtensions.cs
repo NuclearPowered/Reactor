@@ -5,8 +5,8 @@ namespace Reactor.Extensions
 {
     public static class MessageExtensions
     {
-        private const float MIN = -40f;
-        private const float MAX = 40f;
+        private const float MIN = -50f;
+        private const float MAX = 50f;
 
         private static float ReverseLerp(float t)
         {

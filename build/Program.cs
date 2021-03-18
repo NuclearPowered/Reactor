@@ -38,6 +38,7 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
 {
     public const uint AppId = 945360;
     public const uint DepotId = 945361;
+    public const ulong ManifestId = 5200448423569257054; // 2021.3.5s
 
     public override async Task RunAsync(BuildContext context)
     {
@@ -50,7 +51,7 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
         ContentDownloader.Config.InstallDirectory = context.AmongUsPath;
 
         context.Information("Downloading the game from steam");
-        await ContentDownloader.DownloadAppAsync(AppId, DepotId);
+        await ContentDownloader.DownloadAppAsync(AppId, DepotId, ManifestId);
         ContentDownloader.ShutdownSteam3();
 
         var bepinexZip = context.DownloadFile("https://github.com/NuclearPowered/BepInEx/releases/download/6.0.0-reactor.16/BepInEx-6.0.0-reactor.16.zip");

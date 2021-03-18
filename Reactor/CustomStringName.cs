@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using HarmonyLib;
+using Reactor.Extensions;
 using UnhollowerBaseLib;
 
 namespace Reactor
@@ -38,6 +40,29 @@ namespace Reactor
         private static class GetStringPatch
         {
             public static bool Prefix([HarmonyArgument(0)] StringNames stringId, [HarmonyArgument(1)] Il2CppReferenceArray<Il2CppSystem.Object> parts, ref string __result)
+            {
+                var customStringName = (CustomStringName) stringId;
+
+                if (customStringName != null)
+                {
+                    __result = string.Format(customStringName.Value, parts);
+                    return false;
+                }
+
+                return true;
+            }
+        }
+
+        // [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(string), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
+        [HarmonyPatch]
+        private static class GetStringOrDefaultPatch
+        {
+            public static IEnumerable<MethodBase> TargetMethods()
+            {
+                return typeof(TranslationController).GetMethods(typeof(string), typeof(StringNames), typeof(string), typeof(Il2CppReferenceArray<Il2CppSystem.Object>));
+            }
+
+            public static bool Prefix([HarmonyArgument(0)] StringNames stringId, [HarmonyArgument(2)] Il2CppReferenceArray<Il2CppSystem.Object> parts, ref string __result)
             {
                 var customStringName = (CustomStringName) stringId;
 
