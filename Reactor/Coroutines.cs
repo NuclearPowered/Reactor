@@ -343,7 +343,7 @@ namespace Reactor
             }
             catch (Exception e)
             {
-                PluginSingleton<ReactorPlugin>.Instance.Log.LogError(e.ToString());
+                Logger<ReactorPlugin>.Error(e.ToString());
                 Stop(FindOriginalCoroutine(enumerator)); // We want the entire coroutine hierarchy to stop when an error happen
             }
 
@@ -366,7 +366,7 @@ namespace Reactor
                     if (nextAsEnumerator != null) // il2cpp IEnumerator also handles CustomYieldInstruction
                         next = new Il2CppEnumeratorWrapper(nextAsEnumerator);
                     else
-                        PluginSingleton<ReactorPlugin>.Instance.Log.LogWarning($"Unknown coroutine yield object of type {il2CppObjectBase} for coroutine {enumerator}");
+                        Logger<ReactorPlugin>.Warning($"Unknown coroutine yield object of type {il2CppObjectBase} for coroutine {enumerator}");
                     break;
             }
 

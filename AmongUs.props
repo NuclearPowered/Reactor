@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup Condition="'$(GamePlatform)' == 'Steam'">
-        <GameVersion>2021.3.5s</GameVersion>
+        <GameVersion>2021.3.31.3s</GameVersion>
         <DefineConstants>$(DefineConstants);STEAM</DefineConstants>
     </PropertyGroup>
 
@@ -10,11 +10,11 @@
     </PropertyGroup>
 
     <PropertyGroup>
-        <Mappings>NuclearPowered/Mappings:0.2.0</Mappings>
+        <Mappings>NuclearPowered/Mappings:0.3.0</Mappings>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.2.9" />
+        <PackageReference Include="Reactor.OxygenFilter.MSBuild" Version="0.3.0" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Reobfuscate">

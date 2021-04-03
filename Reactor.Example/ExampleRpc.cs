@@ -1,11 +1,12 @@
 using Hazel;
+using Reactor.Networking;
 
 namespace Reactor.Example
 {
-    [RegisterCustomRpc]
+    [RegisterCustomRpc((uint) CustomRpcCalls.Example)]
     public class ExampleRpc : PlayerCustomRpc<ExamplePlugin, ExampleRpc.Data>
     {
-        public ExampleRpc(ExamplePlugin plugin) : base(plugin)
+        public ExampleRpc(ExamplePlugin plugin, uint id) : base(plugin, id)
         {
         }
 

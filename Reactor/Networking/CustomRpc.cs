@@ -1,17 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Hazel;
 using InnerNet;
-using Reactor.Net;
 
-namespace Reactor
+namespace Reactor.Networking
 {
     public enum RpcLocalHandling
     {
@@ -22,9 +19,9 @@ namespace Reactor
 
     public abstract class UnsafeCustomRpc
     {
-        public int? Id { get; internal set; }
-
         internal CustomRpcManager Manager { get; set; }
+
+        public uint Id { get; }
         public BasePlugin UnsafePlugin { get; }
         public string PluginId { get; }
 
@@ -33,10 +30,11 @@ namespace Reactor
         public virtual SendOption SendOption { get; } = SendOption.Reliable;
         public abstract RpcLocalHandling LocalHandling { get; }
 
-        protected UnsafeCustomRpc(BasePlugin plugin)
+        protected UnsafeCustomRpc(BasePlugin plugin, uint id)
         {
             UnsafePlugin = plugin;
             PluginId = MetadataHelper.GetMetadata(plugin).GUID;
+            Id = id;
         }
 
         public abstract void UnsafeWrite(MessageWriter writer, object data);
@@ -47,7 +45,7 @@ namespace Reactor
         {
             if (netObject == null) throw new ArgumentNullException(nameof(netObject));
 
-            if (Id == null)
+            if (Manager == null)
             {
                 throw new InvalidOperationException("Can't send unregistered CustomRpc");
             }
@@ -63,17 +61,13 @@ namespace Reactor
                 true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId)
             };
 
-            if (Manager.PluginIdMap.TryGetValue(PluginId, out var pluginId))
-            {
-                writer.WritePacked(pluginId);
-            }
-            else
-            {
-                writer.Write(PluginId);
-            }
+            var pluginNetId = ModList.Current.Single(x => x.Id == PluginId).NetId;
+            writer.WritePacked(pluginNetId);
+            writer.WritePacked(Id);
 
-            writer.WritePacked(Id!.Value);
+            writer.StartMessage(0);
             UnsafeWrite(writer, data);
+            writer.EndMessage();
 
             if (immediately)
             {
@@ -93,7 +87,7 @@ namespace Reactor
 
     public abstract class CustomRpc<TPlugin, TInnerNetObject, TData> : UnsafeCustomRpc where TPlugin : BasePlugin where TInnerNetObject : InnerNetObject
     {
-        protected CustomRpc(TPlugin plugin) : base(plugin)
+        protected CustomRpc(TPlugin plugin, uint id) : base(plugin, id)
         {
         }
 
@@ -132,7 +126,7 @@ namespace Reactor
 
     public abstract class PlayerCustomRpc<TPlugin, TData> : CustomRpc<TPlugin, PlayerControl, TData> where TPlugin : BasePlugin
     {
-        protected PlayerCustomRpc(TPlugin plugin) : base(plugin)
+        protected PlayerCustomRpc(TPlugin plugin, uint id) : base(plugin, id)
         {
         }
 
@@ -160,9 +154,6 @@ namespace Reactor
             _map.SelectMany(pair => pair.Value, (pair, value) => new { pair.Key, Value = value })
                 .ToLookup(pair => pair.Key, pair => pair.Value);
 
-        public Dictionary<string, int> PluginIdMap { get; private set; }
-        public Dictionary<int, string> PluginIdMapReversed { get; private set; }
-
         public CustomRpcManager()
         {
             foreach (var type in HandleRpcPatch.InnerNetObjectTypes)
@@ -171,28 +162,14 @@ namespace Reactor
             }
         }
 
-        public void ReloadPluginIdMap()
-        {
-            PluginIdMap = new Dictionary<string, int>();
-            PluginIdMapReversed = new Dictionary<int, string>();
-
-            var i = -1;
-
-            foreach (var mod in ModList.GetCurrent().OrderBy(x => x.Id))
-            {
-                if (mod.Side == PluginSide.Both)
-                {
-                    PluginIdMap[mod.Id] = i;
-                    PluginIdMapReversed[i] = mod.Id;
-                    i--;
-                }
-            }
-        }
-
         public UnsafeCustomRpc Register(UnsafeCustomRpc customRpc)
         {
+            if (_list.Any(x => x.UnsafePlugin == customRpc.UnsafePlugin && x.Id == customRpc.Id))
+            {
+                throw new ArgumentException("Rpc with that id was already registered");
+            }
+
             customRpc.Manager = this;
-            customRpc.Id = List.Count(x => x.UnsafePlugin == customRpc.UnsafePlugin);
             _list.Add(customRpc);
             _map[customRpc.InnerNetObjectType].Add(customRpc);
 
@@ -211,15 +188,6 @@ namespace Reactor
                 return InnerNetObjectTypes.Select(x => x.GetMethod(nameof(InnerNetObject.HandleRpc), AccessTools.all));
             }
 
-            private static string ReadString(MessageReader reader, int len)
-            {
-                if (reader.BytesRemaining < len) throw new InvalidDataException($"Read length is longer than message length: {len} of {reader.BytesRemaining}");
-
-                var output = Encoding.UTF8.GetString(reader.Buffer, reader.readHead, len);
-                reader.Position += len;
-                return output;
-            }
-
             public static bool Prefix(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
             {
                 if (callId == CallId)
@@ -227,17 +195,13 @@ namespace Reactor
                     var manager = PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager;
                     var customRpcs = manager.Map[__instance.GetType()];
 
-                    var lengthOrShortId = reader.ReadPackedInt32();
+                    var pluginNetId = reader.ReadPackedUInt32();
+                    var id = reader.ReadPackedUInt32();
 
-                    var pluginId = lengthOrShortId < 0
-                        ? manager.PluginIdMapReversed[lengthOrShortId]
-                        : ReadString(reader, lengthOrShortId);
-
-                    var id = reader.ReadPackedInt32();
-
+                    var pluginId = ModList.Current.Single(x => x.NetId == pluginNetId).Id;
                     var customRpc = customRpcs.Single(x => x.PluginId == pluginId && x.Id == id);
 
-                    customRpc.UnsafeHandle(__instance, customRpc.UnsafeRead(reader));
+                    customRpc.UnsafeHandle(__instance, customRpc.UnsafeRead(reader.ReadMessage()));
 
                     return false;
                 }

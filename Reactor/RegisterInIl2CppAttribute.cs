@@ -64,7 +64,7 @@ namespace Reactor
             }
             catch (Exception e)
             {
-                PluginSingleton<ReactorPlugin>.Instance.Log.LogWarning($"Failed to register {type.FullDescription()}: {e}");
+                Logger<ReactorPlugin>.Warning($"Failed to register {type.FullDescription()}: {e}");
             }
         }
 

@@ -51,7 +51,7 @@ namespace Reactor.Extensions
         /// <remarks>https://docs.unity3d.com/ScriptReference/ColorUtility.ToHtmlStringRGBA.html</remarks>
         public static string ToHtmlStringRGBA(this Color32 color)
         {
-            return $"{color.r:X2}{color.g:X2}{color.b:X2}{color.a:X2}";
+            return ColorUtility.ToHtmlStringRGBA(color);
         }
 
         /// <inheritdoc cref="ToHtmlStringRGBA(UnityEngine.Color32)"/>

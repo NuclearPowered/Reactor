@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using BepInEx;
 using BepInEx.IL2CPP;
+using HarmonyLib;
 using Reactor.Extensions;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -52,6 +53,16 @@ namespace Reactor.Patches
             Text.Text += "\nBepInEx: " + Paths.BepInExVersion;
             Text.Text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
             TextUpdated?.Invoke(Text);
+        }
+
+        [HarmonyPatch(typeof(FreeWeekendShower), nameof(FreeWeekendShower.Start))]
+        private static class FreeWeekendShowerPatch
+        {
+            public static bool Prefix(FreeWeekendShower __instance)
+            {
+                __instance.Output.Destroy();
+                return false;
+            }
         }
     }
 }

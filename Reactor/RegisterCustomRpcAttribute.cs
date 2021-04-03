@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 using BepInEx.IL2CPP;
 using HarmonyLib;
+using Reactor.Networking;
 
 namespace Reactor
 {
@@ -11,6 +12,13 @@ namespace Reactor
     [AttributeUsage(AttributeTargets.Class)]
     public class RegisterCustomRpcAttribute : Attribute
     {
+        public uint Id { get; }
+
+        public RegisterCustomRpcAttribute(uint id)
+        {
+            Id = id;
+        }
+
         public static void Register(BasePlugin plugin)
         {
             Register(Assembly.GetCallingAssembly(), plugin);
@@ -29,7 +37,7 @@ namespace Reactor
                         throw new InvalidOperationException($"Type {type.FullDescription()} has {nameof(RegisterCustomRpcAttribute)} but doesn't extend {nameof(UnsafeCustomRpc)}.");
                     }
 
-                    var customRpc = (UnsafeCustomRpc) Activator.CreateInstance(type, plugin);
+                    var customRpc = (UnsafeCustomRpc) Activator.CreateInstance(type, plugin, attribute.Id);
                     PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
                 }
             }

@@ -1,9 +1,11 @@
+using System;
 using Hazel;
+using Hazel.Udp;
 using UnityEngine;
 
 namespace Reactor.Extensions
 {
-    public static class MessageExtensions
+    public static class ExtraMessageExtensions
     {
         private const float MIN = -50f;
         private const float MAX = 50f;
@@ -30,15 +32,19 @@ namespace Reactor.Extensions
             return new Vector2(Mathf.Lerp(MIN, MAX, x), Mathf.Lerp(MIN, MAX, y));
         }
 
-        // public static void Write(MessageWriter writer, InnerNetObject value)
-        // {
-        //     global::MessageExtensions.WriteNetObject(writer, value);
-        // }
+        public static void Send(this UdpConnection connection, MessageWriter msg, Action ackCallback)
+        {
+            if (msg.SendOption != SendOption.Reliable)
+                throw new InvalidOperationException("Message SendOption has to be Reliable.");
 
-        // TODO OxygenFilter crashes, Mono.Cecil hates generic arguments, I have no idea why
-        // public static T ReadNetObject<T>(MessageReader reader) where T : InnerNetObject
-        // {
-        //     return global::MessageExtensions.ReadNetObject<T>(reader);
-        // }
+            var buffer = new byte[msg.Length];
+            Buffer.BlockCopy(msg.Buffer, 0, buffer, 0, msg.Length);
+
+            connection.ResetKeepAliveTimer();
+
+            connection.AttachReliableID(buffer, 1, ackCallback);
+            connection.WriteBytesToConnection(buffer, buffer.Length);
+            connection.Statistics.LogReliableSend(buffer.Length - 3, buffer.Length);
+        }
     }
 }

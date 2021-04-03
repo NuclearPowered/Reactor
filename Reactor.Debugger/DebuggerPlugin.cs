@@ -3,6 +3,7 @@ using System.Linq;
 using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
+using InnerNet;
 using Reactor.Extensions;
 using UnhollowerBaseLib;
 using UnhollowerBaseLib.Attributes;

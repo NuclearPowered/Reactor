@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E2F4DAFA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Example", "Reactor.Example\Reactor.Example.csproj", "{26A83466-26FE-4383-A35C-B8629902F909}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Reactor.Shared", "Reactor.Shared\Reactor.Shared.shproj", "{8C1EEFE9-EF8A-47C4-810E-6D9BA1E7218B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
