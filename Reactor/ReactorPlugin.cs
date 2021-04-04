@@ -34,6 +34,7 @@ namespace Reactor
 
             Harmony.PatchAll();
             ReactorVersionShower.Initialize();
+            SplashSkip.Initialize();
             DefaultBundle.Load();
         }
 
