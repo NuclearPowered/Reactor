@@ -61,7 +61,7 @@ namespace Reactor.Networking
                 true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId)
             };
 
-            var pluginNetId = ModList.Current.Single(x => x.Id == PluginId).NetId;
+            var pluginNetId = ModList.GetById(PluginId).NetId;
             writer.WritePacked(pluginNetId);
             writer.WritePacked(Id);
 
@@ -198,7 +198,7 @@ namespace Reactor.Networking
                     var pluginNetId = reader.ReadPackedUInt32();
                     var id = reader.ReadPackedUInt32();
 
-                    var pluginId = ModList.Current.Single(x => x.NetId == pluginNetId).Id;
+                    var pluginId = ModList.GetByNetId(pluginNetId).Id;
                     var customRpc = customRpcs.Single(x => x.PluginId == pluginId && x.Id == id);
 
                     customRpc.UnsafeHandle(__instance, customRpc.UnsafeRead(reader.ReadMessage()));

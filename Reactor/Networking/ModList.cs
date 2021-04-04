@@ -7,7 +7,20 @@ namespace Reactor.Networking
 {
     public static class ModList
     {
+        private static Dictionary<string, Mod> _mapById;
+        private static Dictionary<uint, Mod> _mapByNetId;
+
         public static ISet<Mod> Current { get; private set; }
+
+        public static Mod GetById(string id)
+        {
+            return _mapById[id];
+        }
+
+        public static Mod GetByNetId(uint netId)
+        {
+            return _mapByNetId[netId];
+        }
 
         internal static void Update()
         {
@@ -22,6 +35,9 @@ namespace Reactor.Networking
                     plugin.Instance.GetType().GetCustomAttribute<ReactorPluginSideAttribute>()?.Side ?? PluginSide.Both
                 ))
                 .ToHashSet();
+
+            _mapById = Current.ToDictionary(mod => mod.Id, mod => mod);
+            _mapByNetId = Current.ToDictionary(mod => mod.NetId, mod => mod);
         }
     }
 }
