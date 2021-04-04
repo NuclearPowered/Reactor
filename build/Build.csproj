@@ -8,7 +8,7 @@
         <PackageReference Include="Cake.Frosting" Version="1.1.0" />
         <PackageReference Include="DepotDownloader.Library" Version="0.1.2" />
         <PackageReference Include="Reactor.OxygenFilter" Version="0.1.1" />
-        <PackageReference Include="js6pak.Il2CppDumper" Version="6.4.20" />
-        <PackageReference Include="NuclearPowered.AssemblyUnhollower" Version="0.4.13" />
+        <PackageReference Include="Il2CppDumper" Version="6.5.4" />
+        <PackageReference Include="NuclearPowered.AssemblyUnhollower" Version="0.4.15" />
     </ItemGroup>
 </Project>
