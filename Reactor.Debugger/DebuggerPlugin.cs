@@ -66,8 +66,11 @@ namespace Reactor.Debugger
                         playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
                         playerControl.GetComponent<DummyBehaviour>().enabled = true;
                         playerControl.NetTransform.enabled = false;
-                        playerControl.SetName("Dummy " + (i + 1));
+                        playerControl.SetName($"{TranslationController.Instance.GetString(StringNames.Dummy, Array.Empty<Il2CppSystem.Object>())} {i}");
                         playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
+                        playerControl.SetHat(i % (uint)HatManager.Instance.AllHats.Count, playerControl.Data.ColorId);
+                        playerControl.SetPet(i % (uint)HatManager.Instance.AllPets.Count);
+                        playerControl.SetSkin(i % (uint)HatManager.Instance.AllSkins.Count);
                         GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
                     }
 
