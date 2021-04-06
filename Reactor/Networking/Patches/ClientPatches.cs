@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using HarmonyLib;
 using Hazel;
 using Hazel.Udp;
@@ -125,6 +126,21 @@ namespace Reactor.Networking.Patches
                 var client = AmongUsClient.Instance;
                 if (client != null && client.connection != null && client.connection.Equals(connection) && client.connection.State == ConnectionState.Connecting)
                 {
+                    var reactorPlugin = PluginSingleton<ReactorPlugin>.Instance;
+
+                    if (reactorPlugin.AllowVanillaServers.Value)
+                    {
+                        if (reactorPlugin.CustomRpcManager.List.Any())
+                        {
+                            Logger<ReactorPlugin>.Warning("Config option AllowVanillaServers was set to true, but there are custom rpcs registered!");
+                        }
+                        else
+                        {
+                            connection.State = ConnectionState.Connected;
+                            yield break;
+                        }
+                    }
+
                     client.LastDisconnectReason = DisconnectReasons.Custom;
                     client.LastCustomDisconnect = "Server didn't respond to modded handshake";
                     client.HandleDisconnect(client.LastDisconnectReason, client.LastCustomDisconnect);

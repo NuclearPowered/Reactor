@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Reactor.Extensions;
@@ -21,12 +22,16 @@ namespace Reactor
         public Harmony Harmony { get; } = new Harmony(Id);
         public CustomRpcManager CustomRpcManager { get; } = new CustomRpcManager();
 
+        public ConfigEntry<bool> AllowVanillaServers;
+
         private GameObject _gameObject;
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
         public override void Load()
         {
             RegisterInIl2CppAttribute.Register();
+
+            AllowVanillaServers = Config.Bind("Features", "Allow vanilla servers", false, "Whether reactor should ignore servers not responding to modded handshake. This config is ignored if any plugin uses custom rpcs!");
 
             _gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
             _gameObject.AddComponent<ReactorComponent>().Plugin = this;
