@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Hazel;
@@ -13,7 +14,7 @@ namespace Reactor.Networking.Patches
 {
     internal static class ClientPatches
     {
-        private static bool CustomServer = false;
+        private static Dictionary<UdpConnection, bool> CustomConnections = new Dictionary<UdpConnection, bool>();
 
         [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.HandleMessage))]
         public static class HandleMessagePatch
@@ -32,7 +33,7 @@ namespace Reactor.Networking.Patches
 
                             Logger<ReactorPlugin>.Info($"Connected to a modded server ({serverName} {serverVersion}, {pluginCount} plugins), sending mod declarations");
 
-                            CustomServer = true;
+                            CustomConnections[__instance.connection] = true;
 
                             var mods = ModList.Current;
 
@@ -114,7 +115,14 @@ namespace Reactor.Networking.Patches
 
                     Logger<ReactorPlugin>.Debug("Hello was acked, waiting for modded handshake response");
 
-                    CustomServer = false;
+                    CustomConnections[__instance] = false;
+
+                    var keys = CustomConnections.Keys.ToArray();
+                    foreach (var key in keys)
+                    {
+                        if (AmongUsClient.Instance == null || AmongUsClient.Instance.connection == null || !AmongUsClient.Instance.connection.Equals(key))
+                            CustomConnections.Remove(key);
+                    }
 
                     var coroutine = Coroutines.Start(Coroutine(__instance));
 
@@ -130,7 +138,7 @@ namespace Reactor.Networking.Patches
                 yield return new WaitForSeconds(3);
 
                 var client = AmongUsClient.Instance;
-                if (client?.connection?.Equals(connection) == true && connection.State == ConnectionState.Connecting)
+                if (client != null && client.connection != null && client.connection.Equals(connection) && connection.State == ConnectionState.Connecting)
                 {
                     var reactorPlugin = PluginSingleton<ReactorPlugin>.Instance;
 
@@ -175,14 +183,78 @@ namespace Reactor.Networking.Patches
             }
         }
 
-        [HarmonyPatch(typeof(InnerNetObject), nameof(InnerNetObject.HandleRpc))]
-        public static class HandleRpcPatch
+        public static class InnerNetPatches
         {
-            private static byte MaxCallId = Extensions.Extensions.GetHighestValue<RpcCalls, byte>();
+            private static byte MaxCallId = (byte)Extensions.Extensions.GetHighestValue<RpcCalls>();
+            private static MessageWriter DummyWriter = MessageWriter.Get(SendOption.None);
 
-            public static bool Prefix([HarmonyArgument(0)] byte callId)
+            private static bool AllowRpc(byte callId)
             {
-                return CustomServer || callId <= MaxCallId;
+                if (CustomConnections.TryGetValue(AmongUsClient.Instance.connection, out bool customServer) && customServer || callId <= MaxCallId)
+                    return true;
+
+                Logger<ReactorPlugin>.Warning("A plugin is attempting to send custom rpcs on vanilla servers!");
+
+                return false;
+            }
+
+            private static bool AllowRpc(byte callId, ref MessageWriter writer)
+            {
+                if (!AllowRpc(callId))
+                {
+                    DummyWriter.Clear(SendOption.None);
+
+                    writer = DummyWriter;
+
+                    return false;
+                }
+
+                return true;
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SendRpc))]
+            public static class SendRpcPatch
+            {
+                public static bool Prefix([HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                {
+                    return AllowRpc(callId, ref __result);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpc))]
+            public static class StartRpcPatch
+            {
+                public static bool Prefix([HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                {
+                    return AllowRpc(callId, ref __result);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpcImmediately))]
+            public static class StartRpcImmediatelyPatch
+            {
+                public static bool Prefix([HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                {
+                    return AllowRpc(callId, ref __result);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.FinishRpcImmediately))]
+            public static class FinishRpcImmediatelyPatch
+            {
+                public static bool Prefix([HarmonyArgument(0)] MessageWriter writer)
+                {
+                    return writer != DummyWriter;
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetObject), nameof(InnerNetObject.HandleRpc))]
+            public static class HandleRpcPatch // Supposedly irrelevant when patching sending, remove?
+            {
+                public static bool Prefix([HarmonyArgument(0)] byte callId)
+                {
+                    return AllowRpc(callId);
+                }
             }
         }
     }
