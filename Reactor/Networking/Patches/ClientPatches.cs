@@ -13,6 +13,8 @@ namespace Reactor.Networking.Patches
 {
     internal static class ClientPatches
     {
+        private static bool CustomServer = false;
+
         [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.HandleMessage))]
         public static class HandleMessagePatch
         {
@@ -29,6 +31,8 @@ namespace Reactor.Networking.Patches
                             ModdedHandshakeS2C.Deserialize(reader, out var serverName, out var serverVersion, out var pluginCount);
 
                             Logger<ReactorPlugin>.Info($"Connected to a modded server ({serverName} {serverVersion}, {pluginCount} plugins), sending mod declarations");
+
+                            CustomServer = true;
 
                             var mods = ModList.Current;
 
@@ -110,6 +114,8 @@ namespace Reactor.Networking.Patches
 
                     Logger<ReactorPlugin>.Debug("Hello was acked, waiting for modded handshake response");
 
+                    CustomServer = false;
+
                     var coroutine = Coroutines.Start(Coroutine(__instance));
 
                     __instance.Disconnected = (Action<Il2CppSystem.Object, DisconnectedEventArgs>) ((_, _) =>
@@ -124,7 +130,7 @@ namespace Reactor.Networking.Patches
                 yield return new WaitForSeconds(3);
 
                 var client = AmongUsClient.Instance;
-                if (client != null && client.connection != null && client.connection.Equals(connection) && client.connection.State == ConnectionState.Connecting)
+                if (client?.connection?.Equals(connection) == true && connection.State == ConnectionState.Connecting)
                 {
                     var reactorPlugin = PluginSingleton<ReactorPlugin>.Instance;
 
@@ -166,6 +172,17 @@ namespace Reactor.Networking.Patches
 
                 __result = handshake.ToByteArray(false);
                 handshake.Recycle();
+            }
+        }
+
+        [HarmonyPatch(typeof(InnerNetObject), nameof(InnerNetObject.HandleRpc))]
+        public static class HandleRpcPatch
+        {
+            private static byte MaxCallId = Extensions.Extensions.GetHighestValue<RpcCalls, byte>();
+
+            public static bool Prefix([HarmonyArgument(0)] byte callId)
+            {
+                return CustomServer || callId <= MaxCallId;
             }
         }
     }
