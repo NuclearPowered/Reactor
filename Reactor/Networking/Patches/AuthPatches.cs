@@ -12,9 +12,9 @@ namespace Reactor.Networking.Patches
         {
             public static bool Prefix(ref bool __result)
             {
-                var caller = new Il2CppSystem.Diagnostics.StackTrace().GetFrames().First().GetMethod();
+                var caller = new Il2CppSystem.Diagnostics.StackTrace().GetFrames().FirstOrDefault()?.GetMethod();
 
-                if (caller.DeclaringType.FullName == typeof(DtlsUnityConnection).FullName && caller.Name == nameof(DtlsUnityConnection.ProcessHandshake))
+                if (caller != null && caller.DeclaringType.FullName == typeof(DtlsUnityConnection).FullName && caller.Name == nameof(DtlsUnityConnection.ProcessHandshake))
                 {
                     __result = true;
                     return false;

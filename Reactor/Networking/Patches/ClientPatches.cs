@@ -33,7 +33,9 @@ namespace Reactor.Networking.Patches
 
                             Logger<ReactorPlugin>.Info($"Connected to a modded server ({serverName} {serverVersion}, {pluginCount} plugins), sending mod declarations");
 
-                            CustomConnections[__instance.connection] = true;
+                            var key = CustomConnections.Keys.FirstOrDefault(k => k.Equals(__instance.connection));
+                            if (key == null) key = __instance.connection;
+                            CustomConnections[key] = true;
 
                             var mods = ModList.Current;
 
@@ -115,13 +117,15 @@ namespace Reactor.Networking.Patches
 
                     Logger<ReactorPlugin>.Debug("Hello was acked, waiting for modded handshake response");
 
-                    CustomConnections[__instance] = false;
+                    var key = CustomConnections.Keys.FirstOrDefault(k => k.Equals(__instance));
+                    if (key == null) key = __instance;
+                    CustomConnections[key] = false;
 
                     var keys = CustomConnections.Keys.ToArray();
-                    foreach (var key in keys)
+                    foreach (var k in keys)
                     {
-                        if (AmongUsClient.Instance == null || AmongUsClient.Instance.connection == null || !AmongUsClient.Instance.connection.Equals(key))
-                            CustomConnections.Remove(key);
+                        if (AmongUsClient.Instance == null || AmongUsClient.Instance.connection == null || !AmongUsClient.Instance.connection.Equals(k))
+                            CustomConnections.Remove(k);
                     }
 
                     var coroutine = Coroutines.Start(Coroutine(__instance));
@@ -188,19 +192,26 @@ namespace Reactor.Networking.Patches
             private static byte MaxCallId = (byte)Extensions.Extensions.GetHighestValue<RpcCalls>();
             private static MessageWriter DummyWriter = MessageWriter.Get(SendOption.None);
 
-            private static bool AllowRpc(byte callId)
+            private static bool AllowRpc(UdpConnection connection, byte callId)
             {
-                if (callId <= MaxCallId || CustomConnections.TryGetValue(AmongUsClient.Instance.connection, out bool customServer) && customServer)
+                if (callId <= MaxCallId)
                     return true;
+
+                if (connection != null)
+                {
+                    var key = CustomConnections.Keys.FirstOrDefault(k => k.Equals(connection));
+                    if (key != null && CustomConnections[key])
+                        return true;
+                }
 
                 Logger<ReactorPlugin>.Warning($"A plugin is attempting to send custom rpcs on vanilla servers (callId: {callId})!");
 
                 return false;
             }
 
-            private static bool AllowRpc(byte callId, ref MessageWriter writer)
+            private static bool AllowRpc(UdpConnection connection, byte callId, ref MessageWriter writer, bool immediately = false)
             {
-                if (!AllowRpc(callId))
+                if (!AllowRpc(connection, callId))
                 {
                     DummyWriter.Clear(SendOption.None);
 
@@ -212,30 +223,57 @@ namespace Reactor.Networking.Patches
                 return true;
             }
 
+            [HarmonyPatch(typeof(MessageWriter), nameof(MessageWriter.StartMessage))]
+            public static class StartMessagePatch
+            {
+                public static bool Prefix(MessageWriter __instance)
+                {
+                    return !__instance.Equals(DummyWriter);
+                }
+            }
+
+            [HarmonyPatch(typeof(MessageWriter), nameof(MessageWriter.EndMessage))]
+            public static class EndMessagePatch
+            {
+                public static bool Prefix(MessageWriter __instance)
+                {
+                    return !__instance.Equals(DummyWriter);
+                }
+            }
+
+            [HarmonyPatch(typeof(MessageWriter), nameof(MessageWriter.CancelMessage))]
+            public static class CancelMessagePatch
+            {
+                public static bool Prefix(MessageWriter __instance)
+                {
+                    return !__instance.Equals(DummyWriter);
+                }
+            }
+
             [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SendRpc))]
             public static class SendRpcPatch
             {
-                public static bool Prefix([HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(1)] byte callId)
                 {
-                    return AllowRpc(callId, ref __result);
+                    return AllowRpc(__instance.connection, callId);
                 }
             }
 
             [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpc))]
             public static class StartRpcPatch
             {
-                public static bool Prefix([HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(1)] byte callId, ref MessageWriter __result)
                 {
-                    return AllowRpc(callId, ref __result);
+                    return AllowRpc(__instance.connection, callId, ref __result);
                 }
             }
 
             [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpcImmediately))]
             public static class StartRpcImmediatelyPatch
             {
-                public static bool Prefix([HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(1)] byte callId, ref MessageWriter __result)
                 {
-                    return AllowRpc(callId, ref __result);
+                    return AllowRpc(__instance.connection, callId, ref __result, true);
                 }
             }
 
@@ -244,7 +282,7 @@ namespace Reactor.Networking.Patches
             {
                 public static bool Prefix([HarmonyArgument(0)] MessageWriter writer)
                 {
-                    return writer != DummyWriter;
+                    return !writer.Equals(DummyWriter);
                 }
             }
         }
