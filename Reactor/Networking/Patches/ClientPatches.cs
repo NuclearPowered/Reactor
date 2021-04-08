@@ -190,10 +190,10 @@ namespace Reactor.Networking.Patches
 
             private static bool AllowRpc(byte callId)
             {
-                if (CustomConnections.TryGetValue(AmongUsClient.Instance.connection, out bool customServer) && customServer || callId <= MaxCallId)
+                if (callId <= MaxCallId || CustomConnections.TryGetValue(AmongUsClient.Instance.connection, out bool customServer) && customServer)
                     return true;
 
-                Logger<ReactorPlugin>.Warning("A plugin is attempting to send custom rpcs on vanilla servers!");
+                Logger<ReactorPlugin>.Warning($"A plugin is attempting to send custom rpcs on vanilla servers (callId: {callId})!");
 
                 return false;
             }
@@ -245,15 +245,6 @@ namespace Reactor.Networking.Patches
                 public static bool Prefix([HarmonyArgument(0)] MessageWriter writer)
                 {
                     return writer != DummyWriter;
-                }
-            }
-
-            [HarmonyPatch(typeof(InnerNetObject), nameof(InnerNetObject.HandleRpc))]
-            public static class HandleRpcPatch // Supposedly irrelevant when patching sending, remove?
-            {
-                public static bool Prefix([HarmonyArgument(0)] byte callId)
-                {
-                    return AllowRpc(callId);
                 }
             }
         }
