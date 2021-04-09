@@ -14,7 +14,7 @@ namespace Reactor.Networking.Patches
 {
     internal static class ClientPatches
     {
-        private static Dictionary<UdpConnection, bool> CustomConnections = new Dictionary<UdpConnection, bool>();
+        private static Dictionary<UdpConnection, bool> CustomConnections = new Dictionary<UdpConnection, bool>(Il2CppEqualityComparer<UdpConnection>.Instance);
 
         [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.HandleMessage))]
         public static class HandleMessagePatch
@@ -33,9 +33,7 @@ namespace Reactor.Networking.Patches
 
                             Logger<ReactorPlugin>.Info($"Connected to a modded server ({serverName} {serverVersion}, {pluginCount} plugins), sending mod declarations");
 
-                            var key = CustomConnections.Keys.FirstOrDefault(k => k.Equals(__instance.connection));
-                            if (key == null) key = __instance.connection;
-                            CustomConnections[key] = true;
+                            CustomConnections[__instance.connection] = true;
 
                             var mods = ModList.Current;
 
@@ -117,9 +115,7 @@ namespace Reactor.Networking.Patches
 
                     Logger<ReactorPlugin>.Debug("Hello was acked, waiting for modded handshake response");
 
-                    var key = CustomConnections.Keys.FirstOrDefault(k => k.Equals(__instance));
-                    if (key == null) key = __instance;
-                    CustomConnections[key] = false;
+                    CustomConnections[__instance] = false;
 
                     var keys = CustomConnections.Keys.ToArray();
                     foreach (var k in keys)
@@ -194,15 +190,8 @@ namespace Reactor.Networking.Patches
 
             private static bool AllowRpc(UdpConnection connection, byte callId)
             {
-                if (callId <= MaxCallId)
+                if (callId <= MaxCallId || connection != null && CustomConnections.TryGetValue(connection, out bool customServer) && customServer)
                     return true;
-
-                if (connection != null)
-                {
-                    var key = CustomConnections.Keys.FirstOrDefault(k => k.Equals(connection));
-                    if (key != null && CustomConnections[key])
-                        return true;
-                }
 
                 Logger<ReactorPlugin>.Warning($"A plugin is attempting to send custom rpcs on vanilla servers (callId: {callId})!");
 
