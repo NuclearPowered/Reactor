@@ -105,9 +105,14 @@ namespace Reactor.Extensions
             }
         }
 
+        public static IEnumerable<MethodBase> GetMethods(this Type type, BindingFlags bindingAttr, Type returnType, params Type[] parameterTypes)
+        {
+            return type.GetMethods(bindingAttr).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));
+        }
+
         public static IEnumerable<MethodBase> GetMethods(this Type type, Type returnType, params Type[] parameterTypes)
         {
-            return type.GetMethods(AccessTools.all).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));
+            return type.GetMethods(AccessTools.all, returnType, parameterTypes);
         }
 
         public static T LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityEngine.Object
