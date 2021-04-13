@@ -4,6 +4,7 @@ using BepInEx;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Reactor.Extensions;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,11 +12,11 @@ namespace Reactor.Patches
 {
     public static class ReactorVersionShower
     {
-        public static TextRenderer Text { get; private set; }
+        public static TextMeshPro Text { get; private set; }
 
         public static event TextUpdatedHandler TextUpdated;
 
-        public delegate void TextUpdatedHandler(TextRenderer text);
+        public delegate void TextUpdatedHandler(TextMeshPro text);
 
         internal static void Initialize()
         {
@@ -25,8 +26,6 @@ namespace Reactor.Patches
                 if (!original)
                     return;
 
-                TextRendererExtensions.Prefab ??= new TextRendererPrefab(original.gameObject.GetComponentInChildren<TextRenderer>());
-
                 var gameObject = new GameObject("ReactorVersion " + Guid.NewGuid());
                 gameObject.transform.parent = original.transform.parent;
 
@@ -34,14 +33,22 @@ namespace Reactor.Patches
 
                 aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
 
-                var position = original.GetComponent<AspectPosition>().DistanceFromEdge;
-                position.y += 0.2f;
+                var originalAspectPosition = original.GetComponent<AspectPosition>();
+                var originalPosition = originalAspectPosition.DistanceFromEdge;
+                originalPosition.y = 0.15f;
+                originalAspectPosition.DistanceFromEdge = originalPosition;
+                originalAspectPosition.AdjustPosition();
+
+                var position = originalPosition;
+                position.x += 10.075f - 0.1f;
+                position.y += 2.75f - 0.15f;
+                position.z -= 1;
                 aspectPosition.DistanceFromEdge = position;
 
                 aspectPosition.AdjustPosition();
 
-                Text = gameObject.AddTextRenderer();
-                Text.scale = 0.65f;
+                Text = gameObject.AddComponent<TextMeshPro>();
+                Text.fontSize = 2;
 
                 UpdateText();
             }));
@@ -49,9 +56,9 @@ namespace Reactor.Patches
 
         public static void UpdateText()
         {
-            Text.Text = "Reactor " + typeof(ReactorPlugin).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-            Text.Text += "\nBepInEx: " + Paths.BepInExVersion;
-            Text.Text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
+            Text.text = "Reactor " + typeof(ReactorPlugin).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            Text.text += "\nBepInEx: " + Paths.BepInExVersion;
+            Text.text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
             TextUpdated?.Invoke(Text);
         }
 
