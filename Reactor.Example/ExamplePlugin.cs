@@ -1,7 +1,6 @@
 ﻿using System;
 using BepInEx;
 using BepInEx.IL2CPP;
-using InnerNet;
 using Reactor.Extensions;
 using Reactor.Networking;
 using UnhollowerBaseLib.Attributes;

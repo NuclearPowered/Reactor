@@ -1,16 +1,11 @@
 <Project>
     <PropertyGroup Condition="'$(GamePlatform)' == 'Steam'">
-        <GameVersion>2021.3.31.3s</GameVersion>
+        <GameVersion>2021.4.12s</GameVersion>
         <DefineConstants>$(DefineConstants);STEAM</DefineConstants>
     </PropertyGroup>
 
-    <PropertyGroup Condition="'$(GamePlatform)' == 'Itch'">
-        <GameVersion>2021.3.5i</GameVersion>
-        <DefineConstants>$(DefineConstants);ITCH</DefineConstants>
-    </PropertyGroup>
-
     <PropertyGroup>
-        <Mappings>NuclearPowered/Mappings:0.3.0</Mappings>
+        <Mappings>NuclearPowered/Mappings:0.4.0</Mappings>
     </PropertyGroup>
 
     <ItemGroup>

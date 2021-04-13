@@ -38,7 +38,7 @@ public sealed class SetupAmongUsTask : AsyncFrostingTask<BuildContext>
 {
     public const uint AppId = 945360;
     public const uint DepotId = 945361;
-    public const ulong ManifestId = 3941730972865408291; // 2021.3.31.3s
+    public const ulong ManifestId = 2725166875026424465; // 2021.4.12s
 
     public override async Task RunAsync(BuildContext context)
     {
