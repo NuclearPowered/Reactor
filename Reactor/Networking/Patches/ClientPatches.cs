@@ -14,7 +14,7 @@ namespace Reactor.Networking.Patches
 {
     internal static class ClientPatches
     {
-        private static Dictionary<UdpConnection, bool> CustomConnections = new Dictionary<UdpConnection, bool>(Il2CppEqualityComparer<UdpConnection>.Instance);
+        private static Dictionary<UdpConnection, bool> CustomConnections { get; } = new Dictionary<UdpConnection, bool>(Il2CppEqualityComparer<UdpConnection>.Instance);
 
         [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.HandleMessage))]
         public static class HandleMessagePatch
