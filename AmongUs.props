@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup Condition="'$(GamePlatform)' == 'Steam'">
-        <GameVersion>2021.4.12s</GameVersion>
+        <GameVersion>2021.4.14s</GameVersion>
         <DefineConstants>$(DefineConstants);STEAM</DefineConstants>
     </PropertyGroup>
 
