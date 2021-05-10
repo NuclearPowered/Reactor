@@ -1,5 +1,6 @@
 using HarmonyLib;
 using InnerNet;
+using UnityEngine;
 
 namespace Reactor.Patches
 {
@@ -12,6 +13,26 @@ namespace Reactor.Patches
             {
                 __result = QuickChatModes.FreeChatOrQuickChat;
                 return false;
+            }
+        }
+
+        [HarmonyPatch(typeof(AccountTab), nameof(AccountTab.Open))]
+        public static class EditNamePatch
+        {
+            public static void Prefix(AccountTab __instance)
+            {
+                Fix(__instance, __instance.guestMode);
+                Fix(__instance, __instance.offlineMode);
+            }
+
+            private static void Fix(AccountTab __instance, GameObject mode)
+            {
+                var randomizeName = mode.transform.Find("RandomizeName").gameObject;
+                if (!randomizeName.active)
+                    return;
+
+                randomizeName.active = false;
+                Object.Instantiate(__instance.loggedInMode.editNameButton, mode.transform);
             }
         }
     }
