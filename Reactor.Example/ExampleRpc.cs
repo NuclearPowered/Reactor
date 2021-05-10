@@ -34,7 +34,7 @@ namespace Reactor.Example
 
         public override void Handle(PlayerControl innerNetObject, Data data)
         {
-            Plugin.Log.LogWarning($"{innerNetObject.Data.PlayerId} sent \"{data.Message}\"");
+            Plugin.Log.LogWarning($"Handle: {innerNetObject.Data.PlayerName} sent \"{data.Message}\"");
         }
     }
 }

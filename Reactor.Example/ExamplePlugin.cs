@@ -38,9 +38,13 @@ namespace Reactor.Example
             {
                 if (Input.GetKeyDown(KeyCode.F3) && AmongUsClient.Instance && PlayerControl.LocalPlayer)
                 {
-                    Plugin.Log.LogWarning("Sending example rpc");
-                    Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data("Cześć :)"));
-                    Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data("host :O"));
+                    var name = PlayerControl.LocalPlayer.Data.PlayerName;
+                    Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {name}"));
+
+                    if (!AmongUsClient.Instance.AmHost)
+                    {
+                        Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {name} to host"));
+                    }
                 }
             }
         }
