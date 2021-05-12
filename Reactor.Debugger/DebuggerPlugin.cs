@@ -51,10 +51,18 @@ namespace Reactor.Debugger
                     GUILayout.Label("Name: " + SaveManager.PlayerName, new Il2CppReferenceArray<GUILayoutOption>(0));
                     DisableGameEnd = GUILayout.Toggle(DisableGameEnd, "Disable game end", new Il2CppReferenceArray<GUILayoutOption>(0));
 
-                    if (AmongUsClient.Instance.AmHost && ShipStatus.Instance && GUILayout.Button("Force game end", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                    if (ShipStatus.Instance && AmongUsClient.Instance.AmHost)
                     {
-                        ShipStatus.Instance.enabled = false;
-                        ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
+                        if (GUILayout.Button("Force game end", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                        {
+                            ShipStatus.Instance.enabled = false;
+                            ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
+                        }
+
+                        if (GUILayout.Button("Call a meeting", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                        {
+                            PlayerControl.LocalPlayer.CmdReportDeadBody(null);
+                        }
                     }
 
                     if (TutorialManager.InstanceExists && GUILayout.Button("Spawn a dummy", new Il2CppReferenceArray<GUILayoutOption>(0)))
@@ -68,9 +76,9 @@ namespace Reactor.Debugger
                         playerControl.NetTransform.enabled = false;
                         playerControl.SetName($"{TranslationController.Instance.GetString(StringNames.Dummy, Array.Empty<Il2CppSystem.Object>())} {i}");
                         playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
-                        playerControl.SetHat(i % (uint)HatManager.Instance.AllHats.Count, playerControl.Data.ColorId);
-                        playerControl.SetPet(i % (uint)HatManager.Instance.AllPets.Count);
-                        playerControl.SetSkin(i % (uint)HatManager.Instance.AllSkins.Count);
+                        playerControl.SetHat(i % (uint) HatManager.Instance.AllHats.Count, playerControl.Data.ColorId);
+                        playerControl.SetPet(i % (uint) HatManager.Instance.AllPets.Count);
+                        playerControl.SetSkin(i % (uint) HatManager.Instance.AllSkins.Count);
                         GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
                     }
 
