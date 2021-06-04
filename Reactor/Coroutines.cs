@@ -201,22 +201,22 @@ using UnityEngine;
 
 namespace Reactor
 {
+    public class Il2CppEnumeratorWrapper : IEnumerator
+    {
+        private readonly Il2CppSystem.Collections.IEnumerator _il2CPPEnumerator;
+
+        public Il2CppEnumeratorWrapper(Il2CppSystem.Collections.IEnumerator il2CppEnumerator) => _il2CPPEnumerator = il2CppEnumerator;
+        public bool MoveNext() => _il2CPPEnumerator.MoveNext();
+        public void Reset() => _il2CPPEnumerator.Reset();
+        public object Current => _il2CPPEnumerator.Current;
+    }
+
     public static class Coroutines
     {
         private struct CoroutineTuple
         {
             public object WaitCondition;
             public IEnumerator Coroutine;
-        }
-
-        private class Il2CppEnumeratorWrapper : IEnumerator
-        {
-            private readonly Il2CppSystem.Collections.IEnumerator _il2CPPEnumerator;
-
-            public Il2CppEnumeratorWrapper(Il2CppSystem.Collections.IEnumerator il2CppEnumerator) => _il2CPPEnumerator = il2CppEnumerator;
-            public bool MoveNext() => _il2CPPEnumerator.MoveNext();
-            public void Reset() => _il2CPPEnumerator.Reset();
-            public object Current => _il2CPPEnumerator.Current;
         }
 
         [RegisterInIl2Cpp]
