@@ -65,21 +65,42 @@ namespace Reactor.Debugger
                         }
                     }
 
-                    if (TutorialManager.InstanceExists && GUILayout.Button("Spawn a dummy", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                    if (TutorialManager.InstanceExists && PlayerControl.LocalPlayer)
                     {
-                        var playerControl = Instantiate(TutorialManager.Instance.PlayerPrefab);
-                        var i = playerControl.PlayerId = (byte) GameData.Instance.GetAvailableId();
-                        GameData.Instance.AddPlayer(playerControl);
-                        AmongUsClient.Instance.Spawn(playerControl, -2, SpawnFlags.None);
-                        playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
-                        playerControl.GetComponent<DummyBehaviour>().enabled = true;
-                        playerControl.NetTransform.enabled = false;
-                        playerControl.SetName($"{TranslationController.Instance.GetString(StringNames.Dummy, Array.Empty<Il2CppSystem.Object>())} {i}");
-                        playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
-                        playerControl.SetHat(i % (uint) HatManager.Instance.AllHats.Count, playerControl.Data.ColorId);
-                        playerControl.SetPet(i % (uint) HatManager.Instance.AllPets.Count);
-                        playerControl.SetSkin(i % (uint) HatManager.Instance.AllSkins.Count);
-                        GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
+                        var data = PlayerControl.LocalPlayer.Data;
+
+                        var newIsImpostor = GUILayout.Toggle(data.IsImpostor, "Is Impostor", new Il2CppReferenceArray<GUILayoutOption>(0));
+                        if (data.IsImpostor != newIsImpostor)
+                        {
+                            if (newIsImpostor)
+                            {
+                                PlayerControl.LocalPlayer.RpcSetInfected(new[]
+                                {
+                                    data
+                                });
+                            }
+                            else
+                            {
+                                PlayerControl.LocalPlayer.RemoveInfected();
+                            }
+                        }
+
+                        if (GUILayout.Button("Spawn a dummy", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                        {
+                            var playerControl = Instantiate(TutorialManager.Instance.PlayerPrefab);
+                            var i = playerControl.PlayerId = (byte) GameData.Instance.GetAvailableId();
+                            GameData.Instance.AddPlayer(playerControl);
+                            AmongUsClient.Instance.Spawn(playerControl, -2, SpawnFlags.None);
+                            playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
+                            playerControl.GetComponent<DummyBehaviour>().enabled = true;
+                            playerControl.NetTransform.enabled = false;
+                            playerControl.SetName($"{TranslationController.Instance.GetString(StringNames.Dummy, Array.Empty<Il2CppSystem.Object>())} {i}");
+                            playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
+                            playerControl.SetHat(i % (uint) HatManager.Instance.AllHats.Count, playerControl.Data.ColorId);
+                            playerControl.SetPet(i % (uint) HatManager.Instance.AllPets.Count);
+                            playerControl.SetSkin(i % (uint) HatManager.Instance.AllSkins.Count);
+                            GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
+                        }
                     }
 
                     if (PlayerControl.LocalPlayer)
