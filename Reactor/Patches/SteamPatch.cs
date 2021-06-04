@@ -1,15 +1,28 @@
-#if STEAM
+using System;
 using System.IO;
+using System.Reflection;
 using HarmonyLib;
-using Steamworks;
 
 namespace Reactor.Patches
 {
     internal static class SteamPatch
     {
-        [HarmonyPatch(typeof(SteamAPI), nameof(SteamAPI.RestartAppIfNecessary))]
+        [HarmonyPatch]
         public static class RestartAppIfNecessaryPatch
         {
+            public const string TypeName = "Steamworks.SteamAPI, Assembly-CSharp-firstpass";
+            public const string MethodName = "RestartAppIfNecessary";
+
+            public static bool Prepare()
+            {
+                return Type.GetType(TypeName, false) != null;
+            }
+
+            public static MethodBase TargetMethod()
+            {
+                return AccessTools.Method(TypeName + ":" + MethodName);
+            }
+
             public static bool Prefix(out bool __result)
             {
                 const string file = "steam_appid.txt";
@@ -24,4 +37,3 @@ namespace Reactor.Patches
         }
     }
 }
-#endif
