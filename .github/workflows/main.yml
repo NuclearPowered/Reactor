@@ -1,7 +1,6 @@
 name: CI
 
-on:
-  push:
+on: [ "push", "pull_request" ]
 
 jobs:
   build:
@@ -15,19 +14,19 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v1
         with:
-          dotnet-version: 5.0.101
+          dotnet-version: 5.0.300
 
-      - name: Cake Action
-        run: sh build.sh
-        env:
-          STEAM: ${{ secrets.STEAM }}
+      - name: Run the Cake script
+        uses: cake-build/cake-action@v1
+        with:
+          verbosity: Diagnostic
 
       - uses: actions/upload-artifact@v2
         with:
           name: Reactor.dll
-          path: Reactor/bin/Release/netstandard2.1/reobfuscated/Reactor-*.dll
+          path: Reactor/bin/Release/netstandard2.1/Reactor.dll
 
       - uses: actions/upload-artifact@v2
         with:
           name: Reactor.Debugger.dll
-          path: Reactor.Debugger/bin/Release/netstandard2.1/reobfuscated/Reactor.Debugger-*.dll
+          path: Reactor.Debugger/bin/Release/netstandard2.1/Reactor.Debugger.dll
