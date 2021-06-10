@@ -8,9 +8,7 @@ Modding api for Among Us
 
 Featuring amazing features like:
 
-- automatic deobfuscation using [OxygenFilter](https://github.com/NuclearPowered/Reactor.OxygenFilter)
-- modded handshake (example implementation is here [NuclearPowered/Impostor](https://github.com/NuclearPowered/Impostor))
-- unstripped [IMGUI](https://docs.unity3d.com/Manual/GUIScriptingGuide.html), [UI](https://docs.unity3d.com/2019.1/Documentation/ScriptReference/UI.DefaultControls.html), [AssetBundle](https://docs.unity3d.com/ScriptReference/AssetBundle.html), [ImageConversion](https://docs.unity3d.com/ScriptReference/ImageConversion.html)
+- modded handshake (example implementation is here [NuclearPowered/Reactor.Impostor](https://github.com/NuclearPowered/Reactor.Impostor))
 - custom rpc api
 - a lot of utility methods
 
