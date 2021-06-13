@@ -70,11 +70,6 @@ namespace Reactor
             {
             }
 
-            private void OnRenderImage(RenderTexture src, RenderTexture dest)
-            {
-                Plugin.Log.LogWarning(src.GetInstanceID());
-            }
-
             private void Update()
             {
                 if (Plugin.RegionInfoWatcher.Reload)
