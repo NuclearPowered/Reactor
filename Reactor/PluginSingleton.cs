@@ -1,5 +1,5 @@
-using System;
 using System.Linq;
+using System.Reflection;
 using BepInEx.IL2CPP;
 
 namespace Reactor
@@ -8,19 +8,16 @@ namespace Reactor
     {
         private static T _instance;
 
-        public static T Instance
+        public static T Instance => _instance ??= IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
+
+        internal static void Initialize()
         {
-            get => _instance ??= IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
-
-            set
+            ChainloaderHooks.PluginLoad += plugin =>
             {
-                if (_instance != null)
-                {
-                    throw new Exception($"Instance for {typeof(T).FullName} is already set");
-                }
-
-                _instance = value;
-            }
+                typeof(PluginSingleton<>).MakeGenericType(plugin.GetType())!
+                    .GetField(nameof(_instance), BindingFlags.Static | BindingFlags.NonPublic)!
+                    .SetValue(null, plugin);
+            };
         }
     }
 }

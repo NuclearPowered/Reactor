@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Reactor.MSBuild" Version="0.1.1" />
+        <PackageReference Include="Reactor.MSBuild" Version="0.1.2" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Build" Condition="'$(AmongUs)' != ''">

@@ -27,17 +27,25 @@ namespace Reactor
         private GameObject _gameObject;
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
+        public ReactorPlugin()
+        {
+            PluginSingleton<BasePlugin>.Initialize();
+            RegisterInIl2CppAttribute.Initialize();
+            RegisterCustomRpcAttribute.Initialize();
+
+            ChainloaderHooks.OnPluginLoad(this);
+        }
+
         public override void Load()
         {
-            RegisterInIl2CppAttribute.Register();
-
             AllowVanillaServers = Config.Bind("Features", "Allow vanilla servers", false, "Whether reactor should ignore servers not responding to modded handshake. This config is ignored if any plugin uses custom rpcs!");
+
+            Harmony.PatchAll();
 
             _gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
             _gameObject.AddComponent<ReactorComponent>().Plugin = this;
             _gameObject.AddComponent<Coroutines.Component>();
 
-            Harmony.PatchAll();
             ReactorVersionShower.Initialize();
             SplashSkip.Initialize();
             DefaultBundle.Load();
@@ -60,6 +68,11 @@ namespace Reactor
 
             public ReactorComponent(IntPtr ptr) : base(ptr)
             {
+            }
+
+            private void OnRenderImage(RenderTexture src, RenderTexture dest)
+            {
+                Plugin.Log.LogWarning(src.GetInstanceID());
             }
 
             private void Update()

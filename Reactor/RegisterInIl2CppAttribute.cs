@@ -7,14 +7,14 @@ using UnhollowerRuntimeLib;
 namespace Reactor
 {
     /// <summary>
-    /// Utility attribute for automatically calling <see cref="UnhollowerRuntimeLib.ClassInjector.RegisterTypeInIl2Cpp{T}"/>
+    /// Utility attribute for automatically calling <see cref="ClassInjector.RegisterTypeInIl2Cpp{T}()"/>
     /// </summary>
     [AttributeUsage(AttributeTargets.Class)]
     public class RegisterInIl2CppAttribute : Attribute
     {
+        [Obsolete("You don't need to call this anymore", true)]
         public static void Register()
         {
-            Register(Assembly.GetCallingAssembly());
         }
 
         private static readonly AccessTools.FieldRef<object, HashSet<string>> _injectedTypes
@@ -58,9 +58,7 @@ namespace Reactor
 
             try
             {
-                typeof(ClassInjector).GetMethod(nameof(ClassInjector.RegisterTypeInIl2Cpp))!
-                    .MakeGenericMethod(type)
-                    .Invoke(null, new object[0]);
+                ClassInjector.RegisterTypeInIl2Cpp(type);
             }
             catch (Exception e)
             {
@@ -77,6 +75,11 @@ namespace Reactor
                     Register(type);
                 }
             }
+        }
+
+        internal static void Initialize()
+        {
+            ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
         }
     }
 }

@@ -17,9 +17,6 @@ namespace Reactor.Example
 
         public override void Load()
         {
-            RegisterInIl2CppAttribute.Register();
-            RegisterCustomRpcAttribute.Register(this);
-
             var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
             gameObject.AddComponent<ExampleComponent>().Plugin = this;
         }

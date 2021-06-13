@@ -24,8 +24,6 @@ namespace Reactor.Debugger
 
         public override void Load()
         {
-            RegisterInIl2CppAttribute.Register();
-
             var gameObject = new GameObject(nameof(DebuggerPlugin)).DontDestroy();
             Component = gameObject.AddComponent<DebuggerComponent>();
 

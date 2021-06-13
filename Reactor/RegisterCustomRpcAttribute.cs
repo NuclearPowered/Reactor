@@ -19,9 +19,9 @@ namespace Reactor
             Id = id;
         }
 
+        [Obsolete("You don't need to call this anymore", true)]
         public static void Register(BasePlugin plugin)
         {
-            Register(Assembly.GetCallingAssembly(), plugin);
         }
 
         public static void Register(Assembly assembly, BasePlugin plugin)
@@ -41,6 +41,11 @@ namespace Reactor
                     PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
                 }
             }
+        }
+
+        internal static void Initialize()
+        {
+            ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly, plugin);
         }
     }
 }
