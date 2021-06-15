@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 namespace Reactor.Patches
 {
+    // TODO this needs some changes as text box was entirely removed in 2021.6.15
     internal static class FreeNamePatch
     {
         [HarmonyPatch(typeof(SetNameText), nameof(SetNameText.Start))]
