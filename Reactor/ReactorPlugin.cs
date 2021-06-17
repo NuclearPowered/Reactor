@@ -70,6 +70,11 @@ namespace Reactor
             {
             }
 
+            private void Start()
+            {
+                ModManager.Instance.ShowModStamp();
+            }
+
             private void Update()
             {
                 if (Plugin.RegionInfoWatcher.Reload)
