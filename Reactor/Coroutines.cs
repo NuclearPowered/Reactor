@@ -230,7 +230,7 @@ namespace Reactor
             {
                 Camera.onPostRender = Camera.onPostRender == null
                     ? new Action<Camera>(OnPostRenderM)
-                    : Il2CppSystem.Delegate.Combine(Camera.onPostRender, Il2CppSystem.Delegate.CreateDelegate(GetIl2CppType(), GetIl2CppType().GetMethod(nameof(OnPostRenderM), Il2CppSystem.Reflection.BindingFlags.Static | Il2CppSystem.Reflection.BindingFlags.Public))).Cast<Camera.CameraCallback>();
+                    : Il2CppSystem.Delegate.Combine(Camera.onPostRender, (Camera.CameraCallback) (Action<Camera>) OnPostRenderM).Cast<Camera.CameraCallback>();
             }
 
             private void FixedUpdate()
