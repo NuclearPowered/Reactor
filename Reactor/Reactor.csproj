@@ -8,6 +8,7 @@
         <Description>Core mod and API for Among Us</Description>
         <Authors>NuclearPowered</Authors>
 
+        <PackageIcon>icon.png</PackageIcon>
         <RepositoryType>git</RepositoryType>
         <RepositoryUrl>https://github.com/NuclearPowered/Reactor</RepositoryUrl>
         <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
@@ -23,7 +24,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="Assets\**\*" />
+        <EmbeddedResource Include="Assets\**\*" Exclude="Assets\icon.png" />
+        <None Include="Assets\icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <Import Project="../AmongUs.props" />
