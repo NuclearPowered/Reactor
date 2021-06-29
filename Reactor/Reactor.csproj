@@ -7,6 +7,11 @@
         <VersionSuffix>dev</VersionSuffix>
         <Description>Core mod and API for Among Us</Description>
         <Authors>NuclearPowered</Authors>
+
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/NuclearPowered/Reactor</RepositoryUrl>
+        <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
 
     <ItemGroup>
