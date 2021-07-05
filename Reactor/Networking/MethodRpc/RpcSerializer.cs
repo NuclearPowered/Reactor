@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Hazel;
 using InnerNet;
-using Reactor;
 using Reactor.Extensions;
-using Reactor.Networking.MethodRpc;
 using UnityEngine;
 
 namespace Reactor.Networking

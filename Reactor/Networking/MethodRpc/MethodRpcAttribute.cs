@@ -11,11 +11,11 @@ namespace Reactor.Networking.MethodRpc
     [AttributeUsage(AttributeTargets.Method)]
     public class MethodRpcAttribute : Attribute
     {
-        public byte id;
+        public uint id;
         public SendOption option;
         public RpcLocalHandling localHandling;
 
-        public MethodRpcAttribute( byte id, SendOption option = SendOption.Reliable, RpcLocalHandling localHandling = RpcLocalHandling.Before)
+        public MethodRpcAttribute( uint id, SendOption option = SendOption.Reliable, RpcLocalHandling localHandling = RpcLocalHandling.Before)
         {
             this.id = id;
             this.option = option;

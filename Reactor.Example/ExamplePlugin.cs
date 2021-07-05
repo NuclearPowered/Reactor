@@ -3,6 +3,7 @@ using BepInEx;
 using BepInEx.IL2CPP;
 using Reactor.Extensions;
 using Reactor.Networking;
+using Reactor.Networking.MethodRpc;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -43,7 +44,18 @@ namespace Reactor.Example
                         Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {name} to host"));
                     }
                 }
+                
+                if (Input.GetKeyDown(KeyCode.F4) && AmongUsClient.Instance && PlayerControl.LocalPlayer)
+                {
+                    RpcSay(PlayerControl.LocalPlayer, "Hello from method rpc");
+                }
             }
+        }
+
+        [MethodRpc((uint) CustomRpcCalls.MethodRpcExample)]
+        public static void RpcSay(PlayerControl sender, string text)
+        {
+            Logger<ExamplePlugin>.Info($"{sender.Data.PlayerName} said: {text}");
         }
     }
 }

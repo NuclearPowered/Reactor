@@ -28,9 +28,13 @@ namespace Reactor.Networking
                 return true;
             }
             
-            CustomMethodRpc methodRpc =
-                CustomMethodRpc.AllCustomMethodRpcs.FirstOrDefault(x => x.Method == originalMethod);
-            typeof(CustomMethodRpc).GetMethod(nameof(CustomMethodRpc.Send))?.Invoke(methodRpc,new object[]{list});
+            UnsafeCustomRpc methodRpc =
+                PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.List.FirstOrDefault(x => x is CustomMethodRpc && (x as CustomMethodRpc).Method == originalMethod);
+            if (methodRpc != null)
+            {
+                typeof(CustomMethodRpc).GetMethod(nameof(CustomMethodRpc.Send))?.Invoke((CustomMethodRpc)methodRpc, new object[] {list});
+            }
+
             return false;
         }
 
