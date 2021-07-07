@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Hazel;
@@ -13,6 +14,8 @@ namespace Reactor.Networking.Patches
 {
     internal static class ClientPatches
     {
+        private static Dictionary<UdpConnection, bool> CustomConnections { get; } = new Dictionary<UdpConnection, bool>(Il2CppEqualityComparer<UdpConnection>.Instance);
+
         [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.HandleMessage))]
         public static class HandleMessagePatch
         {
@@ -29,6 +32,8 @@ namespace Reactor.Networking.Patches
                             ModdedHandshakeS2C.Deserialize(reader, out var serverName, out var serverVersion, out var pluginCount);
 
                             Logger<ReactorPlugin>.Info($"Connected to a modded server ({serverName} {serverVersion}, {pluginCount} plugins), sending mod declarations");
+
+                            CustomConnections[__instance.connection] = true;
 
                             var mods = ModList.Current;
 
@@ -110,6 +115,15 @@ namespace Reactor.Networking.Patches
 
                     Logger<ReactorPlugin>.Debug("Hello was acked, waiting for modded handshake response");
 
+                    CustomConnections[__instance] = false;
+
+                    var keys = CustomConnections.Keys.ToArray();
+                    foreach (var k in keys)
+                    {
+                        if (AmongUsClient.Instance == null || AmongUsClient.Instance.connection == null || !AmongUsClient.Instance.connection.Equals(k))
+                            CustomConnections.Remove(k);
+                    }
+
                     var coroutine = Coroutines.Start(Coroutine(__instance));
 
                     __instance.Disconnected = Il2CppSystem.Delegate.Combine(
@@ -127,7 +141,7 @@ namespace Reactor.Networking.Patches
                 yield return new WaitForSeconds(3);
 
                 var client = AmongUsClient.Instance;
-                if (client != null && client.connection != null && client.connection.Equals(connection) && client.connection.State == ConnectionState.Connecting)
+                if (client != null && client.connection != null && client.connection.Equals(connection) && connection.State == ConnectionState.Connecting)
                 {
                     var reactorPlugin = PluginSingleton<ReactorPlugin>.Instance;
 
@@ -169,6 +183,99 @@ namespace Reactor.Networking.Patches
 
                 __result = handshake.ToByteArray(false);
                 handshake.Recycle();
+            }
+        }
+
+        public static class InnerNetPatches
+        {
+            private static byte MaxCallId = (byte)Extensions.Extensions.GetHighestValue<RpcCalls>();
+            private static MessageWriter DummyWriter = MessageWriter.Get(SendOption.None);
+
+            private static bool AllowRpc(UdpConnection connection, byte callId)
+            {
+                if (callId <= MaxCallId || connection != null && CustomConnections.TryGetValue(connection, out bool customServer) && customServer)
+                    return true;
+
+                Logger<ReactorPlugin>.Warning($"A plugin is attempting to send custom rpcs on vanilla servers (callId: {callId})!");
+
+                return false;
+            }
+
+            private static bool AllowRpc(UdpConnection connection, byte callId, ref MessageWriter writer, bool immediately = false)
+            {
+                if (!AllowRpc(connection, callId))
+                {
+                    DummyWriter.Clear(SendOption.None);
+
+                    writer = DummyWriter;
+
+                    return false;
+                }
+
+                return true;
+            }
+
+            [HarmonyPatch(typeof(MessageWriter), nameof(MessageWriter.StartMessage))]
+            public static class StartMessagePatch
+            {
+                public static bool Prefix(MessageWriter __instance)
+                {
+                    return !__instance.Equals(DummyWriter);
+                }
+            }
+
+            [HarmonyPatch(typeof(MessageWriter), nameof(MessageWriter.EndMessage))]
+            public static class EndMessagePatch
+            {
+                public static bool Prefix(MessageWriter __instance)
+                {
+                    return !__instance.Equals(DummyWriter);
+                }
+            }
+
+            [HarmonyPatch(typeof(MessageWriter), nameof(MessageWriter.CancelMessage))]
+            public static class CancelMessagePatch
+            {
+                public static bool Prefix(MessageWriter __instance)
+                {
+                    return !__instance.Equals(DummyWriter);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SendRpc))]
+            public static class SendRpcPatch
+            {
+                public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(1)] byte callId)
+                {
+                    return AllowRpc(__instance.connection, callId);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpc))]
+            public static class StartRpcPatch
+            {
+                public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                {
+                    return AllowRpc(__instance.connection, callId, ref __result);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.StartRpcImmediately))]
+            public static class StartRpcImmediatelyPatch
+            {
+                public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(1)] byte callId, ref MessageWriter __result)
+                {
+                    return AllowRpc(__instance.connection, callId, ref __result, true);
+                }
+            }
+
+            [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.FinishRpcImmediately))]
+            public static class FinishRpcImmediatelyPatch
+            {
+                public static bool Prefix([HarmonyArgument(0)] MessageWriter writer)
+                {
+                    return !writer.Equals(DummyWriter);
+                }
             }
         }
     }

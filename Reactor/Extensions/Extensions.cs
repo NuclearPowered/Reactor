@@ -119,5 +119,10 @@ namespace Reactor.Extensions
         {
             return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>();
         }
+
+        public static TEnum GetHighestValue<TEnum>() where TEnum : Enum
+        {
+            return Enum.GetValues(typeof(TEnum)).Cast<TEnum>().Max();
+        }
     }
 }
