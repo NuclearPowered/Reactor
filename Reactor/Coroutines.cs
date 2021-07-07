@@ -343,8 +343,9 @@ namespace Reactor
             }
             catch (Exception e)
             {
-                Logger<ReactorPlugin>.Error(e.ToString());
+                Logger<ReactorPlugin>.Error($"Exception in coroutine of type {enumerator?.GetType().AssemblyQualifiedName}: {e}");
                 Stop(FindOriginalCoroutine(enumerator)); // We want the entire coroutine hierarchy to stop when an error happen
+                return;
             }
 
             var next = enumerator.Current;
