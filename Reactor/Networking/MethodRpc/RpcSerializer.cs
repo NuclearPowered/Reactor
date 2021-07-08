@@ -6,19 +6,40 @@ using InnerNet;
 using Reactor.Extensions;
 using UnityEngine;
 
-namespace Reactor.Networking
+namespace Reactor.Networking.MethodRpc
 {
     public static class RpcSerializer
     {
-        public static void SendMassage(MessageWriter writer, params object[] list)
-        {
-            Logger<ReactorPlugin>.Debug($"Serializing {list.Length} object");
+        #region GetFindObjectByNetIdInvoker
 
+        private static readonly MethodInfo _findObjectByNetId =
+            typeof(RpcSerializer).GetMethod(nameof(FindObjectByNetId), BindingFlags.Static | BindingFlags.NonPublic);
+
+        private static Dictionary<Type, Func<object[], object>> _findObjectByNetIdInvokers = new();
+        static Func<object[], object> GetFindObjectByNetIdInvoker(Type type)
+        {
+            if (_findObjectByNetIdInvokers.ContainsKey(type)) return _findObjectByNetIdInvokers[type];
+
+            var invoker = RpcPrefixHandle.GenerateCaller(_findObjectByNetId.MakeGenericMethod(type));
+            _findObjectByNetIdInvokers.Add(type, invoker);
+            return invoker;
+        }
+
+        private static InnerNetObject FindObjectByNetId<T>(uint id) where T : InnerNetObject
+        {
+            return AmongUsClient.Instance.FindObjectByNetId<T>(id);
+        }
+
+        #endregion
+ 
+
+        public static void Serialize(MessageWriter writer,CustomMethodRpc methodRpc, params object[] list)
+        {
             foreach (var o in list)
             {
                 if (o.GetType().IsValueType  && !o.GetType().IsPrimitive)
                 {
-                    var structFeilds = o.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance);
+                    var structFeilds = methodRpc.StructBook[o.GetType()];
                     foreach (var feild in structFeilds)
                     {
                         writer.Write(feild.GetValue(o));
@@ -87,28 +108,33 @@ namespace Reactor.Networking
         }
 
 
-        public static object[] Deserialize(MessageReader reader, Type[] list)
+        public static object[] Deserialize(MessageReader reader,CustomMethodRpc methodRpc)
         {
-            Logger<ReactorPlugin>.Debug($"Deserializing {list.Length} object");
+            Logger<ReactorPlugin>.Debug($"Deserializing {methodRpc.Parameters.Length} object");
 
             List<object> args = new();
 
-            foreach (var t in list)
+            foreach (var t in methodRpc.Parameters)
             {
                 if (t.IsValueType && !t.IsPrimitive)
                 {
                     List<object> structArgs = new();
-                    var feilds = t.GetFields(BindingFlags.Public | BindingFlags.Instance);
+                    var feilds = methodRpc.StructBook[t];
                     foreach (var feild in feilds)
                     {
-                        structArgs.Add(reader.Read(feild.GetType()));
+                        var value = reader.Read(feild.FieldType);
+                        Logger<ReactorPlugin>.Debug($"Read {value} of {feild.FieldType.Name} for {methodRpc.Method.Name}");
+                        structArgs.Add(value);
                     }
-
-                    args.Add(Activator.CreateInstance(t, structArgs));
+                    
+                    args.Add(Activator.CreateInstance(t,args: structArgs.ToArray())); //Todo: Improve somehow
                 }
                 else
                 {
-                    args.Add(reader.Read(t));
+                    var value = reader.Read(t);
+                    Logger<ReactorPlugin>.Debug($"Read {value} of {t.Name} for {methodRpc.Method.Name}");
+                    
+                    args.Add(value);
                 }
             }
 
@@ -165,8 +191,7 @@ namespace Reactor.Networking
 
             if (t.IsSubclassOf(typeof(InnerNetObject)))
             {
-                return typeof(AmongUsClient).GetMethod(nameof(AmongUsClient.FindObjectByNetId)).MakeGenericMethod(t)
-                    .Invoke(AmongUsClient.Instance, new object[]{reader.ReadPackedUInt32()});
+                return GetFindObjectByNetIdInvoker(t)(new object[]{reader.ReadPackedUInt32()});
             }
 
             Logger<ReactorPlugin>.Warning($"Tried deserializing unsupported type {t.BaseType.Name}");
