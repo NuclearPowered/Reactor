@@ -39,6 +39,7 @@ namespace Reactor
             RegisterInIl2CppAttribute.Initialize();
             RegisterCustomRpcAttribute.Initialize();
             MethodRpcAttribute.Initialize();
+            ReaderWriterAttribute.Initialize();
 
             ChainloaderHooks.OnPluginLoad(this);
         }

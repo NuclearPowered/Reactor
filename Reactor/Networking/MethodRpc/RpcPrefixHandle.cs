@@ -14,11 +14,7 @@ namespace Reactor.Networking.MethodRpc
         
         public static bool RpcPrefix(MethodBase originalMethod, params object[] list)
         {
-            if (CustomMethodRpc.SkipNextSend)
-            {
-                CustomMethodRpc.SkipNextSend = false;
-                return true;
-            }
+            if (CustomMethodRpc.SkipNextSend) return true;
 
             var methodRpc = CustomMethodRpc.allMethodRPCsFast[originalMethod];
             methodRpc?.Send(list);

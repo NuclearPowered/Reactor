@@ -27,32 +27,29 @@ namespace Reactor.Networking.MethodRpc
 
             var methodParameters = method.GetParameters();
 
-            List<Type> allArgs = new List<Type>();
-            foreach (var arg in methodParameters)
+            Parameters = new Type[methodParameters.Length];
+            for (var i = 0; i < methodParameters.Length; i++)
             {
+                var arg = methodParameters[i];
                 var argType = arg.ParameterType;
                 if (argType.IsValueType && !argType.IsPrimitive && !StructBook.ContainsKey(arg.ParameterType))
                 {
-                    var feilds = argType.GetFields(BindingFlags.Instance | BindingFlags.Public)
+                    var fields = argType.GetFields(BindingFlags.Instance | BindingFlags.Public)
                         .ToArray();
-                    StructBook.Add(argType, feilds);
+                    StructBook.Add(argType, fields);
                 }
 
-                allArgs.Add(argType);
-
+                Parameters[i] = argType;
             }
-
-            Parameters = allArgs.ToArray();
 
             Invoker = RpcPrefixHandle.GenerateCaller(Method);
 
             allMethodRPCsFast.Add(Method, this);
-
         }
 
         public MethodInfo Method { get; }
         public override Type InnerNetObjectType { get; } = typeof(PlayerControl);
-        public override RpcLocalHandling LocalHandling { get; } = RpcLocalHandling.None;
+        public override RpcLocalHandling LocalHandling { get; }
         public override SendOption SendOption { get; }
 
         public override void UnsafeWrite(MessageWriter writer, object data)
@@ -76,6 +73,8 @@ namespace Reactor.Networking.MethodRpc
             {
                 Coroutines.Start((IEnumerator) result);
             }
+
+            SkipNextSend = false;
         }
 
         public void Send(object[] args)
