@@ -37,7 +37,7 @@ namespace Reactor.Networking.MethodRpc
 
             foreach (var method in rpcMethods)
             {
-                
+
                 if (!method.IsStatic)
                 {
                     Logger<ReactorPlugin>.Warning("Cannot register non static custom method rpc");
@@ -45,7 +45,7 @@ namespace Reactor.Networking.MethodRpc
                 }
 
                 var attribute = method.GetCustomAttribute<MethodRpcAttribute>();
-                
+
                 var customRpc = new CustomMethodRpc(plugin, method, attribute.id, attribute.option,
                     attribute.localHandling);
                 PluginSingleton<ReactorPlugin>.Instance.Harmony.Patch(method, new HarmonyMethod(_rpcPrefixGenerator));
@@ -58,9 +58,8 @@ namespace Reactor.Networking.MethodRpc
                     // ignored
                 }
             }
-        }
 
-        
+        }
 
         internal static void Initialize()
         {
