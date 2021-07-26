@@ -29,6 +29,11 @@ namespace Reactor
 
         public ReactorPlugin()
         {
+            if (Paths.BepInExVersion < new SemVer.Version("6.0.0-reactor.23"))
+            {
+                throw new NotSupportedException("This version of BepInEx is not supported!");
+            }
+
             PluginSingleton<BasePlugin>.Initialize();
             RegisterInIl2CppAttribute.Initialize();
             RegisterCustomRpcAttribute.Initialize();
