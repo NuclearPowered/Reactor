@@ -6,6 +6,7 @@ using Reactor.Networking;
 using Reactor.Networking.MethodRpc;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Reactor.Example
 {
@@ -34,28 +35,31 @@ namespace Reactor.Example
 
             private void Update()
             {
-                if (Input.GetKeyDown(KeyCode.F3) && AmongUsClient.Instance && PlayerControl.LocalPlayer)
+                if (AmongUsClient.Instance && PlayerControl.LocalPlayer)
                 {
-                    var name = PlayerControl.LocalPlayer.Data.PlayerName;
-                    Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {name}"));
-
-                    if (!AmongUsClient.Instance.AmHost)
+                    if (Input.GetKeyDown(KeyCode.F3))
                     {
-                        Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {name} to host"));
+                        var name = PlayerControl.LocalPlayer.Data.PlayerName;
+                        Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {name}"));
+
+                        if (!AmongUsClient.Instance.AmHost)
+                        {
+                            Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {name} to host"));
+                        }
                     }
-                }
-                
-                if (Input.GetKeyDown(KeyCode.F4) && AmongUsClient.Instance && PlayerControl.LocalPlayer)
-                {
-                    RpcSay(PlayerControl.LocalPlayer, "Hello from method rpc");
+
+                    if (Input.GetKeyDown(KeyCode.F4))
+                    {
+                        RpcSay(PlayerControl.LocalPlayer, "Hello from method rpc", Random.value, PlayerControl.LocalPlayer);
+                    }
                 }
             }
         }
 
         [MethodRpc((uint) CustomRpcCalls.MethodRpcExample)]
-        public static void RpcSay(PlayerControl sender, string text)
+        public static void RpcSay(PlayerControl player, string text, float number, PlayerControl testPlayer)
         {
-            Logger<ExamplePlugin>.Info($"{sender.Data.PlayerName} said: {text}");
+            Logger<ExamplePlugin>.Info($"{player.Data.PlayerName} text: {text} number: {number} testPlayer: {testPlayer.NetId}");
         }
     }
 }

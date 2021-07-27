@@ -10,55 +10,38 @@ namespace Reactor.Networking.MethodRpc
     [AttributeUsage(AttributeTargets.Method)]
     public class MethodRpcAttribute : Attribute
     {
-        private static readonly MethodInfo _rpcPrefixGenerator = typeof(RpcPrefixHandle).GetMethod(
-            nameof(RpcPrefixHandle.GeneratePrefix),
-            BindingFlags.Static | BindingFlags.Public);
-        
-        public uint id;
-        public SendOption option;
-        public RpcLocalHandling localHandling;
+        public uint Id { get; }
+        public SendOption Option { get; set; } = SendOption.Reliable;
+        public RpcLocalHandling LocalHandling { get; set; } = RpcLocalHandling.Before;
 
-        public MethodRpcAttribute( uint id, SendOption option = SendOption.Reliable, RpcLocalHandling localHandling = RpcLocalHandling.Before)
+        public MethodRpcAttribute(uint id)
         {
-            this.id = id;
-            this.option = option;
-            this.localHandling = localHandling;
+            Id = id;
         }
 
         public static void Register(Assembly assembly, BasePlugin plugin)
         {
-            Logger<ReactorPlugin>.Info($"Registering Method Rpc for {assembly.GetName()}");
+            var methods = assembly.GetTypes()
+                .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public));
 
-            var rpcMethods = assembly.GetTypes()
-                .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public))
-                .Where(m => m.GetCustomAttributes(typeof(MethodRpcAttribute), false).Length > 0)
-                .ToArray();
-
-
-            foreach (var method in rpcMethods)
+            foreach (var method in methods)
             {
-
-                if (!method.IsStatic)
+                var attribute = method.GetCustomAttribute<MethodRpcAttribute>();
+                if (attribute == null)
                 {
-                    Logger<ReactorPlugin>.Warning("Cannot register non static custom method rpc");
                     continue;
                 }
 
-                var attribute = method.GetCustomAttribute<MethodRpcAttribute>();
-
-                var customRpc = new CustomMethodRpc(plugin, method, attribute.id, attribute.option,
-                    attribute.localHandling);
-                PluginSingleton<ReactorPlugin>.Instance.Harmony.Patch(method, new HarmonyMethod(_rpcPrefixGenerator));
                 try
                 {
+                    var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.Option, attribute.LocalHandling);
                     PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    // ignored
+                    Logger<ReactorPlugin>.Warning($"Failed to register {method.FullDescription()}: {e}");
                 }
             }
-
         }
 
         internal static void Initialize()

@@ -7,6 +7,7 @@ using HarmonyLib;
 using Reactor.Extensions;
 using Reactor.Networking;
 using Reactor.Networking.MethodRpc;
+using Reactor.Networking.Serialization;
 using Reactor.Patches;
 using Reactor.Unstrip;
 using UnhollowerBaseLib.Attributes;
@@ -38,8 +39,8 @@ namespace Reactor
             PluginSingleton<BasePlugin>.Initialize();
             RegisterInIl2CppAttribute.Initialize();
             RegisterCustomRpcAttribute.Initialize();
+            MessageConverterAttribute.Initialize();
             MethodRpcAttribute.Initialize();
-            ReaderWriterAttribute.Initialize();
 
             ChainloaderHooks.OnPluginLoad(this);
         }
