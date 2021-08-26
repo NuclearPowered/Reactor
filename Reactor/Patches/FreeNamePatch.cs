@@ -45,13 +45,13 @@ namespace Reactor.Patches
                 "JoinGameButton"
             };
 
-            var offset = Vector3.down * 0.7f;
+            var offset = Vector3.up;
             var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/" + x)).ToList();
             if (gameObjects.Contains(null)) return false;
             
             gameObjects.ForEach(x => {
-                x.transform.position += offset;
-                offset -= Vector3.down * 0.2f;
+                x.transform.position = offset;
+                offset += Vector3.down * 1.5f;
             });
 
             return true;
