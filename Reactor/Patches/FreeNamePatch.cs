@@ -15,6 +15,7 @@ namespace Reactor.Patches
             SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
             {
                 if (!scene.name.Equals("MMOnline")) return;
+                if (!TryMoveObjects()) return;
                 
                 var editName = DestroyableSingleton<AccountManager>.Instance.accountTab.editNameScreen;
                 var nameText = Object.Instantiate(editName.nameText.gameObject);
@@ -33,6 +34,27 @@ namespace Reactor.Patches
                 
                 textBox.Pipe.GetComponent<TextMeshPro>().fontSize = 4f;
             }));
+        }
+
+        private static bool TryMoveObjects()
+        {
+            var toMove = new List<string>
+            {
+                "HostGameButton",
+                "FindGameButton",
+                "JoinGameButton"
+            };
+
+            var offset = Vector3.down * 0.7f;
+            var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/" + x)).ToList();
+            if (gameObjects.Contains(null)) return false;
+            
+            gameObjects.ForEach(x => {
+                x.transform.position += offset;
+                offset -= Vector3.down * 0.2f;
+            });
+
+            return true;
         }
     }
 }
