@@ -52,6 +52,7 @@ namespace Reactor
             _gameObject.AddComponent<Coroutines.Component>();
 
             ReactorVersionShower.Initialize();
+            FreeNamePatch.Initialize();
             SplashSkip.Initialize();
             DefaultBundle.Load();
         }

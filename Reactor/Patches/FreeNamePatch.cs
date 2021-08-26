@@ -1,50 +1,38 @@
 ﻿using System;
-using HarmonyLib;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace Reactor.Patches
 {
-    // TODO this needs some changes as text box was entirely removed in 2021.6.15
-    internal static class FreeNamePatch
+    public static class FreeNamePatch
     {
-        [HarmonyPatch(typeof(SetNameText), nameof(SetNameText.Start))]
-        public static class NameInputPatch
+        public static void Initialize()
         {
-            public static void Postfix(SetNameText __instance)
+            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
             {
-                if (!__instance)
-                {
-                    return;
-                }
+                if (!scene.name.Equals("MMOnline")) return;
+                
+                var editName = DestroyableSingleton<AccountManager>.Instance.accountTab.editNameScreen;
+                var nameText = Object.Instantiate(editName.nameText.gameObject);
 
-                var nameText = __instance.gameObject;
+                nameText.transform.localPosition += Vector3.up * 2.2f;
 
-                var textBox = nameText.AddComponent<TextBoxTMP>();
-                textBox.Background = nameText.GetComponentInChildren<SpriteRenderer>();
-                textBox.OnChange = textBox.OnEnter = textBox.OnFocusLost = new Button.ButtonClickedEvent();
-                textBox.characterLimit = 10;
-
-                var textMeshPro = nameText.GetComponentInChildren<TextMeshPro>();
-                textBox.outputText = textMeshPro;
-                textBox.SetText(SaveManager.PlayerName);
-
-                textBox.OnChange.AddListener((Action) (() =>
-                {
+                var textBox = nameText.GetComponent<TextBoxTMP>();
+                textBox.outputText.alignment = TextAlignmentOptions.CenterGeoAligned;
+                textBox.outputText.transform.position = nameText.transform.position;
+                textBox.outputText.fontSize = 4f;
+                
+                textBox.OnChange.AddListener((Action) (() => {
                     SaveManager.PlayerName = textBox.text;
                 }));
-
-                var pipeGameObject = GameObject.Find("Pipe");
-                if (!pipeGameObject)
-                {
-                    return;
-                }
-
-                var pipe = UnityEngine.Object.Instantiate(pipeGameObject, textMeshPro.transform);
-                pipe.GetComponent<TextMeshPro>().fontSize = 4f;
-                textBox.Pipe = pipe.GetComponent<MeshRenderer>();
-            }
+                textBox.OnEnter = textBox.OnFocusLost = textBox.OnChange;
+                
+                textBox.Pipe.GetComponent<TextMeshPro>().fontSize = 4f;
+            }));
         }
     }
 }
