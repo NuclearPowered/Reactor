@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using BepInEx.IL2CPP;
 
 namespace Reactor.Networking
@@ -32,7 +31,7 @@ namespace Reactor.Networking
                     i++,
                     plugin.Metadata.GUID,
                     plugin.Metadata.Version.Clean(),
-                    plugin.Instance.GetType().GetCustomAttribute<ReactorPluginSideAttribute>()?.Side ?? PluginSide.Both
+                    ReactorPluginSideAttribute.GetPluginSide(plugin.Instance.GetType())
                 ))
                 .ToHashSet();
 
