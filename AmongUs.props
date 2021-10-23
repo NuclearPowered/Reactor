@@ -1,11 +1,15 @@
 <Project>
     <PropertyGroup>
-        <GameVersion Condition="'$(GamePlatform)' == 'Steam'">2021.6.30s</GameVersion>
-        <GameVersion Condition="'$(GamePlatform)' == 'Itch'">2021.6.30i</GameVersion>
+        <GamePlatform Condition="'$(GamePlatform)' == ''">Steam</GamePlatform>
+        <GameVersion Condition="'$(GamePlatform)' == 'Steam'">2021.6.30-s</GameVersion>
+        <GameVersion Condition="'$(GamePlatform)' == 'Itch'">2021.6.30-i</GameVersion>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Reactor.MSBuild" Version="0.1.5" PrivateAssets="all" />
+        <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.0" />
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.426" />
+        <PackageReference Include="AmongUs.GameLibs" Version="$(GameVersion)" />
+        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="0.1.0" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Build" Condition="'$(AmongUs)' != ''">

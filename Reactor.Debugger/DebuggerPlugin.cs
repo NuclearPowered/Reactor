@@ -11,21 +11,18 @@ using UnityEngine;
 
 namespace Reactor.Debugger
 {
-    [BepInPlugin(Id)]
+    [BepInAutoPlugin("gg.reactor.debugger")]
     [BepInProcess("Among Us.exe")]
     [BepInDependency(ReactorPlugin.Id)]
     [ReactorPluginSide(PluginSide.ClientOnly)]
-    public class DebuggerPlugin : BasePlugin
+    public partial class DebuggerPlugin : BasePlugin
     {
-        public const string Id = "gg.reactor.debugger";
-
         public Harmony Harmony { get; } = new Harmony(Id);
         public DebuggerComponent Component { get; private set; }
 
         public override void Load()
         {
-            var gameObject = new GameObject(nameof(DebuggerPlugin)).DontDestroy();
-            Component = gameObject.AddComponent<DebuggerComponent>();
+            Component = this.AddComponent<DebuggerComponent>();
 
             GameOptionsData.MaxImpostors = GameOptionsData.RecommendedImpostors = Enumerable.Repeat((int) byte.MaxValue, byte.MaxValue).ToArray();
             GameOptionsData.MinPlayers = Enumerable.Repeat(1, 4).ToArray();

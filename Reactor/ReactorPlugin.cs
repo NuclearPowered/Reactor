@@ -4,7 +4,6 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
-using Reactor.Extensions;
 using Reactor.Networking;
 using Reactor.Patches;
 using Reactor.Unstrip;
@@ -13,27 +12,19 @@ using UnityEngine;
 
 namespace Reactor
 {
-    [BepInPlugin(Id)]
+    [BepInAutoPlugin("gg.reactor.api")]
     [BepInProcess("Among Us.exe")]
-    public class ReactorPlugin : BasePlugin
+    public partial class ReactorPlugin : BasePlugin
     {
-        public const string Id = "gg.reactor.api";
-
         public Harmony Harmony { get; } = new Harmony(Id);
         public CustomRpcManager CustomRpcManager { get; } = new CustomRpcManager();
 
-        public ConfigEntry<bool> AllowVanillaServers;
+        public ConfigEntry<bool> AllowVanillaServers { get; private set; }
 
-        private GameObject _gameObject;
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
         public ReactorPlugin()
         {
-            if (Paths.BepInExVersion < new SemVer.Version("6.0.0-reactor.23"))
-            {
-                throw new NotSupportedException("This version of BepInEx is not supported!");
-            }
-
             PluginSingleton<BasePlugin>.Initialize();
             RegisterInIl2CppAttribute.Initialize();
             RegisterCustomRpcAttribute.Initialize();
@@ -47,9 +38,8 @@ namespace Reactor
 
             Harmony.PatchAll();
 
-            _gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
-            _gameObject.AddComponent<ReactorComponent>().Plugin = this;
-            _gameObject.AddComponent<Coroutines.Component>();
+            this.AddComponent<ReactorComponent>().Plugin = this;
+            this.AddComponent<Coroutines.Component>();
 
             ReactorVersionShower.Initialize();
             SplashSkip.Initialize();
@@ -59,7 +49,6 @@ namespace Reactor
         public override bool Unload()
         {
             Harmony.UnpatchSelf();
-            _gameObject.Destroy();
             RegionInfoWatcher?.Dispose();
 
             return base.Unload();

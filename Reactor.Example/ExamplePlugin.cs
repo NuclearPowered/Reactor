@@ -1,32 +1,24 @@
 ﻿using System;
 using BepInEx;
 using BepInEx.IL2CPP;
-using Reactor.Extensions;
 using Reactor.Networking;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace Reactor.Example
 {
-    [BepInPlugin(Id)]
+    [BepInAutoPlugin("gg.reactor.Example")]
     [BepInProcess("Among Us.exe")]
     [BepInDependency(ReactorPlugin.Id)]
-    public class ExamplePlugin : BasePlugin
+    public partial class ExamplePlugin : BasePlugin
     {
-        public const string Id = "gg.reactor.Example";
-
         public override void Load()
         {
-            var gameObject = new GameObject(nameof(ReactorPlugin)).DontDestroy();
-            gameObject.AddComponent<ExampleComponent>().Plugin = this;
+            this.AddComponent<ExampleComponent>();
         }
 
         [RegisterInIl2Cpp]
         public class ExampleComponent : MonoBehaviour
         {
-            [HideFromIl2Cpp]
-            public ExamplePlugin Plugin { get; internal set; }
-
             public ExampleComponent(IntPtr ptr) : base(ptr)
             {
             }
