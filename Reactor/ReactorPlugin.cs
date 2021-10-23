@@ -46,6 +46,7 @@ namespace Reactor
             this.AddComponent<Coroutines.Component>();
 
             ReactorVersionShower.Initialize();
+            FreeNamePatch.Initialize();
             SplashSkip.Initialize();
             DefaultBundle.Load();
         }
