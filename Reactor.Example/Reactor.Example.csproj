@@ -2,6 +2,7 @@
     <PropertyGroup>
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
+        <DebugType>embedded</DebugType>
 
         <Version>0.1.0</Version>
         <Description>Example mod using Reactor</Description>

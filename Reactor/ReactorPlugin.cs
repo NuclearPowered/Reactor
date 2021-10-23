@@ -5,6 +5,8 @@ using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
 using Reactor.Networking;
+using Reactor.Networking.MethodRpc;
+using Reactor.Networking.Serialization;
 using Reactor.Patches;
 using Reactor.Unstrip;
 using UnhollowerBaseLib.Attributes;
@@ -28,6 +30,8 @@ namespace Reactor
             PluginSingleton<BasePlugin>.Initialize();
             RegisterInIl2CppAttribute.Initialize();
             RegisterCustomRpcAttribute.Initialize();
+            MessageConverterAttribute.Initialize();
+            MethodRpcAttribute.Initialize();
 
             ChainloaderHooks.OnPluginLoad(this);
         }

@@ -30,9 +30,9 @@ namespace Reactor.Networking
         public abstract object UnsafeRead(MessageReader reader);
         public abstract void UnsafeHandle(InnerNetObject innerNetObject, object data);
 
-        public void UnsafeSend(InnerNetObject netObject, object data, bool immediately = false, int targetClientId = -1)
+        public void UnsafeSend(InnerNetObject innerNetObject, object data, bool immediately = false, int targetClientId = -1)
         {
-            if (netObject == null) throw new ArgumentNullException(nameof(netObject));
+            if (innerNetObject == null) throw new ArgumentNullException(nameof(innerNetObject));
 
             if (Manager == null)
             {
@@ -41,13 +41,13 @@ namespace Reactor.Networking
 
             if (LocalHandling == RpcLocalHandling.Before)
             {
-                UnsafeHandle(netObject, data);
+                UnsafeHandle(innerNetObject, data);
             }
 
             var writer = immediately switch
             {
-                false => AmongUsClient.Instance.StartRpc(netObject.NetId, CustomRpcManager.CallId, SendOption),
-                true => AmongUsClient.Instance.StartRpcImmediately(netObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId)
+                false => AmongUsClient.Instance.StartRpc(innerNetObject.NetId, CustomRpcManager.CallId, SendOption),
+                true => AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId)
             };
 
             var pluginNetId = ModList.GetById(PluginId).NetId;
@@ -69,7 +69,7 @@ namespace Reactor.Networking
 
             if (LocalHandling == RpcLocalHandling.After)
             {
-                UnsafeHandle(netObject, data);
+                UnsafeHandle(innerNetObject, data);
             }
         }
     }
