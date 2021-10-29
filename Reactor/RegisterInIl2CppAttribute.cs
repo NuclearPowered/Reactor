@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
 using UnhollowerBaseLib;
@@ -15,44 +14,26 @@ namespace Reactor
     [AttributeUsage(AttributeTargets.Class)]
     public class RegisterInIl2CppAttribute : Attribute
     {
+        public Type[] Interfaces { get; }
+
+        public RegisterInIl2CppAttribute()
+        {
+            Interfaces = Type.EmptyTypes;
+        }
+
         public RegisterInIl2CppAttribute(params Type[] interfaces)
         {
             Interfaces = interfaces;
         }
 
-        private Type[] Interfaces { get; }
-        
         [Obsolete("You don't need to call this anymore", true)]
         public static void Register()
         {
         }
 
-        private static readonly AccessTools.FieldRef<object, HashSet<string>> _injectedTypes
-            = AccessTools.FieldRefAccess<HashSet<string>>(typeof(ClassInjector), "InjectedTypes");
-
         private static readonly Func<Type, IntPtr> _readClassPointerForType = AccessTools.MethodDelegate<Func<Type, IntPtr>>(
             AccessTools.Method(typeof(ClassInjector), "ReadClassPointerForType")
         );
-
-        private static bool IsInjected(Type type)
-        {
-            if (_readClassPointerForType(type) != IntPtr.Zero)
-            {
-                return true;
-            }
-
-            var injectedTypes = _injectedTypes();
-
-            lock (injectedTypes)
-            {
-                if (injectedTypes.Contains(type.FullName))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
 
         private static unsafe void Register(Type type, Type[] interfaces)
         {
@@ -62,24 +43,23 @@ namespace Reactor
                 Register(type.BaseType, baseTypeAttribute.Interfaces);
             }
 
-            if (IsInjected(type))
+            if (ClassInjector.IsTypeRegisteredInIl2Cpp(type))
             {
                 return;
             }
 
             try
             {
-                var nativeClassStructs = new INativeClassStruct[interfaces.Length];
-                for (int index = 0; index < interfaces.Length; index++)
+                var nativeInterfaces = new INativeClassStruct[interfaces.Length];
+                for (var index = 0; index < interfaces.Length; index++)
                 {
-                    var attributeInterface = interfaces[index];
-
-                    IntPtr klassPtr = (IntPtr) typeof(Il2CppClassPointerStore<>).MakeGenericType(attributeInterface).GetField(nameof(Il2CppClassPointerStore<Il2CppObjectBase>.NativeClassPtr)).GetValue(null);
+                    var interfaceType = interfaces[index];
+                    var klassPtr = _readClassPointerForType(interfaceType);
                     IL2CPP.il2cpp_runtime_class_init(klassPtr);
-                    nativeClassStructs[index] = UnityVersionHandler.Wrap((Il2CppClass*)klassPtr);
+                    nativeInterfaces[index] = UnityVersionHandler.Wrap((Il2CppClass*) klassPtr);
                 }
 
-                ClassInjector.RegisterTypeInIl2Cpp(type, nativeClassStructs);
+                ClassInjector.RegisterTypeInIl2Cpp(type, nativeInterfaces);
             }
             catch (Exception e)
             {
