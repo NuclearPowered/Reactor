@@ -1,7 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using UnhollowerBaseLib;
+using UnhollowerBaseLib.Runtime;
+using UnhollowerBaseLib.Runtime.VersionSpecific.Class;
 using UnhollowerRuntimeLib;
 
 namespace Reactor
@@ -12,53 +14,52 @@ namespace Reactor
     [AttributeUsage(AttributeTargets.Class)]
     public class RegisterInIl2CppAttribute : Attribute
     {
+        public Type[] Interfaces { get; }
+
+        public RegisterInIl2CppAttribute()
+        {
+            Interfaces = Type.EmptyTypes;
+        }
+
+        public RegisterInIl2CppAttribute(params Type[] interfaces)
+        {
+            Interfaces = interfaces;
+        }
+
         [Obsolete("You don't need to call this anymore", true)]
         public static void Register()
         {
         }
 
-        private static readonly AccessTools.FieldRef<object, HashSet<string>> _injectedTypes
-            = AccessTools.FieldRefAccess<HashSet<string>>(typeof(ClassInjector), "InjectedTypes");
-
         private static readonly Func<Type, IntPtr> _readClassPointerForType = AccessTools.MethodDelegate<Func<Type, IntPtr>>(
             AccessTools.Method(typeof(ClassInjector), "ReadClassPointerForType")
         );
 
-        private static bool IsInjected(Type type)
+        private static unsafe void Register(Type type, Type[] interfaces)
         {
-            if (_readClassPointerForType(type) != IntPtr.Zero)
+            var baseTypeAttribute = type.BaseType?.GetCustomAttribute<RegisterInIl2CppAttribute>();
+            if (baseTypeAttribute != null)
             {
-                return true;
+                Register(type.BaseType, baseTypeAttribute.Interfaces);
             }
 
-            var injectedTypes = _injectedTypes();
-
-            lock (injectedTypes)
-            {
-                if (injectedTypes.Contains(type.FullName))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static void Register(Type type)
-        {
-            if (type.BaseType?.GetCustomAttribute<RegisterInIl2CppAttribute>() != null)
-            {
-                Register(type.BaseType);
-            }
-
-            if (IsInjected(type))
+            if (ClassInjector.IsTypeRegisteredInIl2Cpp(type))
             {
                 return;
             }
 
             try
             {
-                ClassInjector.RegisterTypeInIl2Cpp(type);
+                var nativeInterfaces = new INativeClassStruct[interfaces.Length];
+                for (var index = 0; index < interfaces.Length; index++)
+                {
+                    var interfaceType = interfaces[index];
+                    var klassPtr = _readClassPointerForType(interfaceType);
+                    IL2CPP.il2cpp_runtime_class_init(klassPtr);
+                    nativeInterfaces[index] = UnityVersionHandler.Wrap((Il2CppClass*) klassPtr);
+                }
+
+                ClassInjector.RegisterTypeInIl2Cpp(type, nativeInterfaces);
             }
             catch (Exception e)
             {
@@ -70,9 +71,10 @@ namespace Reactor
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (type.GetCustomAttribute<RegisterInIl2CppAttribute>() != null)
+                var attribute = type.GetCustomAttribute<RegisterInIl2CppAttribute>();
+                if (attribute != null)
                 {
-                    Register(type);
+                    Register(type, attribute.Interfaces);
                 }
             }
         }
