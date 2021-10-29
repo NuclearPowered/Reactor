@@ -3,7 +3,8 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <DebugType>embedded</DebugType>
-
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        
         <VersionPrefix>1.0.0</VersionPrefix>
         <VersionSuffix>dev</VersionSuffix>
         <Description>Core mod and API for Among Us</Description>

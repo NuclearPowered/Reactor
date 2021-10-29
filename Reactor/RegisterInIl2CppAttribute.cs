@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using UnhollowerBaseLib;
+using UnhollowerBaseLib.Runtime;
+using UnhollowerBaseLib.Runtime.VersionSpecific.Class;
 using UnhollowerRuntimeLib;
 
 namespace Reactor
@@ -12,6 +15,13 @@ namespace Reactor
     [AttributeUsage(AttributeTargets.Class)]
     public class RegisterInIl2CppAttribute : Attribute
     {
+        public RegisterInIl2CppAttribute(params Type[] interfaces)
+        {
+            Interfaces = interfaces;
+        }
+
+        private Type[] Interfaces { get; }
+        
         [Obsolete("You don't need to call this anymore", true)]
         public static void Register()
         {
@@ -44,11 +54,12 @@ namespace Reactor
             return false;
         }
 
-        private static void Register(Type type)
+        private static unsafe void Register(Type type, Type[] interfaces)
         {
-            if (type.BaseType?.GetCustomAttribute<RegisterInIl2CppAttribute>() != null)
+            var baseTypeAttribute = type.BaseType?.GetCustomAttribute<RegisterInIl2CppAttribute>();
+            if (baseTypeAttribute != null)
             {
-                Register(type.BaseType);
+                Register(type.BaseType, baseTypeAttribute.Interfaces);
             }
 
             if (IsInjected(type))
@@ -58,7 +69,17 @@ namespace Reactor
 
             try
             {
-                ClassInjector.RegisterTypeInIl2Cpp(type);
+                var nativeClassStructs = new INativeClassStruct[interfaces.Length];
+                for (int index = 0; index < interfaces.Length; index++)
+                {
+                    var attributeInterface = interfaces[index];
+
+                    IntPtr klassPtr = (IntPtr) typeof(Il2CppClassPointerStore<>).MakeGenericType(attributeInterface).GetField(nameof(Il2CppClassPointerStore<Il2CppObjectBase>.NativeClassPtr)).GetValue(null);
+                    IL2CPP.il2cpp_runtime_class_init(klassPtr);
+                    nativeClassStructs[index] = UnityVersionHandler.Wrap((Il2CppClass*)klassPtr);
+                }
+
+                ClassInjector.RegisterTypeInIl2Cpp(type, nativeClassStructs);
             }
             catch (Exception e)
             {
@@ -70,9 +91,10 @@ namespace Reactor
         {
             foreach (var type in assembly.GetTypes())
             {
-                if (type.GetCustomAttribute<RegisterInIl2CppAttribute>() != null)
+                var attribute = type.GetCustomAttribute<RegisterInIl2CppAttribute>();
+                if (attribute != null)
                 {
-                    Register(type);
+                    Register(type, attribute.Interfaces);
                 }
             }
         }
