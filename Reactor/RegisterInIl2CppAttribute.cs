@@ -1,9 +1,6 @@
 using System;
 using System.Reflection;
 using HarmonyLib;
-using UnhollowerBaseLib;
-using UnhollowerBaseLib.Runtime;
-using UnhollowerBaseLib.Runtime.VersionSpecific.Class;
 using UnhollowerRuntimeLib;
 
 namespace Reactor
@@ -31,11 +28,7 @@ namespace Reactor
         {
         }
 
-        private static readonly Func<Type, IntPtr> _readClassPointerForType = AccessTools.MethodDelegate<Func<Type, IntPtr>>(
-            AccessTools.Method(typeof(ClassInjector), "ReadClassPointerForType")
-        );
-
-        private static unsafe void Register(Type type, Type[] interfaces)
+        private static void Register(Type type, Type[] interfaces)
         {
             var baseTypeAttribute = type.BaseType?.GetCustomAttribute<RegisterInIl2CppAttribute>();
             if (baseTypeAttribute != null)
@@ -50,16 +43,7 @@ namespace Reactor
 
             try
             {
-                var nativeInterfaces = new INativeClassStruct[interfaces.Length];
-                for (var index = 0; index < interfaces.Length; index++)
-                {
-                    var interfaceType = interfaces[index];
-                    var klassPtr = _readClassPointerForType(interfaceType);
-                    IL2CPP.il2cpp_runtime_class_init(klassPtr);
-                    nativeInterfaces[index] = UnityVersionHandler.Wrap((Il2CppClass*) klassPtr);
-                }
-
-                ClassInjector.RegisterTypeInIl2Cpp(type, nativeInterfaces);
+                ClassInjector.RegisterTypeInIl2CppWithInterfaces(type, true, interfaces);
             }
             catch (Exception e)
             {

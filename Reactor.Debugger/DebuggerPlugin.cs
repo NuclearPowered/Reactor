@@ -5,7 +5,6 @@ using BepInEx.IL2CPP;
 using HarmonyLib;
 using InnerNet;
 using Reactor.Extensions;
-using UnhollowerBaseLib;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -43,18 +42,18 @@ namespace Reactor.Debugger
             {
                 TestWindow = new DragWindow(new Rect(20, 20, 0, 0), "Debugger", () =>
                 {
-                    GUILayout.Label("Name: " + SaveManager.PlayerName, new Il2CppReferenceArray<GUILayoutOption>(0));
-                    DisableGameEnd = GUILayout.Toggle(DisableGameEnd, "Disable game end", new Il2CppReferenceArray<GUILayoutOption>(0));
+                    GUILayout.Label("Name: " + SaveManager.PlayerName);
+                    DisableGameEnd = GUILayout.Toggle(DisableGameEnd, "Disable game end");
 
                     if (ShipStatus.Instance && AmongUsClient.Instance.AmHost)
                     {
-                        if (GUILayout.Button("Force game end", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                        if (GUILayout.Button("Force game end"))
                         {
                             ShipStatus.Instance.enabled = false;
                             ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
                         }
 
-                        if (GUILayout.Button("Call a meeting", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                        if (GUILayout.Button("Call a meeting"))
                         {
                             PlayerControl.LocalPlayer.CmdReportDeadBody(null);
                         }
@@ -64,7 +63,7 @@ namespace Reactor.Debugger
                     {
                         var data = PlayerControl.LocalPlayer.Data;
 
-                        var newIsImpostor = GUILayout.Toggle(data.IsImpostor, "Is Impostor", new Il2CppReferenceArray<GUILayoutOption>(0));
+                        var newIsImpostor = GUILayout.Toggle(data.IsImpostor, "Is Impostor");
                         if (data.IsImpostor != newIsImpostor)
                         {
                             if (newIsImpostor)
@@ -80,7 +79,7 @@ namespace Reactor.Debugger
                             }
                         }
 
-                        if (GUILayout.Button("Spawn a dummy", new Il2CppReferenceArray<GUILayoutOption>(0)))
+                        if (GUILayout.Button("Spawn a dummy"))
                         {
                             var playerControl = Instantiate(TutorialManager.Instance.PlayerPrefab);
                             var i = playerControl.PlayerId = (byte) GameData.Instance.GetAvailableId();
@@ -101,8 +100,8 @@ namespace Reactor.Debugger
                     if (PlayerControl.LocalPlayer)
                     {
                         var position = PlayerControl.LocalPlayer.transform.position;
-                        GUILayout.Label($"x: {position.x}", new Il2CppReferenceArray<GUILayoutOption>(0));
-                        GUILayout.Label($"y: {position.y}", new Il2CppReferenceArray<GUILayoutOption>(0));
+                        GUILayout.Label($"x: {position.x}");
+                        GUILayout.Label($"y: {position.y}");
                     }
                 })
                 {
