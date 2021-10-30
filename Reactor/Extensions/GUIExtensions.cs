@@ -114,7 +114,11 @@ namespace Reactor.Extensions
         {
             if (Enabled)
             {
-                Rect = Rect.ResetSize();
+                if (Event.current.type == EventType.Layout)
+                {
+                    Rect = Rect.ResetSize();
+                }
+
                 Rect = GUILayout.Window(Id, Rect, Func, Title, new Il2CppReferenceArray<GUILayoutOption>(0));
 
                 if ((Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)) && Rect.Contains(new Vector2(Input.mousePosition.x, Screen.height - Input.mousePosition.y)))
