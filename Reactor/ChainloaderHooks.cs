@@ -10,10 +10,16 @@ namespace Reactor
         public delegate void PluginLoadHandler(BasePlugin plugin);
 
         public static event PluginLoadHandler PluginLoad;
+        public static event PluginLoadHandler PluginLoaded;
 
         internal static void OnPluginLoad(BasePlugin plugin)
         {
             PluginLoad?.Invoke(plugin);
+        }
+        
+        internal static void AfterPluginLoad(BasePlugin plugin)
+        {
+            PluginLoaded?.Invoke(plugin);
         }
 
         [HarmonyPatch(typeof(IL2CPPChainloader), nameof(IL2CPPChainloader.LoadPlugin))]
@@ -28,6 +34,11 @@ namespace Reactor
                         new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ChainloaderHooks), nameof(OnPluginLoad)))
                     )
                     .InstructionEnumeration();
+            }
+
+            public static void Postfix(BasePlugin __result)
+            {
+                AfterPluginLoad(__result);
             }
         }
     }
