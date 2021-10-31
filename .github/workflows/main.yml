@@ -7,6 +7,15 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/.cache/bepinex
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
       - uses: actions/checkout@v2
         with:
           submodules: true
