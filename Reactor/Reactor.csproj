@@ -3,6 +3,7 @@
         <TargetFramework>netstandard2.1</TargetFramework>
         <LangVersion>latest</LangVersion>
         <DebugType>embedded</DebugType>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
         <VersionPrefix>1.1.0</VersionPrefix>
         <VersionSuffix>dev</VersionSuffix>

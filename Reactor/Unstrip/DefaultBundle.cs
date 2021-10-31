@@ -8,7 +8,7 @@ namespace Reactor.Unstrip
     {
         public static void Load()
         {
-            var bundle = AssetBundle.LoadFromMemory(typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle").ReadFully());
+            var bundle = AssetBundle.LoadFromStream(typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle").AsIl2Cpp());
 
             var backupShader = bundle.LoadAsset<Shader>("UI-Default");
 
