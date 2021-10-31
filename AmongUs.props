@@ -6,9 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BepInEx.AutoPlugin" Version="1.*" />
-        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.434" />
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.508" />
         <PackageReference Include="AmongUs.GameLibs" Version="$(GameVersion)" />
+
+        <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.0" />
+        <PackageReference Include="BepInEx.IL2CPP.MSBuild" Version="1.0.1" />
     </ItemGroup>
 
     <Target Name="Copy" AfterTargets="Build" Condition="'$(AmongUs)' != ''">
