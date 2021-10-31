@@ -43,6 +43,16 @@ namespace Reactor.Extensions
             _stream.Flush();
         }
 
+        public override void Close()
+        {
+            _stream.Close();
+        }
+
+        public override void Dispose()
+        {
+            _stream.Dispose();
+        }
+
         public override long Seek(long offset, Il2CppSystem.IO.SeekOrigin origin)
         {
             return _stream.Seek(offset, origin switch
