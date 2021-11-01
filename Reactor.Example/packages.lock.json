@@ -2,14 +2,11 @@
   "version": 1,
   "dependencies": {
     ".NETStandard,Version=v2.1": {
-      "AmongUs.GameLibs": {
+      "AmongUs.GameLibs.Steam": {
         "type": "Direct",
-        "requested": "[2021.6.30-s, )",
-        "resolved": "2021.6.30-s",
-        "contentHash": "j7clrZV+UpMuZeAifwL6QxIShSYj+R5afIRgA6pFUK1rpWb75rYR8FH0mXS81yAntvRjMZ9qAuz6Rz2cSZ6SAA==",
-        "dependencies": {
-          "BepInEx.IL2CPP.MSBuild": "1.0.0"
-        }
+        "requested": "[2021.6.30, )",
+        "resolved": "2021.6.30",
+        "contentHash": "TdlFO+S61WREk/sOV2YUmzQ6MFNXk5o+uxLv4i4ft/Z1VRkxFo66/ff3cR1ZfI8DuXni/Ao9rS4dJP+j85pEFA=="
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
@@ -474,10 +471,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "AmongUs.GameLibs": "2021.6.30-s",
-          "BepInEx.AutoPlugin": "1.0.0",
-          "BepInEx.IL2CPP": "6.0.0-be.508",
-          "BepInEx.IL2CPP.MSBuild": "1.0.1"
+          "BepInEx.IL2CPP": "6.0.0-be.508"
         }
       }
     }
