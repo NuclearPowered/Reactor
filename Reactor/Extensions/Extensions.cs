@@ -23,7 +23,7 @@ namespace Reactor.Extensions
         /// </summary>
         public static void once_sceneLoaded(Action<Scene, LoadSceneMode> value)
         {
-            UnityAction<Scene, LoadSceneMode> unityAction = null;
+            UnityAction<Scene, LoadSceneMode>? unityAction = null;
 
             unityAction = (Action<Scene, LoadSceneMode>) ((scene, loadMode) =>
             {
@@ -37,7 +37,7 @@ namespace Reactor.Extensions
         /// <summary>
         /// Returns random <typeparamref name="T"/> from <paramref name="input"/>
         /// </summary>
-        public static T Random<T>(this IEnumerable<T> input)
+        public static T? Random<T>(this IEnumerable<T> input)
         {
             var list = input as IList<T> ?? input.ToList();
             return list.Count == 0 ? default : list[UnityEngine.Random.Range(0, list.Count)];
@@ -77,9 +77,9 @@ namespace Reactor.Extensions
         /// </summary>
         public static Task SendAsync(this UnityWebRequest request)
         {
-            var task = new TaskCompletionSource<object>();
+            var task = new TaskCompletionSource<object?>();
 
-            request.Send().m_completeCallback = (Action<AsyncOperation>) (x =>
+            request.Send().m_completeCallback = (Action<AsyncOperation>) (_ =>
             {
                 task.SetResult(null);
             });
@@ -115,7 +115,7 @@ namespace Reactor.Extensions
             return type.GetMethods(AccessTools.all, returnType, parameterTypes);
         }
 
-        public static T LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityEngine.Object
+        public static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityEngine.Object
         {
             return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>();
         }

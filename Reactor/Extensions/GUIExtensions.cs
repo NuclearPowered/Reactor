@@ -48,7 +48,7 @@ namespace Reactor.Extensions
             return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 100f);
         }
 
-        public static DefaultControls.Resources StandardResources { get; internal set; }
+        public static DefaultControls.Resources StandardResources { get; internal set; } = null!;
 
         public static GameObject CreateCanvas()
         {

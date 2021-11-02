@@ -21,7 +21,7 @@ namespace Reactor
         public Harmony Harmony { get; } = new Harmony(Id);
         public CustomRpcManager CustomRpcManager { get; } = new CustomRpcManager();
 
-        public ConfigEntry<bool> AllowVanillaServers { get; private set; }
+        public ConfigEntry<bool>? AllowVanillaServers { get; private set; }
 
         private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
@@ -63,7 +63,7 @@ namespace Reactor
         public class ReactorComponent : MonoBehaviour
         {
             [HideFromIl2Cpp]
-            public ReactorPlugin Plugin { get; internal set; }
+            public ReactorPlugin? Plugin { get; internal set; }
 
             public ReactorComponent(IntPtr ptr) : base(ptr)
             {
@@ -76,7 +76,7 @@ namespace Reactor
 
             private void Update()
             {
-                if (Plugin.RegionInfoWatcher.Reload)
+                if (Plugin!.RegionInfoWatcher.Reload)
                 {
                     Plugin.RegionInfoWatcher.Reload = false;
                     ServerManager.Instance.LoadServers();

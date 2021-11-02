@@ -8,7 +8,7 @@ namespace Reactor.Unstrip
     {
         public static void Load()
         {
-            using var stream = typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle");
+            using var stream = typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle")!;
             var bundle = AssetBundle.LoadFromStream(stream.AsIl2Cpp());
 
             var backupShader = bundle.LoadAsset<Shader>("UI-Default");
@@ -20,13 +20,13 @@ namespace Reactor.Unstrip
 
             GUIExtensions.StandardResources = new DefaultControls.Resources
             {
-                background = bundle.LoadAsset<Sprite>("Background").DontUnload(),
-                checkmark = bundle.LoadAsset<Sprite>("Checkmark").DontUnload(),
-                dropdown = bundle.LoadAsset<Sprite>("DropdownArrow").DontUnload(),
-                knob = bundle.LoadAsset<Sprite>("Knob").DontUnload(),
-                mask = bundle.LoadAsset<Sprite>("UIMask").DontUnload(),
-                standard = bundle.LoadAsset<Sprite>("UISprite").DontUnload(),
-                inputField = bundle.LoadAsset<Sprite>("InputFieldBackground").DontUnload()
+                background = bundle.LoadAsset<Sprite>("Background")!.DontUnload(),
+                checkmark = bundle.LoadAsset<Sprite>("Checkmark")!.DontUnload(),
+                dropdown = bundle.LoadAsset<Sprite>("DropdownArrow")!.DontUnload(),
+                knob = bundle.LoadAsset<Sprite>("Knob")!.DontUnload(),
+                mask = bundle.LoadAsset<Sprite>("UIMask")!.DontUnload(),
+                standard = bundle.LoadAsset<Sprite>("UISprite")!.DontUnload(),
+                inputField = bundle.LoadAsset<Sprite>("InputFieldBackground")!.DontUnload()
             };
 
             bundle.Unload(false);

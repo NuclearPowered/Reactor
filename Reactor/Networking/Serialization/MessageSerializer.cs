@@ -19,7 +19,7 @@ namespace Reactor.Networking.Serialization
             MessageConverterMap.Clear();
         }
 
-        public static UnsafeMessageConverter FindConverter(Type type)
+        public static UnsafeMessageConverter? FindConverter(Type type)
         {
             if (MessageConverterMap.TryGetValue(type, out var value))
             {

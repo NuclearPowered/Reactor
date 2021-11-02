@@ -5,7 +5,7 @@ namespace Reactor
 {
     public sealed class Il2CppEqualityComparer<T> : IEqualityComparer<T> where T : Il2CppSystem.Object
     {
-        private static Il2CppEqualityComparer<T> _instance;
+        private static Il2CppEqualityComparer<T>? _instance;
 
         public static Il2CppEqualityComparer<T> Instance
         {
@@ -25,7 +25,7 @@ namespace Reactor
             return RuntimeHelpers.GetHashCode(value);
         }
 
-        public bool Equals(T left, T right)
+        public bool Equals(T? left, T? right)
         {
             if (left == null || right == null)
             {

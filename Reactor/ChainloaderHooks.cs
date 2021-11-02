@@ -9,7 +9,7 @@ namespace Reactor
     {
         public delegate void PluginLoadHandler(BasePlugin plugin);
 
-        public static event PluginLoadHandler PluginLoad;
+        public static event PluginLoadHandler? PluginLoad;
 
         internal static void OnPluginLoad(BasePlugin plugin)
         {

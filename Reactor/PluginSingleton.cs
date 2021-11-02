@@ -6,7 +6,7 @@ namespace Reactor
 {
     public static class PluginSingleton<T> where T : BasePlugin
     {
-        private static T _instance;
+        private static T? _instance;
 
         public static T Instance => _instance ??= IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();
 

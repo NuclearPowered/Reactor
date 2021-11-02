@@ -6,19 +6,19 @@ namespace Reactor.Networking
 {
     public static class ModList
     {
-        private static Dictionary<string, Mod> _mapById;
-        private static Dictionary<uint, Mod> _mapByNetId;
+        private static Dictionary<string, Mod>? _mapById;
+        private static Dictionary<uint, Mod>? _mapByNetId;
 
-        public static ISet<Mod> Current { get; private set; }
+        public static ISet<Mod>? Current { get; private set; }
 
         public static Mod GetById(string id)
         {
-            return _mapById[id];
+            return _mapById![id];
         }
 
         public static Mod GetByNetId(uint netId)
         {
-            return _mapByNetId[netId];
+            return _mapByNetId![netId];
         }
 
         internal static void Update()

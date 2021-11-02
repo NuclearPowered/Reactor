@@ -47,7 +47,7 @@ namespace Reactor.Patches
 
             var offset = Vector3.up;
             var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/" + x)).ToList();
-            if (gameObjects.Contains(null)) return false;
+            if (gameObjects.Contains(null!)) return false;
             
             gameObjects.ForEach(x => {
                 x.transform.position = offset;

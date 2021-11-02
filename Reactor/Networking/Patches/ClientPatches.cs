@@ -30,7 +30,7 @@ namespace Reactor.Networking.Patches
 
                             Logger<ReactorPlugin>.Info($"Connected to a modded server ({serverName} {serverVersion}, {pluginCount} plugins), sending mod declarations");
 
-                            var mods = ModList.Current;
+                            var mods = ModList.Current!;
 
                             var writer = MessageWriter.Get(SendOption.Reliable);
 
@@ -131,7 +131,7 @@ namespace Reactor.Networking.Patches
                 {
                     var reactorPlugin = PluginSingleton<ReactorPlugin>.Instance;
 
-                    if (reactorPlugin.AllowVanillaServers.Value)
+                    if (reactorPlugin.AllowVanillaServers!.Value)
                     {
                         if (reactorPlugin.CustomRpcManager.List.Any())
                         {
@@ -164,7 +164,7 @@ namespace Reactor.Networking.Patches
 
                 ModdedHandshakeC2S.Serialize(
                     handshake,
-                    ModList.Current.Count
+                    ModList.Current!.Count
                 );
 
                 __result = handshake.ToByteArray(false);

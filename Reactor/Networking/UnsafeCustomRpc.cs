@@ -8,7 +8,7 @@ namespace Reactor.Networking
 {
     public abstract class UnsafeCustomRpc
     {
-        internal CustomRpcManager Manager { get; set; }
+        internal CustomRpcManager? Manager { get; set; }
 
         public uint Id { get; }
         public BasePlugin UnsafePlugin { get; }
@@ -26,11 +26,11 @@ namespace Reactor.Networking
             Id = id;
         }
 
-        public abstract void UnsafeWrite(MessageWriter writer, object data);
-        public abstract object UnsafeRead(MessageReader reader);
-        public abstract void UnsafeHandle(InnerNetObject innerNetObject, object data);
+        public abstract void UnsafeWrite(MessageWriter writer, object? data);
+        public abstract object? UnsafeRead(MessageReader reader);
+        public abstract void UnsafeHandle(InnerNetObject innerNetObject, object? data);
 
-        public void UnsafeSend(InnerNetObject innerNetObject, object data, bool immediately = false, int targetClientId = -1)
+        public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1)
         {
             if (innerNetObject == null) throw new ArgumentNullException(nameof(innerNetObject));
 

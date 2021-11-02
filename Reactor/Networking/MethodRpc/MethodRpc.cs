@@ -55,9 +55,9 @@ namespace Reactor.Networking.MethodRpc
         public override RpcLocalHandling LocalHandling { get; }
         public override SendOption SendOption { get; }
 
-        public override void UnsafeWrite(MessageWriter writer, object data)
+        public override void UnsafeWrite(MessageWriter writer, object? data)
         {
-            var args = (object[]) data;
+            var args = (object[]) data!;
             MessageSerializer.Serialize(writer, args);
         }
 
@@ -67,9 +67,9 @@ namespace Reactor.Networking.MethodRpc
             return args;
         }
 
-        public override void UnsafeHandle(InnerNetObject innerNetObject, object data)
+        public override void UnsafeHandle(InnerNetObject innerNetObject, object? data)
         {
-            var args = (object[]) data;
+            var args = (object[]) data!;
             var result = Handle(innerNetObject, args);
 
             if (result is IEnumerator enumerator)

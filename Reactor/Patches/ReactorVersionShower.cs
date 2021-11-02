@@ -12,9 +12,9 @@ namespace Reactor.Patches
 {
     public static class ReactorVersionShower
     {
-        public static TextMeshPro Text { get; private set; }
+        public static TextMeshPro? Text { get; private set; }
 
-        public static event TextUpdatedHandler TextUpdated;
+        public static event TextUpdatedHandler? TextUpdated;
 
         public delegate void TextUpdatedHandler(TextMeshPro text);
 
@@ -56,8 +56,8 @@ namespace Reactor.Patches
 
         public static void UpdateText()
         {
-            Text.text = "Reactor " + typeof(ReactorPlugin).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-            Text.text += "\nBepInEx: " + Paths.BepInExVersion;
+            Text!.text = "Reactor " + typeof(ReactorPlugin).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            Text.text += "\nBepInEx " + Paths.BepInExVersion;
             Text.text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
             TextUpdated?.Invoke(Text);
         }

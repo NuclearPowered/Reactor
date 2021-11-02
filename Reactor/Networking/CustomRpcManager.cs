@@ -87,7 +87,7 @@ namespace Reactor.Networking
 
     public static class Rpc<T> where T : UnsafeCustomRpc
     {
-        private static T _instance;
+        private static T? _instance;
 
         public static T Instance
         {

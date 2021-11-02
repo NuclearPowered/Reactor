@@ -24,6 +24,6 @@ namespace Reactor.Networking.Serialization
 
         public override void UnsafeWrite(MessageWriter writer, object value) => Write(writer, (T) value);
 
-        public override object UnsafeRead(MessageReader reader, Type objectType) => Read(reader, objectType);
+        public override object UnsafeRead(MessageReader reader, Type objectType) => Read(reader, objectType)!;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using UnhollowerBaseLib.Attributes;
 using UnhollowerRuntimeLib;
@@ -12,7 +13,7 @@ namespace Reactor
         [RegisterInIl2Cpp]
         internal class Component : MonoBehaviour
         {
-            internal static Component Instance { get; set; }
+            internal static Component? Instance { get; set; }
 
             public Component(IntPtr ptr) : base(ptr)
             {
@@ -47,21 +48,22 @@ namespace Reactor
             return component.StartCoroutine(coroutine.Wrap());
         }
 
-        public static IEnumerator Start(IEnumerator routine)
+        [return: NotNullIfNotNull("routine")]
+        public static IEnumerator? Start(IEnumerator? routine)
         {
             if (routine != null)
             {
-                _ourCoroutineStore.AddOrUpdate(routine, Component.Instance.StartCoroutine(routine));
+                _ourCoroutineStore.AddOrUpdate(routine, Component.Instance!.StartCoroutine(routine));
             }
 
             return routine;
         }
 
-        public static void Stop(IEnumerator enumerator)
+        public static void Stop(IEnumerator? enumerator)
         {
             if (enumerator != null && _ourCoroutineStore.TryGetValue(enumerator, out var routine))
             {
-                Component.Instance.StopCoroutine(routine);
+                Component.Instance!.StopCoroutine(routine);
             }
         }
     }
@@ -69,7 +71,9 @@ namespace Reactor
     [RegisterInIl2Cpp(typeof(Il2CppSystem.Collections.IEnumerator))]
     public sealed class CoroutineWrapper : Il2CppSystem.Object
     {
+#pragma warning disable 8618
         public CoroutineWrapper(IntPtr ptr) : base(ptr) { }
+#pragma warning restore 8618
 
         /// <summary>
         /// Creates an Il2Cpp IEnumerator with a System IEnumerator.
@@ -88,7 +92,7 @@ namespace Reactor
             set;
         }
 
-        public Il2CppSystem.Object Current
+        public Il2CppSystem.Object? Current
         {
             get
             {
