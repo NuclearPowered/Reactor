@@ -16,7 +16,7 @@ namespace Reactor.Patches
         public static void Prefix(InnerNetClient __instance, ref string addr, ref ushort port)
         {
             var serverManager = ServerManager.Instance;
-            if (__instance.GameMode == GameModes.OnlineGame && addr == serverManager.OnlineNetAddress && port != serverManager.OnlineNetPort)
+            if (__instance.GameMode == GameModes.OnlineGame && serverManager.CurrentServer != null && addr == serverManager.OnlineNetAddress && port != serverManager.OnlineNetPort)
             {
                 Logger<ReactorPlugin>.Info($"Set endpoint to {addr}:{port}");
                 Logger<ReactorPlugin>.Info($"Correcting port to {serverManager.OnlineNetPort}");
