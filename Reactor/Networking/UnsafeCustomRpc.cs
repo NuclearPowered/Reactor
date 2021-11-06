@@ -9,6 +9,7 @@ namespace Reactor.Networking
     public abstract class UnsafeCustomRpc
     {
         internal CustomRpcManager? Manager { get; set; }
+        protected internal virtual bool IsSingleton => true;
 
         public uint Id { get; }
         public BasePlugin UnsafePlugin { get; }

@@ -51,6 +51,8 @@ namespace Reactor.Networking.MethodRpc
         public MethodInfo Method { get; }
         public HandleDelegate Handle { get; }
 
+        protected internal override bool IsSingleton => false;
+
         public override Type InnerNetObjectType { get; }
         public override RpcLocalHandling LocalHandling { get; }
         public override SendOption SendOption { get; }

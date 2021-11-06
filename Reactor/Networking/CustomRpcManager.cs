@@ -47,7 +47,10 @@ namespace Reactor.Networking
             _list.Add(customRpc);
             _map[customRpc.InnerNetObjectType].Add(customRpc);
 
-            typeof(Rpc<>).MakeGenericType(customRpc.GetType()).GetProperty("Instance")!.SetValue(null, customRpc);
+            if (customRpc.IsSingleton)
+            {
+                typeof(Rpc<>).MakeGenericType(customRpc.GetType()).GetProperty("Instance")!.SetValue(null, customRpc);
+            }
 
             return customRpc;
         }
