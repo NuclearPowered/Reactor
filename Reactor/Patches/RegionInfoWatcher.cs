@@ -1,13 +1,14 @@
 using System;
 using System.IO;
+using Reactor.Extensions;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Reactor.Patches
 {
     internal class RegionInfoWatcher : IDisposable
     {
         private FileSystemWatcher Watcher { get; }
-        public bool Reload { get; set; }
 
         internal RegionInfoWatcher()
         {
@@ -20,7 +21,19 @@ namespace Reactor.Patches
             {
                 if (new FileInfo(e.Name).Length > 0)
                 {
-                    Reload = true;
+                    Dispatcher.Instance.Enqueue(() =>
+                    {
+                        ServerManager.Instance.LoadServers();
+
+                        Object.FindObjectOfType<RegionTextMonitor>()?.Start();
+                        if (Object.FindObjectOfType<RegionMenu>() is { } regionMenu)
+                        {
+                            regionMenu.OnDisable();
+                            regionMenu.OnEnable();
+                        }
+
+                        Logger<ReactorPlugin>.Info("Region file reloaded");
+                    });
                 }
             };
 
@@ -29,7 +42,7 @@ namespace Reactor.Patches
 
         public void Dispose()
         {
-            Watcher?.Dispose();
+            Watcher.Dispose();
         }
     }
 }

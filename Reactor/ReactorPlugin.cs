@@ -4,6 +4,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.IL2CPP;
 using HarmonyLib;
+using Reactor.Extensions;
 using Reactor.Networking;
 using Reactor.Networking.MethodRpc;
 using Reactor.Networking.Serialization;
@@ -11,6 +12,7 @@ using Reactor.Patches;
 using Reactor.Unstrip;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Reactor
 {
@@ -44,11 +46,20 @@ namespace Reactor
 
             this.AddComponent<ReactorComponent>().Plugin = this;
             this.AddComponent<Coroutines.Component>();
+            this.AddComponent<Dispatcher>();
 
             ReactorVersionShower.Initialize();
             FreeNamePatch.Initialize();
             SplashSkip.Initialize();
             DefaultBundle.Load();
+
+            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
+            {
+                if (scene.name == "MainMenu")
+                {
+                    ModManager.Instance.ShowModStamp();
+                }
+            }));
         }
 
         public override bool Unload()
@@ -69,23 +80,11 @@ namespace Reactor
             {
             }
 
-            private void Start()
-            {
-                ModManager.Instance.ShowModStamp();
-            }
-
             private void Update()
             {
-                if (Plugin!.RegionInfoWatcher.Reload)
-                {
-                    Plugin.RegionInfoWatcher.Reload = false;
-                    ServerManager.Instance.LoadServers();
-                    Plugin.Log.LogInfo("Region file reloaded");
-                }
-
                 if (Input.GetKeyDown(KeyCode.F5))
                 {
-                    Plugin.Log.LogInfo("Reloading all configs");
+                    Plugin!.Log.LogInfo("Reloading all configs");
 
                     foreach (var pluginInfo in IL2CPPChainloader.Instance.Plugins.Values)
                     {

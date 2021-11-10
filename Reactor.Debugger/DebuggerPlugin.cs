@@ -5,6 +5,7 @@ using BepInEx.IL2CPP;
 using HarmonyLib;
 using InnerNet;
 using Reactor.Extensions;
+using UnhollowerBaseLib;
 using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
@@ -63,20 +64,10 @@ namespace Reactor.Debugger
                     {
                         var data = PlayerControl.LocalPlayer.Data;
 
-                        var newIsImpostor = GUILayout.Toggle(data.IsImpostor, "Is Impostor");
-                        if (data.IsImpostor != newIsImpostor)
+                        var newIsImpostor = GUILayout.Toggle(data.Role.IsImpostor, "Is Impostor");
+                        if (data.Role.IsImpostor != newIsImpostor)
                         {
-                            if (newIsImpostor)
-                            {
-                                PlayerControl.LocalPlayer.RpcSetInfected(new[]
-                                {
-                                    data
-                                });
-                            }
-                            else
-                            {
-                                PlayerControl.LocalPlayer.RemoveInfected();
-                            }
+                            PlayerControl.LocalPlayer.RpcSetRole(newIsImpostor ? RoleTypes.Impostor : RoleTypes.Crewmate);
                         }
 
                         if (GUILayout.Button("Spawn a dummy"))
@@ -90,10 +81,10 @@ namespace Reactor.Debugger
                             playerControl.NetTransform.enabled = false;
                             playerControl.SetName($"{TranslationController.Instance.GetString(StringNames.Dummy, Array.Empty<Il2CppSystem.Object>())} {i}");
                             playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
-                            playerControl.SetHat(i % (uint) HatManager.Instance.AllHats.Count, playerControl.Data.ColorId);
-                            playerControl.SetPet(i % (uint) HatManager.Instance.AllPets.Count);
-                            playerControl.SetSkin(i % (uint) HatManager.Instance.AllSkins.Count);
-                            GameData.Instance.RpcSetTasks(playerControl.PlayerId, new byte[0]);
+                            playerControl.SetHat(HatManager.Instance.AllHats.ToArray().ElementAt(i % HatManager.Instance.AllHats.Count).ProdId, playerControl.Data.DefaultOutfit.ColorId);
+                            playerControl.SetPet(HatManager.Instance.AllPets.ToArray().ElementAt(i % HatManager.Instance.AllPets.Count).ProdId);
+                            playerControl.SetSkin(HatManager.Instance.AllSkins.ToArray().ElementAt(i % HatManager.Instance.AllSkins.Count).ProdId);
+                            GameData.Instance.RpcSetTasks(playerControl.PlayerId, new Il2CppStructArray<byte>(0));
                         }
                     }
 

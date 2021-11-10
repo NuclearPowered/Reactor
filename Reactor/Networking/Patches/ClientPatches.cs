@@ -151,7 +151,7 @@ namespace Reactor.Networking.Patches
             }
         }
 
-        [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.GetConnectionData))]
+        [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
         public static class HandshakePatch
         {
             public static void Postfix(ref Il2CppStructArray<byte> __result)

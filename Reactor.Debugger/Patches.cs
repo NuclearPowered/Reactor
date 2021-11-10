@@ -44,7 +44,7 @@ namespace Reactor.Debugger
             }
         }
 
-        [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.OnEnable))]
+        [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Start))]
         public static class GameSettingMenuPatch
         {
             public static void Prefix(GameSettingMenu __instance)

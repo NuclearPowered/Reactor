@@ -7,24 +7,6 @@ using InnerNet;
 
 namespace Reactor.Patches
 {
-    /// <summary>
-    /// Fixes hardcoded ports
-    /// </summary>
-    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.SetEndpoint))]
-    public static class SetEndpointPatch
-    {
-        public static void Prefix(InnerNetClient __instance, ref string addr, ref ushort port)
-        {
-            var serverManager = ServerManager.Instance;
-            if (__instance.GameMode == GameModes.OnlineGame && serverManager.CurrentServer != null && addr == serverManager.OnlineNetAddress && port != serverManager.OnlineNetPort)
-            {
-                Logger<ReactorPlugin>.Info($"Set endpoint to {addr}:{port}");
-                Logger<ReactorPlugin>.Info($"Correcting port to {serverManager.OnlineNetPort}");
-                port = serverManager.OnlineNetPort;
-            }
-        }
-    }
-
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.Connect))]
     public static class ConnectPatch
     {
@@ -52,7 +34,7 @@ namespace Reactor.Patches
                     .ToArray();
 
                 __instance.cachedServers = servers;
-                Logger<ReactorPlugin>.Info($"Populated {__instance.Name} ({__instance.Fqdn}:{__instance.Port}) with {servers.Length} server(s) {{{servers.Join()}}}");
+                Logger<ReactorPlugin>.Info($"Populated {__instance.Name} ({__instance.Fqdn}:{__instance.Port}) with {servers.Length} server(s) {{{servers.Select(x => x.ToString()).Join()}}}");
             }
             catch (Exception e)
             {
@@ -64,21 +46,6 @@ namespace Reactor.Patches
             }
 
             return false;
-        }
-    }
-
-    /// <summary>
-    /// De-inlines AmongUsClient#SetEndpoint from JoinGameButton 
-    /// </summary>
-    [HarmonyPatch(typeof(JoinGameButton), nameof(JoinGameButton.OnClick))]
-    public static class JoinGameButtonPatch
-    {
-        public static void Postfix(JoinGameButton __instance)
-        {
-            if (__instance.GameMode == GameModes.OnlineGame)
-            {
-                AmongUsClient.Instance.SetEndpoint(DestroyableSingleton<ServerManager>.Instance.OnlineNetAddress, DestroyableSingleton<ServerManager>.Instance.OnlineNetPort);
-            }
         }
     }
 }
