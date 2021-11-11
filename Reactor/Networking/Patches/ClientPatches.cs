@@ -158,7 +158,7 @@ namespace Reactor.Networking.Patches
             {
                 ModList.Update();
 
-                var handshake = MessageWriter.Get(SendOption.Reliable);
+                var handshake = new MessageWriter(1000);
 
                 handshake.Write(__result);
 
@@ -167,7 +167,7 @@ namespace Reactor.Networking.Patches
                     ModList.Current!.Count
                 );
 
-                __result = handshake.ToByteArray(false);
+                __result = handshake.ToByteArray(true);
                 handshake.Recycle();
             }
         }

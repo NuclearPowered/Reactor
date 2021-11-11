@@ -15,6 +15,12 @@ namespace Reactor.Patches
         {
             public static void Prefix(ref bool useDtlsLayout)
             {
+                if (AmongUsClient.Instance.GameMode != GameModes.OnlineGame)
+                {
+                    useDtlsLayout = false;
+                    return;
+                }
+
                 var serverManager = ServerManager.Instance;
                 if (!serverManager || serverManager.CurrentRegion?.TryCast<DnsRegionInfo>() is not { } regionInfo || !regionInfo.Fqdn.EndsWith("among.us"))
                 {
