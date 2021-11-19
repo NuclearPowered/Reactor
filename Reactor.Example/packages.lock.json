@@ -10,23 +10,23 @@
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
-        "requested": "[1.0.0, )",
-        "resolved": "1.0.0",
-        "contentHash": "rQUxf9ds83egTM/IM2V0VchMc6kosgF7D1SYPU4VOve/QbDYGD9daGeDvHX2yN2Kj+cPesnKZl5eBBKrTVhJHg=="
+        "requested": "[1.0.1, )",
+        "resolved": "1.0.1",
+        "contentHash": "G4YpTHG9rtkDJof+ld7Er4E+sCOlgsjG4bJ1itx1ub7dgff6qqHLy9ksX1ehgO0AdBOPVyVl/GKJg9o7iNl8HA=="
       },
       "BepInEx.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.513, )",
-        "resolved": "6.0.0-be.513",
-        "contentHash": "3qJWnrBdNG6NnQZlcFL+gkauElheUqXsDhO/6Szhdvz1x7qpncoJw/5+zSjJLKt8VCQFFJ2u7Wxz4LBvpvYoFg==",
+        "requested": "[6.0.0-be.521, )",
+        "resolved": "6.0.0-be.521",
+        "contentHash": "nzXG/X9u4Ane4KvzaTTon9iP2o3zBkPierrkefaq9tmmQ91FzXFtmFGkVZpD6hGqGjd+KRIn0c6my58+e0u+gw==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.513",
+          "BepInEx.Core": "6.0.0-be.521",
           "BepInEx.Il2Cpp.TlsAdapter": "1.0.1",
           "HarmonyX": "2.5.7",
           "Iced": "1.15.0",
-          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.3",
-          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.19.3",
-          "Il2CppAssemblyUnhollower.Tool": "0.4.19.3",
+          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.5",
+          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.19.5",
+          "Il2CppAssemblyUnhollower.Tool": "0.4.19.5",
           "Il2CppDumper": "6.6.4",
           "MonoMod.RuntimeDetour": "21.10.10.1",
           "Samboy063.Cpp2IL.Core": "2021.5.3"
@@ -40,8 +40,8 @@
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.513",
-        "contentHash": "MBUNReAFudLPyxH7/w9iHLcy6T/agSSmM4dyLMy+Hhqle5Hvi07d3x+6Usq0IizuQZIje8ngL16rud2FBTLgeQ==",
+        "resolved": "6.0.0-be.521",
+        "contentHash": "O1UmrldEd72/0//LIdop26QuWwToNP3lXURfORKZGZv1Kp5nU03jS/hXIXEgDSzxRZJt5j+ffay7x+5eedXMbg==",
         "dependencies": {
           "HarmonyX": "2.5.7",
           "MonoMod.Utils": "21.10.10.1",
@@ -77,27 +77,27 @@
       },
       "Il2CppAssemblyUnhollower.BaseLib": {
         "type": "Transitive",
-        "resolved": "0.4.19.3",
-        "contentHash": "/gNECLNOWQR6KDZTZQtBOGG445ajBQTqX9L9TO8WkiAc7QT27KafO3/MmwGjephZcA7V81UZ8RUcq0rVKa2yfA==",
+        "resolved": "0.4.19.5",
+        "contentHash": "UP0vtj0iDigQ/HZBq6+sP/btgDLc5Ibt1WkFrPvXvOtkgjt+cIdKpJmxVZHwMluUmP6Wsy3RCXeLlXE9eC/15Q==",
         "dependencies": {
           "Iced": "1.15.0"
         }
       },
       "Il2CppAssemblyUnhollower.BaseLib.Legacy": {
         "type": "Transitive",
-        "resolved": "0.4.19.3",
-        "contentHash": "U0cA2XdoULAQPxa294VRot+08jQLgbuQNOzkgGCnCP79eq6Qc4e4CKQ6+nrsd4i2AeswTWOauDzL400PdtVoVw==",
+        "resolved": "0.4.19.5",
+        "contentHash": "dxn4ADz0VlWQtSnNhVIaFzQREnSwZEvS6YaFmwuKW+wbLdHTk9D9bDbS5QkL8glKdgoW2ifpvCBgKd1QAui/1w==",
         "dependencies": {
-          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.3"
+          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.5"
         }
       },
       "Il2CppAssemblyUnhollower.Tool": {
         "type": "Transitive",
-        "resolved": "0.4.19.3",
-        "contentHash": "eb0IyfXxOS1t6wSJ+TuEWcNXBtd98p6Hun1IG7I2ZGDiRQByKy9qPYRh2VG2JLXlVMcCVNybLUnnDWo9cupHcw==",
+        "resolved": "0.4.19.5",
+        "contentHash": "TYfW5UA77dy0a0N1XaIkZJLMyJIXdHO9q3jyuhTdsZdpuD/oi7qZt1GDlpI5dsg2nf9HKVAlIPNagtIqK9pYvw==",
         "dependencies": {
-          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.3",
-          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.19.3",
+          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.5",
+          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.19.5",
           "Mono.Cecil": "0.11.3"
         }
       },
@@ -472,7 +472,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.IL2CPP": "6.0.0-be.513"
+          "BepInEx.IL2CPP": "6.0.0-be.521"
         }
       }
     }
