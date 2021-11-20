@@ -16,11 +16,11 @@
       },
       "BepInEx.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.515, )",
-        "resolved": "6.0.0-be.515",
-        "contentHash": "T4PAFl5wB/UsoVafc2rrbzJyUDMjdgCdeC1f/M3fB1vJKJY9UF67XTSgI3qo3AvQMR3x+4n+MuEXWwTo5Urnlw==",
+        "requested": "[6.0.0-be.521, )",
+        "resolved": "6.0.0-be.521",
+        "contentHash": "nzXG/X9u4Ane4KvzaTTon9iP2o3zBkPierrkefaq9tmmQ91FzXFtmFGkVZpD6hGqGjd+KRIn0c6my58+e0u+gw==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.515",
+          "BepInEx.Core": "6.0.0-be.521",
           "BepInEx.Il2Cpp.TlsAdapter": "1.0.1",
           "HarmonyX": "2.5.7",
           "Iced": "1.15.0",
@@ -40,8 +40,8 @@
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.515",
-        "contentHash": "VyWAWja6n8KcJRsLmY2Qp4IYddBOtwgnlnuwM4kYy8XLV6et45ua64RjWWb2vcVIWZvrXjeCwwxW2rb8lJKLMQ==",
+        "resolved": "6.0.0-be.521",
+        "contentHash": "O1UmrldEd72/0//LIdop26QuWwToNP3lXURfORKZGZv1Kp5nU03jS/hXIXEgDSzxRZJt5j+ffay7x+5eedXMbg==",
         "dependencies": {
           "HarmonyX": "2.5.7",
           "MonoMod.Utils": "21.10.10.1",
@@ -472,7 +472,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.IL2CPP": "6.0.0-be.515"
+          "BepInEx.IL2CPP": "6.0.0-be.521"
         }
       }
     }

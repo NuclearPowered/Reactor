@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.515" />
+        <PackageReference Include="BepInEx.IL2CPP" Version="6.0.0-be.521" />
         <PackageReference Include="AmongUs.GameLibs.$(GamePlatform)" Version="$(GameVersion)" PrivateAssets="all" />
 
         <PackageReference Include="BepInEx.AutoPlugin" Version="1.0.1" PrivateAssets="all" />
