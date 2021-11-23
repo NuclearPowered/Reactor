@@ -56,6 +56,8 @@ namespace Reactor.Networking.MethodRpc
         public override Type InnerNetObjectType { get; }
         public override RpcLocalHandling LocalHandling { get; }
         public override SendOption SendOption { get; }
+        
+        public bool Immediate { get; init; }
 
         public override void UnsafeWrite(MessageWriter writer, object? data)
         {
@@ -82,7 +84,7 @@ namespace Reactor.Networking.MethodRpc
 
         public void Send(InnerNetObject innerNetObject, object[] args)
         {
-            UnsafeSend(innerNetObject, args);
+            UnsafeSend(innerNetObject, args, Immediate);
         }
 
         private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));
