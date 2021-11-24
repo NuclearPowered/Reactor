@@ -13,7 +13,7 @@ namespace Reactor.Networking.MethodRpc
         public uint Id { get; }
         public SendOption Option { get; set; } = SendOption.Reliable;
         public RpcLocalHandling LocalHandling { get; set; } = RpcLocalHandling.Before;
-        public bool Immediate { get; set; }
+        public bool SendImmediately { get; set; }
 
         public MethodRpcAttribute(uint id)
         {
@@ -35,10 +35,7 @@ namespace Reactor.Networking.MethodRpc
 
                 try
                 {
-                    var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.Option, attribute.LocalHandling)
-                    {
-                        Immediate = attribute.Immediate
-                    };
+                    var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.Option, attribute.LocalHandling, attribute.SendImmediately);
                     PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
                 }
                 catch (Exception e)
