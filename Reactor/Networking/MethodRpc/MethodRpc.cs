@@ -18,11 +18,12 @@ namespace Reactor.Networking.MethodRpc
     {
         public delegate object HandleDelegate(InnerNetObject innerNetObject, object[] args);
 
-        public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling) : base(plugin, id)
+        public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately) : base(plugin, id)
         {
             Method = method;
             LocalHandling = localHandling;
             SendOption = option;
+            SendImmediately = sendImmediately;
 
             if (!method.IsStatic)
             {
@@ -56,6 +57,7 @@ namespace Reactor.Networking.MethodRpc
         public override Type InnerNetObjectType { get; }
         public override RpcLocalHandling LocalHandling { get; }
         public override SendOption SendOption { get; }
+        public bool SendImmediately { get; }
 
         public override void UnsafeWrite(MessageWriter writer, object? data)
         {
@@ -82,7 +84,7 @@ namespace Reactor.Networking.MethodRpc
 
         public void Send(InnerNetObject innerNetObject, object[] args)
         {
-            UnsafeSend(innerNetObject, args);
+            UnsafeSend(innerNetObject, args, SendImmediately);
         }
 
         private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));
