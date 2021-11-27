@@ -10,6 +10,15 @@ namespace Reactor.Patches
 {
     public static class FreeNamePatch
     {
+        [HarmonyPatch(typeof(AccountManager), nameof(AccountManager.CheckAndRegenerateName))]
+        internal static class ValidateRandomNamePatch
+        {
+            public static bool Prefix()
+            {
+                return false;
+            }
+        }
+        
         public static void Initialize()
         {
             SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
