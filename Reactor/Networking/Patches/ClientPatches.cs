@@ -151,14 +151,14 @@ namespace Reactor.Networking.Patches
             }
         }
 
-        [HarmonyPatch(typeof(AmongUsClient), nameof(AmongUsClient.GetConnectionData))]
+        [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
         public static class HandshakePatch
         {
             public static void Postfix(ref Il2CppStructArray<byte> __result)
             {
                 ModList.Update();
 
-                var handshake = MessageWriter.Get(SendOption.Reliable);
+                var handshake = new MessageWriter(1000);
 
                 handshake.Write(__result);
 
@@ -167,7 +167,7 @@ namespace Reactor.Networking.Patches
                     ModList.Current!.Count
                 );
 
-                __result = handshake.ToByteArray(false);
+                __result = handshake.ToByteArray(true);
                 handshake.Recycle();
             }
         }
