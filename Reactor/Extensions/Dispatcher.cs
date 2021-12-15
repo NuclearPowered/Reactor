@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace Reactor.Extensions;
@@ -31,6 +32,7 @@ public class Dispatcher : MonoBehaviour
         }
     }
 
+    [HideFromIl2Cpp]
     public void Enqueue(Action action)
     {
         lock (_queue)

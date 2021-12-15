@@ -30,7 +30,7 @@ namespace Reactor.Patches
                 var servers = Dns.GetHostAddresses(__instance.Fqdn)
                     .Distinct()
                     .Where(ipAddress => ipAddress.AddressFamily == AddressFamily.InterNetwork)
-                    .Select(ipAddress => new ServerInfo($"{__instance.Name}-{i++}", ipAddress.ToString(), __instance.Port))
+                    .Select(ipAddress => new ServerInfo($"{__instance.Name}-{i++}", ipAddress.ToString(), __instance.Port, __instance.UseDtls))
                     .ToArray();
 
                 __instance.cachedServers = servers;
@@ -41,7 +41,7 @@ namespace Reactor.Patches
                 Logger<ReactorPlugin>.Info($"Failed to populate {__instance.Name}: {e}");
                 __instance.cachedServers = new[]
                 {
-                    new ServerInfo(__instance.Name ?? string.Empty, __instance.DefaultIp, __instance.Port),
+                    new ServerInfo(__instance.Name ?? string.Empty, __instance.DefaultIp, __instance.Port, __instance.UseDtls),
                 };
             }
 
