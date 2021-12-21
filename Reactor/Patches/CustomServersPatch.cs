@@ -41,7 +41,7 @@ namespace Reactor.Patches
                 if (serverManager.CurrentRegion.TryCast<DnsRegionInfo>() is not { } regionInfo || !regionInfo.Fqdn.EndsWith("among.us"))
                 {
                     var remoteEndPoint = new IPEndPoint(IPAddress.Parse(targetIp), targetPort - 3);
-                    __result = new UnityUdpClientConnection(remoteEndPoint);
+                    __result = new UnityUdpClientConnection(null, remoteEndPoint);
                     return false;
                 }
 
