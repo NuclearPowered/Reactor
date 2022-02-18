@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using HarmonyLib;
 using Reactor.Extensions;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -9,6 +10,8 @@ namespace Reactor.Patches
     internal class RegionInfoWatcher : IDisposable
     {
         private FileSystemWatcher Watcher { get; }
+
+        public bool IgnoreNext { get; set; }
 
         internal RegionInfoWatcher()
         {
@@ -21,6 +24,12 @@ namespace Reactor.Patches
             {
                 if (new FileInfo(e.Name).Length > 0)
                 {
+                    if (IgnoreNext)
+                    {
+                        IgnoreNext = false;
+                        return;
+                    }
+
                     Dispatcher.Instance.Enqueue(() =>
                     {
                         ServerManager.Instance.LoadServers();
@@ -43,6 +52,18 @@ namespace Reactor.Patches
         public void Dispose()
         {
             Watcher.Dispose();
+        }
+
+        [HarmonyPatch(typeof(FileIO), nameof(FileIO.WriteAllText))]
+        private static class WritePatch
+        {
+            public static void Prefix(string path)
+            {
+                if (ServerManager.Instance && path == ServerManager.Instance.serverInfoFileJson)
+                {
+                    PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher.IgnoreNext = true;
+                }
+            }
         }
     }
 }

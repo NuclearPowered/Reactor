@@ -25,7 +25,7 @@ namespace Reactor
 
         public ConfigEntry<bool>? AllowVanillaServers { get; private set; }
 
-        private RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
+        internal RegionInfoWatcher RegionInfoWatcher { get; } = new RegionInfoWatcher();
 
         public ReactorPlugin()
         {
