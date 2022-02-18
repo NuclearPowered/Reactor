@@ -6,7 +6,7 @@
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-        <VersionPrefix>1.2.0</VersionPrefix>
+        <VersionPrefix>1.2.1</VersionPrefix>
         <VersionSuffix>dev</VersionSuffix>
         <Description>Core mod and API for Among Us</Description>
         <Authors>NuclearPowered</Authors>
