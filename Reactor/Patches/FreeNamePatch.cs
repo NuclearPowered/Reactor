@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using HarmonyLib;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,15 @@ namespace Reactor.Patches
 {
     public static class FreeNamePatch
     {
+        [HarmonyPatch(typeof(AccountManager), nameof(AccountManager.CheckAndRegenerateName))]
+        internal static class ValidateRandomNamePatch
+        {
+            public static bool Prefix()
+            {
+                return false;
+            }
+        }
+        
         public static void Initialize()
         {
             SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
@@ -45,14 +55,16 @@ namespace Reactor.Patches
                 "JoinGameButton"
             };
 
-            var offset = Vector3.up;
-            var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/" + x)).ToList();
-            if (gameObjects.Contains(null!)) return false;
+            var yStart = Vector3.up;
+            var yOffset = Vector3.down * 1.5f;
             
-            gameObjects.ForEach(x => {
-                x.transform.position = offset;
-                offset += Vector3.down * 1.5f;
-            });
+            var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/" + x)).ToList();
+            if (gameObjects.Any(x => x == null)) return false;
+
+            for (var i = 0; i < gameObjects.Count; i++)
+            {
+                gameObjects[i].transform.position = yStart + (yOffset * i);
+            }
 
             return true;
         }
