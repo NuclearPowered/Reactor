@@ -43,7 +43,7 @@ namespace Reactor
 
             try
             {
-                ClassInjector.RegisterTypeInIl2CppWithInterfaces(type, true, interfaces);
+                ClassInjector.RegisterTypeInIl2Cpp(type, new RegisterTypeOptions { Interfaces = interfaces });
             }
             catch (Exception e)
             {

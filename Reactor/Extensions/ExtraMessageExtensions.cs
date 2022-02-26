@@ -44,7 +44,6 @@ namespace Reactor.Extensions
 
             connection.AttachReliableID(buffer, 1, ackCallback);
             connection.WriteBytesToConnection(buffer, buffer.Length);
-            connection.Statistics.LogReliableSend(buffer.Length - 3, buffer.Length);
         }
     }
 }

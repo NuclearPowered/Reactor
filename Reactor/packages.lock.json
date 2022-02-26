@@ -4,9 +4,9 @@
     ".NETStandard,Version=v2.1": {
       "AmongUs.GameLibs.Steam": {
         "type": "Direct",
-        "requested": "[2021.12.15, )",
-        "resolved": "2021.12.15",
-        "contentHash": "YXKxGYWvA5+cLvJXlzcsYOS55q1g/QKzLgy1QNGnyWgTYk91z1scufLb4aMb6lSfQhTPUpEB3ajyupwqtI8uOg=="
+        "requested": "[2022.2.23, )",
+        "resolved": "2022.2.23",
+        "contentHash": "CHMKmYSv00f7bU8pZ/NSfXNSSwKqCtcYyLsBmiFJ8asx+wmLKXHPsUbB9l+Ew2ZdisTt8lU+bQm2jznyWaMtdw=="
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
@@ -16,27 +16,27 @@
       },
       "BepInEx.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.521, )",
-        "resolved": "6.0.0-be.521",
-        "contentHash": "nzXG/X9u4Ane4KvzaTTon9iP2o3zBkPierrkefaq9tmmQ91FzXFtmFGkVZpD6hGqGjd+KRIn0c6my58+e0u+gw==",
+        "requested": "[6.0.0-be.551, )",
+        "resolved": "6.0.0-be.551",
+        "contentHash": "RvGBR8aXv/AabeiPV6jepRkSXixei4UTtQD86dRrh0canunubXt8pmIybW+0aH7BP1wewiwHIQnrKNRbniMHjQ==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.521",
+          "BepInEx.Core": "6.0.0-be.551",
           "BepInEx.Il2Cpp.TlsAdapter": "1.0.1",
-          "HarmonyX": "2.5.7",
-          "Iced": "1.15.0",
-          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.5",
-          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.19.5",
-          "Il2CppAssemblyUnhollower.Tool": "0.4.19.5",
+          "HarmonyX": "2.9.0",
+          "Iced": "1.17.0",
+          "Il2CppAssemblyUnhollower.BaseLib": "0.4.23",
+          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.23",
+          "Il2CppAssemblyUnhollower.Tool": "0.4.23",
           "Il2CppDumper": "6.6.4",
-          "MonoMod.RuntimeDetour": "21.10.10.1",
-          "Samboy063.Cpp2IL.Core": "2021.5.3"
+          "MonoMod.RuntimeDetour": "22.1.29.1",
+          "Samboy063.Cpp2IL.Core": "2022.0.1"
         }
       },
       "BepInEx.IL2CPP.MSBuild": {
         "type": "Direct",
-        "requested": "[1.0.1, )",
-        "resolved": "1.0.1",
-        "contentHash": "fOxbM3r8vBo5djUh3R4/cfzYNwIL4EyPc2P7yGIPaR+jrql1eS2IW+4oy2MGpfvbMLGeDHaYubcYS4VSc7F3jw=="
+        "requested": "[1.0.2, )",
+        "resolved": "1.0.2",
+        "contentHash": "RdnDWUFy0em+AtYXohvPx4HbGokvfzJaiVovFNj35PhwzMlgqHZRIxLHoTRnfJLeWJruqBi8PXJj03JqJAeQUw=="
       },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
@@ -50,11 +50,11 @@
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.521",
-        "contentHash": "O1UmrldEd72/0//LIdop26QuWwToNP3lXURfORKZGZv1Kp5nU03jS/hXIXEgDSzxRZJt5j+ffay7x+5eedXMbg==",
+        "resolved": "6.0.0-be.551",
+        "contentHash": "8/2XA14bH4w04KEtWxQ5J74uStOeiAV37entU/vSFA3rdesYycPZct3Te3eRJ2i5U0mVMXsP0xUDfdHVXDkfng==",
         "dependencies": {
-          "HarmonyX": "2.5.7",
-          "MonoMod.Utils": "21.10.10.1",
+          "HarmonyX": "2.9.0",
+          "MonoMod.Utils": "22.1.29.1",
           "SemanticVersioning": "2.0.0"
         }
       },
@@ -73,41 +73,41 @@
       },
       "HarmonyX": {
         "type": "Transitive",
-        "resolved": "2.5.7",
-        "contentHash": "BVQAIGbYKp6S6IoP4pduDFKT4ST6iO4WC/INHJDeK3y2CA1AyhNAgYuPTzap3TVfGFUwphNcDpWBTO7hMu5grw==",
+        "resolved": "2.9.0",
+        "contentHash": "vB03a0lJJefzSnPP8VJSzyTtgSx81dnxU2olfirHTBnbXY8Uc2BMoxCODPK1nzg4C53lQR0NOi+bp9170sYVFA==",
         "dependencies": {
-          "MonoMod.RuntimeDetour": "21.10.10.1",
+          "MonoMod.RuntimeDetour": "22.1.29.1",
           "System.Reflection.Emit": "4.7.0"
         }
       },
       "Iced": {
         "type": "Transitive",
-        "resolved": "1.15.0",
-        "contentHash": "zSMOcs5qL77q4yb4O4cCrnY3/E8TMrKiz9vDvHgpQacs97gtnj2JfU9WoagNgwdn3C07CmEVaaQMxto11Uh5yQ=="
+        "resolved": "1.17.0",
+        "contentHash": "8x+HCVTl/HHTGpscH3vMBhV8sknN/muZFw9s3TsI8SA6+c43cOTCi2+jE4KsU8pNLbJ++iF2ZFcpcXHXtDglnw=="
       },
       "Il2CppAssemblyUnhollower.BaseLib": {
         "type": "Transitive",
-        "resolved": "0.4.19.5",
-        "contentHash": "UP0vtj0iDigQ/HZBq6+sP/btgDLc5Ibt1WkFrPvXvOtkgjt+cIdKpJmxVZHwMluUmP6Wsy3RCXeLlXE9eC/15Q==",
+        "resolved": "0.4.23",
+        "contentHash": "5KJfb2ILowJyVpLqpGcWmVG2cdphQj4jUSN1LZDVdhx5Co0eL1PqXVZyma0u/tbv568YZLKVh+N8lbzPIhwm+A==",
         "dependencies": {
           "Iced": "1.15.0"
         }
       },
       "Il2CppAssemblyUnhollower.BaseLib.Legacy": {
         "type": "Transitive",
-        "resolved": "0.4.19.5",
-        "contentHash": "dxn4ADz0VlWQtSnNhVIaFzQREnSwZEvS6YaFmwuKW+wbLdHTk9D9bDbS5QkL8glKdgoW2ifpvCBgKd1QAui/1w==",
+        "resolved": "0.4.23",
+        "contentHash": "gfQbpDvZ+gFTHiMQxB60IfUARQtIdmPrNjrWgTdtUkgfBlGIFlHxBWjYByei0yGUKQk8HVgKy9nniOy75Ven5Q==",
         "dependencies": {
-          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.5"
+          "Il2CppAssemblyUnhollower.BaseLib": "0.4.23"
         }
       },
       "Il2CppAssemblyUnhollower.Tool": {
         "type": "Transitive",
-        "resolved": "0.4.19.5",
-        "contentHash": "TYfW5UA77dy0a0N1XaIkZJLMyJIXdHO9q3jyuhTdsZdpuD/oi7qZt1GDlpI5dsg2nf9HKVAlIPNagtIqK9pYvw==",
+        "resolved": "0.4.23",
+        "contentHash": "13TOP6ywMkgRVkhDpfMskBFMwxmEqBD0h8vboRaOdNhep5XDgGOkatb7jHOxlbDx1keeMoB/aSGufjgdpIpOpg==",
         "dependencies": {
-          "Il2CppAssemblyUnhollower.BaseLib": "0.4.19.5",
-          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.19.5",
+          "Il2CppAssemblyUnhollower.BaseLib": "0.4.23",
+          "Il2CppAssemblyUnhollower.BaseLib.Legacy": "0.4.23",
           "Mono.Cecil": "0.11.3"
         }
       },
@@ -151,11 +151,11 @@
       },
       "MonoMod.RuntimeDetour": {
         "type": "Transitive",
-        "resolved": "21.10.10.1",
-        "contentHash": "cZFLf8kCTqGAznnrGfAX8tRrMrHFH8hFHtX/Cr/CFZOcHFZZICUA03Cmjs97uoquvKpV1D2YEHGhtLprPj+ZUg==",
+        "resolved": "22.1.29.1",
+        "contentHash": "CksRFEGCPs8VGKe6pc3zsOPd2Jik+FMlmx5HDxWVTxz9JlAmWDk1+0PCwAVw4iGDuDZmIUjZDjhSACasyw9y/Q==",
         "dependencies": {
           "Mono.Cecil": "0.11.4",
-          "MonoMod.Utils": "21.10.10.1",
+          "MonoMod.Utils": "22.1.29.1",
           "System.Collections.NonGeneric": "4.3.0",
           "System.ComponentModel.TypeConverter": "4.3.0",
           "System.IO.FileSystem.Primitives": "4.3.0",
@@ -166,8 +166,8 @@
       },
       "MonoMod.Utils": {
         "type": "Transitive",
-        "resolved": "21.10.10.1",
-        "contentHash": "y1ZION4RwtrnLYmE4SqI2Mnk9zZgwQlxUnfdwe0MJS8KWuSi9tU1h6RUZFaEUWSSiVE12Q2wba1Sv45j33+DLw==",
+        "resolved": "22.1.29.1",
+        "contentHash": "qKyM/JXIA3hr2BpE5LTtYfZvIFlcLB62pkORARRv0bXKSk1n23Nl3oAdYymQMjNfrhn/jCPZRqKDFftrYa1K2Q==",
         "dependencies": {
           "Mono.Cecil": "0.11.4",
           "System.Collections.NonGeneric": "4.3.0",
@@ -180,26 +180,32 @@
       },
       "Samboy063.Cpp2IL.Core": {
         "type": "Transitive",
-        "resolved": "2021.5.3",
-        "contentHash": "e7YdrON5J8Y3KYCwku6srp1/UdCYii/EHCLU1+sVnqKnoEnJh+CZXb2VHuKQ5IRJKLfDq2GDeWdEU8KxOW/7vQ==",
+        "resolved": "2022.0.1",
+        "contentHash": "oAJ1neR8sA4P1nFHRuhJqmaWC3zOGpxq0kuF4OTxCwxhUAU81fR10LzSWZHF2fHTSTIedyjNq9ve9W0B67qUbA==",
         "dependencies": {
           "Gee.External.Capstone": "2.0.2",
           "HarmonyX": "2.5.5",
           "Iced": "1.11.1",
           "IndexRange": "1.0.0",
           "Mono.Cecil": "0.11.4",
-          "Samboy063.LibCpp2IL": "2021.5.3",
+          "Samboy063.LibCpp2IL": "2022.0.1",
+          "System.Runtime.InteropServices": "4.3.0",
           "System.ValueTuple": "4.5.0"
         }
       },
       "Samboy063.LibCpp2IL": {
         "type": "Transitive",
-        "resolved": "2021.5.3",
-        "contentHash": "8N9PZiNqERUXQKRmjiacsC86/qxuBFHeD+P84MXtIzb7X9BkKuPp6N7YfoLv3EFrS+NFbd8gAgPBmAOAb80j+Q==",
+        "resolved": "2022.0.1",
+        "contentHash": "J22g/FsKDUMMUBFdCZicLwC0WilqrkeGD1JHHtrwFC0GwDtG6+ECvjGU/hO6ImxktSwHo05bpN+kLNYZB4U2BA==",
         "dependencies": {
-          "Iced": "1.11.1",
-          "IndexRange": "1.0.0"
+          "IndexRange": "1.0.0",
+          "Samboy063.WasmDisassembler": "2022.0.0"
         }
+      },
+      "Samboy063.WasmDisassembler": {
+        "type": "Transitive",
+        "resolved": "2022.0.0",
+        "contentHash": "1CKCMRwvw53MionMQxSQtmVymG9qDLckQne2OqwnU+Mb19ZF8CVYoVVdk3o01mBIkPWsXgTjTO2DEGE6tA+Gtw=="
       },
       "SemanticVersioning": {
         "type": "Transitive",
