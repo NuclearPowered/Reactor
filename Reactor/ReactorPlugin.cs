@@ -50,7 +50,6 @@ namespace Reactor
 
             ReactorVersionShower.Initialize();
             FreeNamePatch.Initialize();
-            SplashSkip.Initialize();
             DefaultBundle.Load();
 
             SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>

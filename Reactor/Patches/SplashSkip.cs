@@ -1,19 +1,13 @@
-using System;
-using UnityEngine.SceneManagement;
+using HarmonyLib;
 
 namespace Reactor.Patches
 {
+    [HarmonyPatch(typeof(SplashManager), nameof(SplashManager.Start))]
     internal static class SplashSkip
     {
-        internal static void Initialize()
+        private static void Prefix(SplashManager __instance)
         {
-            SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
-            {
-                if (scene.name == "SplashIntro")
-                {
-                    SceneManager.LoadScene("MainMenu");
-                }
-            }));
+            __instance.minimumSecondsBeforeSceneChange = 0;
         }
     }
 }

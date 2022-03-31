@@ -80,10 +80,11 @@ namespace Reactor.Debugger
                             playerControl.GetComponent<DummyBehaviour>().enabled = true;
                             playerControl.NetTransform.enabled = false;
                             playerControl.SetName($"{TranslationController.Instance.GetString(StringNames.Dummy, Array.Empty<Il2CppSystem.Object>())} {i}");
-                            playerControl.SetColor((byte) (i % Palette.PlayerColors.Length));
-                            playerControl.SetHat(HatManager.Instance.AllHats.ToArray().ElementAt(i % HatManager.Instance.AllHats.Count).ProdId, playerControl.Data.DefaultOutfit.ColorId);
-                            playerControl.SetPet(HatManager.Instance.AllPets.ToArray().ElementAt(i % HatManager.Instance.AllPets.Count).ProdId);
-                            playerControl.SetSkin(HatManager.Instance.AllSkins.ToArray().ElementAt(i % HatManager.Instance.AllSkins.Count).ProdId);
+                            var color = (byte) (i % Palette.PlayerColors.Length);
+                            playerControl.SetColor(color);
+                            playerControl.SetHat(HatManager.Instance.allHats[i % HatManager.Instance.allHats.Count].ProdId, playerControl.Data.DefaultOutfit.ColorId);
+                            playerControl.SetPet(HatManager.Instance.allPets[i % HatManager.Instance.allPets.Count].ProdId);
+                            playerControl.SetSkin(HatManager.Instance.allSkins[i % HatManager.Instance.allSkins.Count].ProdId, color);
                             GameData.Instance.RpcSetTasks(playerControl.PlayerId, new Il2CppStructArray<byte>(0));
                         }
                     }

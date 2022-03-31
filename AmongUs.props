@@ -1,8 +1,8 @@
 <Project>
     <PropertyGroup>
         <GamePlatform Condition="'$(GamePlatform)' == ''">Steam</GamePlatform>
-        <GameVersion Condition="'$(GamePlatform)' == 'Steam'">2022.2.23</GameVersion>
-        <GameVersion Condition="'$(GamePlatform)' == 'Itch'">2021.12.15</GameVersion>
+        <GameVersion Condition="'$(GamePlatform)' == 'Steam'">2022.3.29</GameVersion>
+        <GameVersion Condition="'$(GamePlatform)' == 'Itch'">2022.3.29</GameVersion>
     </PropertyGroup>
 
     <ItemGroup>
