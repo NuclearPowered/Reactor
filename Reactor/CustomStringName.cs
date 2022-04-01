@@ -32,14 +32,14 @@ namespace Reactor
         }
 
         public static implicit operator StringNames(CustomStringName name) => (StringNames) name.Id;
-        public static explicit operator CustomStringName(StringNames name) => List.SingleOrDefault(x => x.Id == (int) name);
+        public static explicit operator CustomStringName?(StringNames name) => List.SingleOrDefault(x => x.Id == (int) name);
 
         [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
         private static class GetStringPatch
         {
-            public static bool Prefix(StringNames stringId, Il2CppReferenceArray<Il2CppSystem.Object> parts, ref string __result)
+            public static bool Prefix(StringNames id, Il2CppReferenceArray<Il2CppSystem.Object> parts, ref string __result)
             {
-                var customStringName = (CustomStringName) stringId;
+                var customStringName = (CustomStringName?) id;
 
                 if (customStringName != null)
                 {
