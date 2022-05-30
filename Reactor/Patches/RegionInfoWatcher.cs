@@ -57,12 +57,25 @@ namespace Reactor.Patches
         [HarmonyPatch(typeof(FileIO), nameof(FileIO.WriteAllText))]
         private static class WritePatch
         {
-            public static void Prefix(string path)
+            public static bool Prefix(string path, string contents)
             {
+                // Among Us' region loading code unfortunately contains a call
+                // to SaveServers, which will write out the region file. This
+                // will lead to a positive feedback loop when detecting writes,
+                // which is undesireable. So we check if the write makes a
+                // change to the file on disk and if it would write the same
+                // file again, stop AU from actually writing it.
                 if (ServerManager.Instance && path == ServerManager.Instance.serverInfoFileJson)
                 {
-                    PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher.IgnoreNext = true;
+                    var currentContents = FileIO.ReadAllText(path);
+                    var continueWrite = currentContents != contents;
+                    Logger<ReactorPlugin>.Debug($"Continue serverInfoFile write? {continueWrite}");
+                    // If we will write, ignore the next change action from the observer.
+                    PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher.IgnoreNext = continueWrite;
+                    return continueWrite;
                 }
+
+                return true;
             }
         }
     }
