@@ -13,5 +13,20 @@ namespace Reactor.Patches
             __result = false;
             return false;
         }
+
+        [HarmonyPatch(typeof(AmongUsClient._CoJoinOnlinePublicGame_d__1), nameof(AmongUsClient._CoJoinOnlinePublicGame_d__1.MoveNext))]
+        [HarmonyPrefix]
+        public static void EnableUdpMatchmakingPatch(AmongUsClient._CoJoinOnlinePublicGame_d__1 __instance)
+        {
+            // Skip to state 1 which just calls CoJoinOnlineGameDirect
+            if (__instance.__1__state == 0 && !ServerManager.Instance.IsHttp)
+            {
+                __instance.__1__state = 1;
+                __instance.__8__1 = new AmongUsClient.__c__DisplayClass1_0
+                {
+                    matchmakerToken = string.Empty,
+                };
+            }
+        }
     }
 }
