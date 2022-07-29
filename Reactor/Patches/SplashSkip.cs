@@ -1,7 +1,5 @@
 using System.Reflection;
 using HarmonyLib;
-using System;
-using MonoMod.Utils;
 
 namespace Reactor.Patches
 {
@@ -18,18 +16,28 @@ namespace Reactor.Patches
     internal static class WaitForEpicAuth
     {
         private static readonly PropertyInfo? _localUserIdProperty = typeof(EpicManager).GetProperty("localUserId", BindingFlags.Static | BindingFlags.Public);
-        private static readonly Func<object>? _localUserId = _localUserIdProperty == null ? null : _localUserIdProperty.GetMethod.CreateDelegate<Func<object>>();
+        private static bool _loginFinished;
 
         private static bool Prefix(SplashManager __instance)
         {
             if (__instance.startedSceneLoad) return true;
 
-            if (_localUserId != null && _localUserId() == null)
+            if (_localUserIdProperty != null && !_loginFinished)
             {
                 return false;
             }
 
             return true;
+        }
+
+        // EpicManager calls SaveManager.LoadPlayerPrefs(true) both on successful and unsuccessful EOS login
+        [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.LoadPlayerPrefs))]
+        private static class LoadPlayerPrefsPatch
+        {
+            private static void Postfix(bool overrideLoad)
+            {
+                if (overrideLoad) _loginFinished = true;
+            }
         }
     }
 }
