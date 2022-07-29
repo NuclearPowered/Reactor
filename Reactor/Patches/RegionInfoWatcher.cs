@@ -67,8 +67,7 @@ namespace Reactor.Patches
                 // file again, stop AU from actually writing it.
                 if (ServerManager.Instance && path == ServerManager.Instance.serverInfoFileJson)
                 {
-                    var currentContents = FileIO.ReadAllText(path);
-                    var continueWrite = currentContents != contents;
+                    var continueWrite = !FileIO.Exists(path) || FileIO.ReadAllText(path) != contents;
                     Logger<ReactorPlugin>.Debug($"Continue serverInfoFile write? {continueWrite}");
                     // If we will write, ignore the next change action from the observer.
                     PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher.IgnoreNext = continueWrite;
