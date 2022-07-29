@@ -165,7 +165,7 @@ namespace Reactor.Networking.Patches
 
             public static void Postfix(ref Il2CppStructArray<byte> __result)
             {
-                ModList.Update();
+                var mods = ModList.Update();
 
                 var handshake = new MessageWriter(1000);
 
@@ -173,7 +173,7 @@ namespace Reactor.Networking.Patches
 
                 ModdedHandshakeC2S.Serialize(
                     handshake,
-                    ModList.Current!.Count
+                    mods.Count
                 );
 
                 __result = handshake.ToByteArray(true);
