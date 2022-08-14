@@ -478,7 +478,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.IL2CPP": "6.0.0-be.570"
+          "BepInEx.IL2CPP": "[6.0.0-be.570, )"
         }
       }
     }

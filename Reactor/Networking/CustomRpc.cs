@@ -33,14 +33,14 @@ namespace Reactor.Networking
             Handle((TInnerNetObject) innerNetObject, (TData?) data);
         }
 
-        public void Send(InnerNetObject netObject, TData data, bool immediately = false)
+        public void Send(InnerNetObject netObject, TData data, bool immediately = false, Action? ackCallback = null)
         {
-            UnsafeSend(netObject, data, immediately);
+            UnsafeSend(netObject, data, immediately, ackCallback: ackCallback);
         }
 
-        public void SendTo(InnerNetObject netObject, int targetId, TData data)
+        public void SendTo(InnerNetObject netObject, int targetId, TData data, Action? ackCallback = null)
         {
-            UnsafeSend(netObject, data, true, targetId);
+            UnsafeSend(netObject, data, true, targetId, ackCallback);
         }
     }
 
@@ -69,14 +69,14 @@ namespace Reactor.Networking
             Handle((TInnerNetObject) innerNetObject);
         }
 
-        public void Send(InnerNetObject netObject, bool immediately = false)
+        public void Send(InnerNetObject netObject, bool immediately = false, Action? ackCallback = null)
         {
-            UnsafeSend(netObject, immediately);
+            UnsafeSend(netObject, null, immediately, ackCallback: ackCallback);
         }
 
-        public void SendTo(InnerNetObject netObject, int targetId)
+        public void SendTo(InnerNetObject netObject, int targetId, Action? ackCallback = null)
         {
-            UnsafeSend(netObject, null, true, targetId);
+            UnsafeSend(netObject, null, true, targetId, ackCallback);
         }
     }
 }

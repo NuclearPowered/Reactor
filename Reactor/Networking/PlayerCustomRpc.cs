@@ -1,3 +1,4 @@
+using System;
 using BepInEx.IL2CPP;
 
 namespace Reactor.Networking
@@ -8,14 +9,14 @@ namespace Reactor.Networking
         {
         }
 
-        public void Send(TData data, bool immediately = false)
+        public void Send(TData data, bool immediately = false, Action? ackCallback = null)
         {
-            Send(PlayerControl.LocalPlayer, data, immediately);
+            Send(PlayerControl.LocalPlayer, data, immediately, ackCallback);
         }
 
-        public void SendTo(int targetId, TData data)
+        public void SendTo(int targetId, TData data, Action? ackCallback = null)
         {
-            SendTo(PlayerControl.LocalPlayer, targetId, data);
+            SendTo(PlayerControl.LocalPlayer, targetId, data, ackCallback);
         }
     }
 
@@ -25,14 +26,14 @@ namespace Reactor.Networking
         {
         }
 
-        public void Send(bool immediately = false)
+        public void Send(bool immediately = false, Action? ackCallback = null)
         {
-            Send(PlayerControl.LocalPlayer, immediately);
+            Send(PlayerControl.LocalPlayer, immediately, ackCallback);
         }
 
-        public void SendTo(int targetId)
+        public void SendTo(int targetId, Action? ackCallback = null)
         {
-            SendTo(PlayerControl.LocalPlayer, targetId);
+            SendTo(PlayerControl.LocalPlayer, targetId, ackCallback);
         }
     }
 }
