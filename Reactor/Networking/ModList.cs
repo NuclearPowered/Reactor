@@ -21,7 +21,7 @@ namespace Reactor.Networking
             return _mapByNetId![netId];
         }
 
-        internal static ISet<Mod> Update()
+        internal static void Update()
         {
             var i = (uint) 0;
 
@@ -37,8 +37,6 @@ namespace Reactor.Networking
 
             _mapById = Current.ToDictionary(mod => mod.Id, mod => mod);
             _mapByNetId = Current.ToDictionary(mod => mod.NetId, mod => mod);
-
-            return Current;
         }
     }
 }
