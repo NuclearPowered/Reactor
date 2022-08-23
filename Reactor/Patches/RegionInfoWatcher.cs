@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 using HarmonyLib;
 using Reactor.Extensions;
 using UnityEngine;
@@ -54,9 +55,15 @@ namespace Reactor.Patches
             Watcher.Dispose();
         }
 
-        [HarmonyPatch(typeof(FileIO), nameof(FileIO.WriteAllText))]
+        [HarmonyPatch]
         private static class WritePatch
         {
+            public static MethodBase TargetMethod()
+            {
+                var type = Type.GetType("FileIO, Assembly-CSharp", false) ?? Type.GetType("Innersloth.IO.FileIO, Assembly-CSharp", true);
+                return AccessTools.Method(type, "WriteAllText");
+            }
+            
             public static bool Prefix(string path, string contents)
             {
                 // Among Us' region loading code unfortunately contains a call
@@ -67,7 +74,7 @@ namespace Reactor.Patches
                 // file again, stop AU from actually writing it.
                 if (ServerManager.Instance && path == ServerManager.Instance.serverInfoFileJson)
                 {
-                    var continueWrite = !FileIO.Exists(path) || FileIO.ReadAllText(path) != contents;
+                    var continueWrite = !File.Exists(path) || File.ReadAllText(path) != contents;
                     Logger<ReactorPlugin>.Debug($"Continue serverInfoFile write? {continueWrite}");
                     // If we will write, ignore the next change action from the observer.
                     PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher.IgnoreNext = continueWrite;
