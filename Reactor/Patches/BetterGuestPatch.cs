@@ -1,19 +1,17 @@
 using HarmonyLib;
 using InnerNet;
-using UnityEngine;
 
-namespace Reactor.Patches
+namespace Reactor.Patches;
+
+internal static class BetterGuestPatch
 {
-    internal static class BetterGuestPatch
+    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.ChatModeType), MethodType.Getter)]
+    public static class ChatModeTypePatch
     {
-        [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.ChatModeType), MethodType.Getter)]
-        public static class ChatModeTypePatch
+        public static bool Prefix(out QuickChatModes __result)
         {
-            public static bool Prefix(out QuickChatModes __result)
-            {
-                __result = QuickChatModes.FreeChatOrQuickChat;
-                return false;
-            }
+            __result = QuickChatModes.FreeChatOrQuickChat;
+            return false;
         }
     }
 }

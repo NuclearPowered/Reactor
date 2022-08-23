@@ -1,13 +1,12 @@
 using Hazel;
 
-namespace Reactor.Networking
+namespace Reactor.Networking;
+
+public static class ModdedHandshakeC2S
 {
-    public static class ModdedHandshakeC2S
+    public static void Serialize(MessageWriter writer, int modCount)
     {
-        public static void Serialize(MessageWriter writer, int modCount)
-        {
-            writer.Write((byte) ReactorProtocolVersion.Initial);
-            writer.WritePacked(modCount);
-        }
+        writer.Write((byte) ReactorProtocolVersion.Initial);
+        writer.WritePacked(modCount);
     }
 }

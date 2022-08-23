@@ -4,74 +4,73 @@ using BepInEx.IL2CPP;
 using Hazel;
 using InnerNet;
 
-namespace Reactor.Networking
+namespace Reactor.Networking;
+
+public abstract class UnsafeCustomRpc
 {
-    public abstract class UnsafeCustomRpc
+    internal CustomRpcManager? Manager { get; set; }
+    protected internal virtual bool IsSingleton => true;
+
+    public uint Id { get; }
+    public BasePlugin UnsafePlugin { get; }
+    public string PluginId { get; }
+
+    public abstract Type InnerNetObjectType { get; }
+
+    public virtual SendOption SendOption => SendOption.Reliable;
+    public abstract RpcLocalHandling LocalHandling { get; }
+
+    protected UnsafeCustomRpc(BasePlugin plugin, uint id)
     {
-        internal CustomRpcManager? Manager { get; set; }
-        protected internal virtual bool IsSingleton => true;
+        UnsafePlugin = plugin;
+        PluginId = MetadataHelper.GetMetadata(plugin).GUID;
+        Id = id;
+    }
 
-        public uint Id { get; }
-        public BasePlugin UnsafePlugin { get; }
-        public string PluginId { get; }
+    public abstract void UnsafeWrite(MessageWriter writer, object? data);
+    public abstract object? UnsafeRead(MessageReader reader);
+    public abstract void UnsafeHandle(InnerNetObject innerNetObject, object? data);
 
-        public abstract Type InnerNetObjectType { get; }
+    public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1)
+    {
+        if (innerNetObject == null) throw new ArgumentNullException(nameof(innerNetObject));
 
-        public virtual SendOption SendOption => SendOption.Reliable;
-        public abstract RpcLocalHandling LocalHandling { get; }
-
-        protected UnsafeCustomRpc(BasePlugin plugin, uint id)
+        if (Manager == null)
         {
-            UnsafePlugin = plugin;
-            PluginId = MetadataHelper.GetMetadata(plugin).GUID;
-            Id = id;
+            throw new InvalidOperationException("Can't send unregistered CustomRpc");
         }
 
-        public abstract void UnsafeWrite(MessageWriter writer, object? data);
-        public abstract object? UnsafeRead(MessageReader reader);
-        public abstract void UnsafeHandle(InnerNetObject innerNetObject, object? data);
-
-        public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1)
+        if (LocalHandling == RpcLocalHandling.Before)
         {
-            if (innerNetObject == null) throw new ArgumentNullException(nameof(innerNetObject));
+            UnsafeHandle(innerNetObject, data);
+        }
 
-            if (Manager == null)
-            {
-                throw new InvalidOperationException("Can't send unregistered CustomRpc");
-            }
+        var writer = immediately switch
+        {
+            false => AmongUsClient.Instance.StartRpc(innerNetObject.NetId, CustomRpcManager.CallId, SendOption),
+            true => AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId),
+        };
 
-            if (LocalHandling == RpcLocalHandling.Before)
-            {
-                UnsafeHandle(innerNetObject, data);
-            }
+        var pluginNetId = ModList.GetById(PluginId).NetId;
+        writer.WritePacked(pluginNetId);
+        writer.WritePacked(Id);
 
-            var writer = immediately switch
-            {
-                false => AmongUsClient.Instance.StartRpc(innerNetObject.NetId, CustomRpcManager.CallId, SendOption),
-                true => AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId)
-            };
+        writer.StartMessage(0);
+        UnsafeWrite(writer, data);
+        writer.EndMessage();
 
-            var pluginNetId = ModList.GetById(PluginId).NetId;
-            writer.WritePacked(pluginNetId);
-            writer.WritePacked(Id);
-
-            writer.StartMessage(0);
-            UnsafeWrite(writer, data);
+        if (immediately)
+        {
+            AmongUsClient.Instance.FinishRpcImmediately(writer);
+        }
+        else
+        {
             writer.EndMessage();
+        }
 
-            if (immediately)
-            {
-                AmongUsClient.Instance.FinishRpcImmediately(writer);
-            }
-            else
-            {
-                writer.EndMessage();
-            }
-
-            if (LocalHandling == RpcLocalHandling.After)
-            {
-                UnsafeHandle(innerNetObject, data);
-            }
+        if (LocalHandling == RpcLocalHandling.After)
+        {
+            UnsafeHandle(innerNetObject, data);
         }
     }
 }

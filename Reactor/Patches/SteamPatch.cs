@@ -3,37 +3,36 @@ using System.IO;
 using System.Reflection;
 using HarmonyLib;
 
-namespace Reactor.Patches
+namespace Reactor.Patches;
+
+internal static class SteamPatch
 {
-    internal static class SteamPatch
+    [HarmonyPatch]
+    public static class RestartAppIfNecessaryPatch
     {
-        [HarmonyPatch]
-        public static class RestartAppIfNecessaryPatch
+        public const string TypeName = "Steamworks.SteamAPI, Assembly-CSharp-firstpass";
+        public const string MethodName = "RestartAppIfNecessary";
+
+        public static bool Prepare()
         {
-            public const string TypeName = "Steamworks.SteamAPI, Assembly-CSharp-firstpass";
-            public const string MethodName = "RestartAppIfNecessary";
+            return Type.GetType(TypeName, false) != null;
+        }
 
-            public static bool Prepare()
+        public static MethodBase TargetMethod()
+        {
+            return AccessTools.Method(TypeName + ":" + MethodName);
+        }
+
+        public static bool Prefix(out bool __result)
+        {
+            const string file = "steam_appid.txt";
+
+            if (!File.Exists(file))
             {
-                return Type.GetType(TypeName, false) != null;
+                File.WriteAllText(file, "945360");
             }
 
-            public static MethodBase TargetMethod()
-            {
-                return AccessTools.Method(TypeName + ":" + MethodName);
-            }
-
-            public static bool Prefix(out bool __result)
-            {
-                const string file = "steam_appid.txt";
-
-                if (!File.Exists(file))
-                {
-                    File.WriteAllText(file, "945360");
-                }
-
-                return __result = false;
-            }
+            return __result = false;
         }
     }
 }

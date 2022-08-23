@@ -1,8 +1,7 @@
-namespace Reactor.Example
+namespace Reactor.Example;
+
+public enum CustomRpcCalls : uint
 {
-    public enum CustomRpcCalls : uint
-    {
-        Example,
-        MethodRpcExample
-    }
+    Example,
+    MethodRpcExample,
 }

@@ -1,9 +1,8 @@
-namespace Reactor.Networking
+namespace Reactor.Networking;
+
+public enum ReactorMessageFlags : byte
 {
-    public enum ReactorMessageFlags : byte
-    {
-        Handshake,
-        ModDeclaration,
-        PluginDeclaration
-    }
+    Handshake,
+    ModDeclaration,
+    PluginDeclaration,
 }
