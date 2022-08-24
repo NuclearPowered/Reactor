@@ -1,4 +1,5 @@
-﻿using System;
+﻿global using static Reactor.Logger<Reactor.ReactorPlugin>;
+using System;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;

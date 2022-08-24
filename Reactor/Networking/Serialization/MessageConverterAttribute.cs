@@ -27,7 +27,7 @@ public class MessageConverterAttribute : Attribute
                 }
                 catch (Exception e)
                 {
-                    Logger<ReactorPlugin>.Warning($"Failed to register {type.FullDescription()}: {e}");
+                    Warning($"Failed to register {type.FullDescription()}: {e}");
                 }
             }
         }

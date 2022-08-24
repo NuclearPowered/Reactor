@@ -159,7 +159,7 @@ internal static class ClientPatches
             // Due to reasons currently unknown, the useDtlsLayout parameter sometimes doesn't reflect whether DTLS
             // is actually supposed to be enabled. This causes a bad handshake message and a quick disconnect.
             // The field on AmongUsClient appears to be more reliable, so override this parameter with what it is supposed to be.
-            Logger<ReactorPlugin>.Info($"Currently using dtls: {useDtlsLayout}. Should use dtls: {AmongUsClient.Instance.useDtls}");
+            Info($"Currently using dtls: {useDtlsLayout}. Should use dtls: {AmongUsClient.Instance.useDtls}");
             useDtlsLayout = AmongUsClient.Instance.useDtls;
         }
 

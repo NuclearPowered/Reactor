@@ -43,7 +43,7 @@ internal class RegionInfoWatcher : IDisposable
                         regionMenu.OnEnable();
                     }
 
-                    Logger<ReactorPlugin>.Info("Region file reloaded");
+                    Info("Region file reloaded");
                 });
             }
         };
@@ -76,7 +76,7 @@ internal class RegionInfoWatcher : IDisposable
             if (ServerManager.Instance && path == ServerManager.Instance.serverInfoFileJson)
             {
                 var continueWrite = !File.Exists(path) || File.ReadAllText(path) != contents;
-                Logger<ReactorPlugin>.Debug($"Continue serverInfoFile write? {continueWrite}");
+                Debug($"Continue serverInfoFile write? {continueWrite}");
                 // If we will write, ignore the next change action from the observer.
                 PluginSingleton<ReactorPlugin>.Instance.RegionInfoWatcher.IgnoreNext = continueWrite;
                 return continueWrite;

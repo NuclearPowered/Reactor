@@ -12,7 +12,7 @@ public static class ConnectPatch
 {
     public static void Prefix(InnerNetClient __instance)
     {
-        Logger<ReactorPlugin>.Info($"Joining {__instance.networkAddress}:{__instance.networkPort}");
+        Info($"Joining {__instance.networkAddress}:{__instance.networkPort}");
     }
 }
 
@@ -34,11 +34,11 @@ public static class PopulateServersPatch
                 .ToArray();
 
             __instance.cachedServers = servers;
-            Logger<ReactorPlugin>.Info($"Populated {__instance.Name} ({__instance.Fqdn}:{__instance.Port}) with {servers.Length} server(s) {{{servers.Select(x => x.ToString()).Join()}}}");
+            Info($"Populated {__instance.Name} ({__instance.Fqdn}:{__instance.Port}) with {servers.Length} server(s) {{{servers.Select(x => x.ToString()).Join()}}}");
         }
         catch (Exception e)
         {
-            Logger<ReactorPlugin>.Info($"Failed to populate {__instance.Name}: {e}");
+            Info($"Failed to populate {__instance.Name}: {e}");
             __instance.cachedServers = new[]
             {
                 new ServerInfo(__instance.Name ?? string.Empty, __instance.DefaultIp, __instance.Port, __instance.UseDtls),

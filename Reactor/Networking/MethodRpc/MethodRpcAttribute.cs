@@ -40,7 +40,7 @@ public class MethodRpcAttribute : Attribute
             }
             catch (Exception e)
             {
-                Logger<ReactorPlugin>.Warning($"Failed to register {method.FullDescription()}: {e}");
+                Warning($"Failed to register {method.FullDescription()}: {e}");
             }
         }
     }
