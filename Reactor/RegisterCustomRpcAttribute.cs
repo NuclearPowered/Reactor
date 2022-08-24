@@ -1,6 +1,6 @@
 using System;
 using System.Reflection;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Reactor.Networking;
 
@@ -37,7 +37,7 @@ public class RegisterCustomRpcAttribute : Attribute
                     throw new InvalidOperationException($"Type {type.FullDescription()} has {nameof(RegisterCustomRpcAttribute)} but doesn't extend {nameof(UnsafeCustomRpc)}.");
                 }
 
-                var customRpc = (UnsafeCustomRpc) Activator.CreateInstance(type, plugin, attribute.Id);
+                var customRpc = (UnsafeCustomRpc) Activator.CreateInstance(type, plugin, attribute.Id)!;
                 PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
             }
         }

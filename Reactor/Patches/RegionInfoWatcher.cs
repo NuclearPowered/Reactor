@@ -21,9 +21,10 @@ internal class RegionInfoWatcher : IDisposable
             "regionInfo.json"
         );
 
-        Watcher.Changed += (s, e) =>
+        Watcher.Changed += (_, e) =>
         {
-            if (new FileInfo(e.Name).Length > 0)
+            var fileInfo = new FileInfo(e.FullPath);
+            if (fileInfo.Exists && fileInfo.Length > 0)
             {
                 if (IgnoreNext)
                 {

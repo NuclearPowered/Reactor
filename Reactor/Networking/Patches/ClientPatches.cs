@@ -4,9 +4,9 @@ using System.Linq;
 using HarmonyLib;
 using Hazel;
 using Hazel.Udp;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using Reactor.Extensions;
-using UnhollowerBaseLib;
 using UnityEngine;
 
 namespace Reactor.Networking.Patches;

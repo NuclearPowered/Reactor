@@ -1,6 +1,6 @@
 using System.Linq;
 using HarmonyLib;
-using UnhollowerBaseLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 
 namespace Reactor.Debugger;

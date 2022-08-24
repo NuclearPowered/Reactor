@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
 
@@ -21,7 +21,7 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v2
         with:
           dotnet-version: 6.x
 
@@ -30,23 +30,23 @@ jobs:
         with:
           verbosity: Diagnostic
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Reactor.dll
-          path: Reactor/bin/Release/netstandard2.1/Reactor.dll
+          path: Reactor/bin/Release/net6.0/Reactor.dll
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Reactor.nupkg
           path: Reactor/bin/Release/Reactor.*.nupkg
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: Reactor.Debugger.dll
-          path: Reactor.Debugger/bin/Release/netstandard2.1/Reactor.Debugger.dll
+          path: Reactor.Debugger/bin/Release/net6.0/Reactor.Debugger.dll
 
       - uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           draft: true
-          files: Reactor/bin/Release/netstandard2.1/Reactor.dll
+          files: Reactor/bin/Release/net6.0/Reactor.dll

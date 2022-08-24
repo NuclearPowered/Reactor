@@ -11,7 +11,7 @@ public static class MessageSerializer
 {
     private static List<UnsafeMessageConverter> MessageConverters { get; } = new();
 
-    private static Dictionary<Type, UnsafeMessageConverter> MessageConverterMap { get; } = new();
+    private static Dictionary<Type, UnsafeMessageConverter?> MessageConverterMap { get; } = new();
 
     public static void Register(UnsafeMessageConverter messageConverter)
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Reactor.Extensions;
 using Reactor.Networking;
@@ -10,7 +10,7 @@ using Reactor.Networking.MethodRpc;
 using Reactor.Networking.Serialization;
 using Reactor.Patches;
 using Reactor.Unstrip;
-using UnhollowerBaseLib.Attributes;
+using Il2CppInterop.Runtime.Attributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

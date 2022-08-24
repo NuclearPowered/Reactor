@@ -2,7 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using HarmonyLib;
-using UnhollowerBaseLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine.Networking;
 
 namespace Reactor.Networking.Patches;

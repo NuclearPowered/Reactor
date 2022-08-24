@@ -1,5 +1,5 @@
 using System;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using Hazel;
 using InnerNet;
 

@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
-using Il2CppType = UnhollowerRuntimeLib.Il2CppType;
+using Il2CppType = Il2CppInterop.Runtime.Il2CppType;
 
 namespace Reactor.Extensions;
 

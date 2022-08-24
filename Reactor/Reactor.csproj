@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netstandard2.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <LangVersion>latest</LangVersion>
         <DebugType>embedded</DebugType>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-        <VersionPrefix>1.2.8</VersionPrefix>
+        <VersionPrefix>2.0.0</VersionPrefix>
         <VersionSuffix>dev</VersionSuffix>
         <Description>Core mod and API for Among Us</Description>
         <Authors>NuclearPowered</Authors>

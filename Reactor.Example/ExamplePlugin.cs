@@ -1,10 +1,8 @@
 ﻿using System;
 using BepInEx;
-using BepInEx.IL2CPP;
-using Reactor.Extensions;
+using BepInEx.Unity.IL2CPP;
 using Reactor.Networking;
 using Reactor.Networking.MethodRpc;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

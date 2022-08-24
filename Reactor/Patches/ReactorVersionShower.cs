@@ -1,11 +1,12 @@
 using System;
 using BepInEx;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Reactor.Extensions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Version = SemanticVersioning.Version;
 
 namespace Reactor.Patches;
 
@@ -53,10 +54,16 @@ public static class ReactorVersionShower
         }));
     }
 
+    private static string ToStringWithoutBuild(Version version)
+    {
+        return $"{version.Major}.{version.Minor}.{version.Patch}{(version.PreRelease == null ? "" : $"-{version.PreRelease}")}";
+    }
+
     public static void UpdateText()
     {
-        Text!.text = "Reactor " + typeof(ReactorPlugin).Assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
-        Text.text += "\nBepInEx " + Paths.BepInExVersion;
+        if (Text == null) return;
+        Text.text = "Reactor " + ReactorPlugin.Version;
+        Text.text += "\nBepInEx " + ToStringWithoutBuild(Paths.BepInExVersion);
         Text.text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
         TextUpdated?.Invoke(Text);
     }

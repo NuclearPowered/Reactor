@@ -22,7 +22,7 @@ public class MessageConverterAttribute : Attribute
 
                 try
                 {
-                    var messageConverter = (UnsafeMessageConverter) Activator.CreateInstance(type);
+                    var messageConverter = (UnsafeMessageConverter) Activator.CreateInstance(type)!;
                     MessageSerializer.Register(messageConverter);
                 }
                 catch (Exception e)

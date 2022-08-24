@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using BepInEx;
-using BepInEx.IL2CPP;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using Il2CppInterop.Runtime.Attributes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using Reactor.Extensions;
-using UnhollowerBaseLib;
-using UnhollowerBaseLib.Attributes;
 using UnityEngine;
 
 namespace Reactor.Debugger;
