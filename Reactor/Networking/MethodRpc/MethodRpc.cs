@@ -25,28 +25,35 @@ public class MethodRpc : UnsafeCustomRpc
         SendOption = option;
         SendImmediately = sendImmediately;
 
-        if (!method.IsStatic)
-        {
-            throw new NotImplementedException("Instance method rpc support is postponed until unhollower v0.5.0");
-        }
-
         var parameters = method.GetParameters();
 
-        if (method.IsStatic && parameters.Length == 0)
+        if (method.IsStatic)
         {
-            throw new ArgumentException("Static method rpc requires at least one argument", nameof(method));
+            if (method.IsStatic && parameters.Length == 0)
+            {
+                throw new ArgumentException("Static method rpc requires at least one argument", nameof(method));
+            }
+
+            var innerNetObjectType = parameters.First().ParameterType;
+
+            if (!typeof(InnerNetObject).IsAssignableFrom(innerNetObjectType))
+            {
+                throw new ArgumentException("First argument of a static method rpc has to be an InnerNetObject", nameof(method));
+            }
+
+            InnerNetObjectType = innerNetObjectType;
+        }
+        else
+        {
+            if (!typeof(InnerNetObject).IsAssignableFrom(method.DeclaringType))
+            {
+                throw new ArgumentException("Declaring type of an instance method rpc has to be an InnerNetObject", nameof(method));
+            }
+
+            InnerNetObjectType = method.DeclaringType;
         }
 
-        var innerNetObjectType = parameters.First().ParameterType;
-
-        if (!typeof(InnerNetObject).IsAssignableFrom(innerNetObjectType))
-        {
-            throw new ArgumentException("First argument of a static method rpc has to be an InnerNetObject", nameof(method));
-        }
-
-        InnerNetObjectType = innerNetObjectType;
-
-        Handle = Hook(method, parameters);
+        Handle = Hook(method, parameters, method.IsStatic);
     }
 
     public MethodInfo Method { get; }
@@ -92,18 +99,23 @@ public class MethodRpc : UnsafeCustomRpc
     /// <summary>
     /// Hooks the <paramref name="method"/> rpc with a dynamic method that sends it
     /// </summary>
-    private HandleDelegate Hook(MethodInfo method, ParameterInfo[] parameters)
+    private HandleDelegate Hook(MethodInfo method, ParameterInfo[] parameters, bool isStatic)
     {
         var detour = new Detour(method, GenerateSender());
 
         // Used as target when hooking, sends the method rpc
         DynamicMethod GenerateSender()
         {
-            var dynamicMethod = new DynamicMethod($"Sender<{method.GetID(simple: true)}>", method.ReturnType, parameters.Select(x => x.ParameterType).ToArray());
+            var parameterTypes = parameters.Select(x => x.ParameterType);
+            if (!isStatic) parameterTypes = parameterTypes.Prepend(InnerNetObjectType);
+
+            var dynamicMethod = new DynamicMethod($"Sender<{method.GetID(simple: true)}>", method.ReturnType, parameterTypes.ToArray());
+
+            if (!isStatic) dynamicMethod.DefineParameter(0, ParameterAttributes.None, "this");
 
             foreach (var parameter in parameters)
             {
-                dynamicMethod.DefineParameter(parameter.Position, ParameterAttributes.None, parameter.Name);
+                dynamicMethod.DefineParameter(parameter.Position + (isStatic ? 0 : 1), ParameterAttributes.None, parameter.Name);
             }
 
             var il = dynamicMethod.GetILGenerator();
@@ -139,16 +151,18 @@ public class MethodRpc : UnsafeCustomRpc
 
             il.Emit(OpCodes.Ldarg_0);
 
-            il.Emit(OpCodes.Ldc_I4, parameters.Length - 1);
+            var offset = isStatic ? 1 : 0;
+
+            il.Emit(OpCodes.Ldc_I4, parameters.Length - offset);
             il.Emit(OpCodes.Newarr, typeof(object));
 
-            for (var i = 1; i < parameters.Length; i++)
+            for (var i = offset; i < parameters.Length; i++)
             {
                 var parameter = parameters[i];
 
                 il.Emit(OpCodes.Dup);
-                il.Emit(OpCodes.Ldc_I4, i - 1);
-                il.Emit(OpCodes.Ldarg, i);
+                il.Emit(OpCodes.Ldc_I4, i - offset);
+                il.Emit(OpCodes.Ldarg, i + (isStatic ? 0 : 1));
 
                 var parameterType = parameter.ParameterType;
                 if (parameterType.IsValueType)
@@ -183,12 +197,14 @@ public class MethodRpc : UnsafeCustomRpc
             il.Emit(OpCodes.Ldarg_0);
             il.Emit(OpCodes.Castclass, InnerNetObjectType);
 
-            for (var i = 1; i < parameters.Length; i++)
+            var offset = isStatic ? 1 : 0;
+
+            for (var i = offset; i < parameters.Length; i++)
             {
                 var parameter = parameters[i];
 
                 il.Emit(OpCodes.Ldarg_1);
-                il.Emit(OpCodes.Ldc_I4, i - 1);
+                il.Emit(OpCodes.Ldc_I4, i - offset);
                 il.Emit(OpCodes.Ldelem_Ref);
 
                 var parameterType = parameter.ParameterType;

@@ -23,7 +23,7 @@ public class MethodRpcAttribute : Attribute
     public static void Register(Assembly assembly, BasePlugin plugin)
     {
         var methods = assembly.GetTypes()
-            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public));
+            .SelectMany(t => t.GetMethods(BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public));
 
         foreach (var method in methods)
         {
