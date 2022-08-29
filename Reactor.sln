@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Example", "Reactor.
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Reactor.Shared", "Reactor.Shared\Reactor.Shared.shproj", "{8C1EEFE9-EF8A-47C4-810E-6D9BA1E7218B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Benchmarks", "Reactor.Benchmarks\Reactor.Benchmarks.csproj", "{99B87307-3AEB-4A6A-BF45-871768308FDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{26A83466-26FE-4383-A35C-B8629902F909}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26A83466-26FE-4383-A35C-B8629902F909}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26A83466-26FE-4383-A35C-B8629902F909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{99B87307-3AEB-4A6A-BF45-871768308FDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{99B87307-3AEB-4A6A-BF45-871768308FDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{99B87307-3AEB-4A6A-BF45-871768308FDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{99B87307-3AEB-4A6A-BF45-871768308FDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

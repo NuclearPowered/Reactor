@@ -8,8 +8,7 @@ internal static class DefaultBundle
 {
     public static void Load()
     {
-        using var stream = typeof(ReactorPlugin).Assembly.GetManifestResourceStream("Reactor.Assets.default.bundle")!;
-        var bundle = AssetBundle.LoadFromStream(stream.AsIl2Cpp());
+        var bundle = AssetBundleManager.Load("default");
 
         var backupShader = bundle.LoadAsset<Shader>("UI-Default");
 

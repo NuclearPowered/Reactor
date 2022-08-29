@@ -1,9 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <LangVersion>latest</LangVersion>
-        <DebugType>embedded</DebugType>
-
         <Version>0.1.0</Version>
         <Description>Example mod using Reactor</Description>
         <Authors>NuclearPowered</Authors>

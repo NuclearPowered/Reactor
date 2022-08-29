@@ -1,0 +1,9 @@
+*
+!.gitignore
+!Assets/
+!Assets/**
+!Packages/
+!Packages/**
+!ProjectSettings/
+!ProjectSettings/ProjectVersion.txt
+!build.sh

@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <Version>0.1.0</Version>
-        <Description>Debugging mod for Reactor</Description>
         <Authors>NuclearPowered</Authors>
     </PropertyGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Reactor\Reactor.csproj" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
     </ItemGroup>
 
     <Import Project="../AmongUs.props" />

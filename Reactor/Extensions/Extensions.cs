@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using HarmonyLib;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Networking;
@@ -118,5 +119,10 @@ public static class Extensions
     public static T? LoadAsset<T>(this AssetBundle assetBundle, string name) where T : UnityEngine.Object
     {
         return assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>();
+    }
+
+    public static unsafe Span<T> ToSpan<T>(this Il2CppStructArray<T> array) where T : unmanaged
+    {
+        return new Span<T>(IntPtr.Add(array.Pointer, IntPtr.Size * 4).ToPointer(), array.Length);
     }
 }

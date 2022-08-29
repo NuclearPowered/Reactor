@@ -1,0 +1,44 @@
+name: Unity
+
+on:
+  push:
+    paths: [ "Reactor.Assets/**", "Reactor/Assets/*.bundle", ".github/workflows/unity.yml" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/Unity/Hub/Editor
+            ~/.config/unityhub
+          key: unity-2020.3.22f1
+
+      - name: Setup Unity
+        uses: js6pak/setup-unity@master
+        with:
+          project-path: ./Reactor.Assets
+          unity-modules: windows-mono android
+
+      - name: Activate Unity
+        uses: js6pak/activate-unity@master
+        with:
+          unity-username: ${{ secrets.UNITY_USERNAME }}
+          unity-password: ${{ secrets.UNITY_PASSWORD }}
+          unity-authenticator-key: ${{ secrets.UNITY_AUTHENTICATOR_KEY }}
+
+      - name: Build
+        working-directory: ./Reactor.Assets
+        run: bash ./build.sh
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: bundles
+          path: ./Reactor/Assets/*.bundle
+
+      - name: Verify
+        run: if [[ $(git status --porcelain) ]]; then git status; git diff; exit 1; fi

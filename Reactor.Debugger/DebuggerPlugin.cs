@@ -18,7 +18,7 @@ namespace Reactor.Debugger;
 public partial class DebuggerPlugin : BasePlugin
 {
     public Harmony Harmony { get; } = new(Id);
-    public DebuggerComponent Component { get; private set; }
+    public DebuggerComponent Component { get; private set; } = null!;
 
     public override void Load()
     {
