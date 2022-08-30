@@ -12,9 +12,9 @@ public static class PluginSingleton<T> where T : BasePlugin
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin =>
+        IL2CPPChainloader.Instance.PluginLoad += (_, _, plugin) =>
         {
-            typeof(PluginSingleton<>).MakeGenericType(plugin.GetType())!
+            typeof(PluginSingleton<>).MakeGenericType(plugin.GetType())
                 .GetField(nameof(_instance), BindingFlags.Static | BindingFlags.NonPublic)!
                 .SetValue(null, plugin);
         };

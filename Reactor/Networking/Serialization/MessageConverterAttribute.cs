@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 
 namespace Reactor.Networking.Serialization;
@@ -35,6 +36,6 @@ public class MessageConverterAttribute : Attribute
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
     }
 }

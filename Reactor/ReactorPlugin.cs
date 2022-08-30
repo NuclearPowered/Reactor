@@ -35,8 +35,6 @@ public partial class ReactorPlugin : BasePlugin
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
         MethodRpcAttribute.Initialize();
-
-        ChainloaderHooks.OnPluginLoad(this);
     }
 
     public override void Load()

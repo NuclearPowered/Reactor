@@ -19,11 +19,6 @@ public class RegisterCustomRpcAttribute : Attribute
         Id = id;
     }
 
-    [Obsolete("You don't need to call this anymore", true)]
-    public static void Register(BasePlugin plugin)
-    {
-    }
-
     public static void Register(Assembly assembly, BasePlugin plugin)
     {
         foreach (var type in assembly.GetTypes())
@@ -45,6 +40,6 @@ public class RegisterCustomRpcAttribute : Attribute
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly, plugin);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, plugin) => Register(assembly, plugin);
     }
 }

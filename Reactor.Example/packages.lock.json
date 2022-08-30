@@ -22,17 +22,17 @@
       },
       "BepInEx.Unity.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.649, )",
-        "resolved": "6.0.0-be.649",
-        "contentHash": "d/mYFhxUiPlDaWU0ZPMrJWlxVuxNMXpDfn9ow7Du+ELzFqbbdW/dqEkdpj4vL6iiDLycp+WSDjp9b8x16DOT5g==",
+        "requested": "[6.0.0-be.652, )",
+        "resolved": "6.0.0-be.652",
+        "contentHash": "76ybuFLr9BDTOTfI+yOP3xOIA94NxhOejR8+517b2YnpXWJoUhLx5IHv5Bfezon/oafubEUBzrlLfzoAt+6iXA==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.649",
-          "BepInEx.Unity.Common": "6.0.0-be.649",
+          "BepInEx.Core": "6.0.0-be.652",
+          "BepInEx.Unity.Common": "6.0.0-be.652",
           "HarmonyX": "2.10.0",
           "Iced": "1.17.0",
-          "Il2CppInterop.Generator": "1.1.0",
-          "Il2CppInterop.HarmonySupport": "1.1.0",
-          "Il2CppInterop.Runtime": "1.1.0",
+          "Il2CppInterop.Generator": "1.1.1",
+          "Il2CppInterop.HarmonySupport": "1.1.1",
+          "Il2CppInterop.Runtime": "1.1.1",
           "MonoMod.RuntimeDetour": "22.5.1.1",
           "Samboy063.Cpp2IL.Core": "2022.0.5"
         }
@@ -44,8 +44,8 @@
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.649",
-        "contentHash": "fbCDRZ5wqJCorydypIhvKQVR+y7ZRSWlcgan7MK6ObzC6ltHXV3P2im8iZbr2MVXqfwNdkZAIFolfFjrw7AePA==",
+        "resolved": "6.0.0-be.652",
+        "contentHash": "E2mQ1SbI7AHiUULZSCmgFQonUrNxSlGBinJiMD4tnVtExpig82sFJkaNsbeQOz0l46LymEJKJk9ir9rzHozQ9w==",
         "dependencies": {
           "HarmonyX": "2.10.0",
           "MonoMod.Utils": "22.5.1.1",
@@ -54,8 +54,8 @@
       },
       "BepInEx.Unity.Common": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.649",
-        "contentHash": "nuZX9E7Ma6MQkTZ07BpLySo4BCMjVU/m8VXLKpj2SAje7OKiLDp69i3EcEAaIRBCRznxnGevQY6+6gteW7veFA==",
+        "resolved": "6.0.0-be.652",
+        "contentHash": "sxSYHRFKUtVts/bZKuapnB/rAHhOWz3rc2tu55mF1Ja9Wu9Fvrpd1bGablioX15EE1/GyfSLZwOeN8nYgXbZsQ==",
         "dependencies": {
           "AssetRipper.VersionUtilities": "1.2.1",
           "MonoMod.Utils": "22.5.1.1"
@@ -77,8 +77,8 @@
       },
       "Il2CppInterop.Common": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "wExfEtiVhgTll9Ize6Hxx03lTYsl/nr8+d7VBrqNv+bbNaJ8A67X63TI7+ghsk1OL57DIZb3Txp0WMmNc7vuew==",
+        "resolved": "1.1.1",
+        "contentHash": "eUXvZ2Ed/d1GqGHF9SQPzEz/HTihSfIC32EeUVXNJoGuj93n4xxCg3CbHhh9ZAqKRtG4WLCsIBa/7E/DgpuWqQ==",
         "dependencies": {
           "Iced": "1.17.0",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.1",
@@ -87,29 +87,29 @@
       },
       "Il2CppInterop.Generator": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "YjZUI/GQ78kN2YYpQzNDeo1kUdvxHoXFkrYzTg0IGxDDQTK+AglFQ8au9iMyP5KUgWtfU44FGbnodMVI2yr8Kg==",
+        "resolved": "1.1.1",
+        "contentHash": "FaII+JqFKdcy6YRd7boa+IogcL+6FMCL1cqygFoW7v3WxnD3ZEbgJdqoobrI/5TXIBw+/WN0ngAZkR1GgJvN0g==",
         "dependencies": {
-          "Il2CppInterop.Common": "1.1.0",
+          "Il2CppInterop.Common": "1.1.1",
           "Mono.Cecil": "0.11.3"
         }
       },
       "Il2CppInterop.HarmonySupport": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "ksBVbpf8J6VYwD9w70n/4QsqqI0BsFu/oAZUuJO3nGCoGqSoKY42fZLZ1YgJFpsMqMo9Lc9Er9QxbrfE8IYxpQ==",
+        "resolved": "1.1.1",
+        "contentHash": "b7BBIn2O/BY/ZU4WbWsbDae1+vrJMAydPVss58nUUpFmprPCM8DOs28mqOt5RILfZTw62ivIHP+PAzKmJnWQtA==",
         "dependencies": {
           "HarmonyX": "2.10.0",
-          "Il2CppInterop.Runtime": "1.1.0"
+          "Il2CppInterop.Runtime": "1.1.1"
         }
       },
       "Il2CppInterop.Runtime": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "CAh73XWvFu9584ELoCAmi2Njs+qKyENJih+TEoz2EN5g8lRF9p7NKche5XLIN8OeQo7+CNKKz9/uf5j8k2q2gA==",
+        "resolved": "1.1.1",
+        "contentHash": "rMLHqJ6aiJ/dk91cCzbdg0aCBlCdSi7KGBEkJwWwF7GAnt35CJqoiTwr6orlg3qru1CBFbLpRXT8dqWrwvbowg==",
         "dependencies": {
           "Iced": "1.17.0",
-          "Il2CppInterop.Common": "1.1.0"
+          "Il2CppInterop.Common": "1.1.1"
         }
       },
       "IndexRange": {
@@ -853,7 +853,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.Unity.IL2CPP": "6.0.0-be.649"
+          "BepInEx.Unity.IL2CPP": "[6.0.0-be.652, )"
         }
       }
     }

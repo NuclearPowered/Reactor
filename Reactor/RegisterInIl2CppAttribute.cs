@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
 
@@ -21,11 +22,6 @@ public class RegisterInIl2CppAttribute : Attribute
     public RegisterInIl2CppAttribute(params Type[] interfaces)
     {
         Interfaces = interfaces;
-    }
-
-    [Obsolete("You don't need to call this anymore", true)]
-    public static void Register()
-    {
     }
 
     private static void Register(Type type, Type[] interfaces)
@@ -65,6 +61,6 @@ public class RegisterInIl2CppAttribute : Attribute
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
     }
 }

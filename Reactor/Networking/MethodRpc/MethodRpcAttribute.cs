@@ -47,6 +47,6 @@ public class MethodRpcAttribute : Attribute
 
     internal static void Initialize()
     {
-        ChainloaderHooks.PluginLoad += plugin => Register(plugin.GetType().Assembly, plugin);
+        IL2CPPChainloader.Instance.PluginLoad += (_, assembly, plugin) => Register(assembly, plugin);
     }
 }
