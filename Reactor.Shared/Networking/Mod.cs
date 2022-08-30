@@ -1,39 +1,78 @@
 #nullable enable
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
 
 namespace Reactor.Networking;
 
-public class Mod
+public struct Mod
 {
-    public Mod(uint netId, string id, string version, PluginSide side)
+    public Mod(string id, string version, ModFlags flags, string? name = null)
     {
-        NetId = netId;
         Id = id;
         Version = version;
-        Side = side;
+        Flags = flags;
+        Name = name;
     }
 
-    public uint NetId { get; }
     public string Id { get; }
     public string Version { get; }
-    public PluginSide Side { get; }
+    public ModFlags Flags { get; }
+    public string? Name { get; }
 
-    protected bool Equals(Mod other)
+    public bool IsRequiredOnAllClients => (Flags & ModFlags.RequireOnAllClients) != 0;
+
+    public bool Equals(Mod other)
     {
         return Id == other.Id && Version == other.Version;
     }
 
     public override bool Equals(object? obj)
     {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((Mod) obj);
+        return obj is Mod other && Equals(other);
     }
 
     public override int GetHashCode()
     {
         return HashCode.Combine(Id, Version);
+    }
+
+    public override string ToString()
+    {
+        return $"{Name ?? Id} ({Version})";
+    }
+
+    internal static bool Validate(IReadOnlyCollection<Mod> clientMods, IReadOnlyCollection<Mod> hostMods, [NotNullWhen(false)] out string? reason)
+    {
+        var clientMissing = hostMods.Where(mod => mod.IsRequiredOnAllClients && !clientMods.Contains(mod)).ToArray();
+        var hostMissing = clientMods.Where(mod => mod.IsRequiredOnAllClients && !hostMods.Contains(mod)).ToArray();
+
+        if (clientMissing.Any() || hostMissing.Any())
+        {
+            var message = new StringBuilder();
+
+            if (clientMissing.Any())
+            {
+                message.Append("You are missing: ");
+                message.AppendJoin(", ", clientMissing.Select(x => x.ToString()));
+                message.AppendLine();
+            }
+
+            if (hostMissing.Any())
+            {
+                message.Append("Host is missing: ");
+                message.AppendJoin(", ", hostMissing.Select(x => x.ToString()));
+                message.AppendLine();
+            }
+
+            reason = message.ToString();
+            return false;
+        }
+
+        reason = null;
+        return true;
     }
 }

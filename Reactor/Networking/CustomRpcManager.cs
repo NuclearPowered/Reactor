@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using HarmonyLib;
 using Hazel;
+using Il2CppInterop.Generator.Extensions;
 using InnerNet;
 
 namespace Reactor.Networking;
@@ -20,32 +21,17 @@ public class CustomRpcManager
     public const byte CallId = byte.MaxValue;
 
     private readonly List<UnsafeCustomRpc> _list = new();
-    private readonly Dictionary<Type, List<UnsafeCustomRpc>> _map = new();
+    private readonly Dictionary<Type, Dictionary<Mod, Dictionary<uint, UnsafeCustomRpc>>> _map = new();
 
     public IReadOnlyList<UnsafeCustomRpc> List => _list.AsReadOnly();
 
-    public ILookup<Type, UnsafeCustomRpc> Map =>
-        _map.SelectMany(pair => pair.Value, (pair, value) => new { pair.Key, Value = value })
-            .ToLookup(pair => pair.Key, pair => pair.Value);
-
-    public CustomRpcManager()
-    {
-        foreach (var type in HandleRpcPatch.InnerNetObjectTypes)
-        {
-            _map[type] = new List<UnsafeCustomRpc>();
-        }
-    }
-
     public UnsafeCustomRpc Register(UnsafeCustomRpc customRpc)
     {
-        if (_list.Any(x => x.UnsafePlugin == customRpc.UnsafePlugin && x.Id == customRpc.Id))
-        {
-            throw new ArgumentException("Rpc with that id was already registered");
-        }
-
         customRpc.Manager = this;
         _list.Add(customRpc);
-        _map[customRpc.InnerNetObjectType].Add(customRpc);
+        _map.GetOrCreate(customRpc.InnerNetObjectType, _ => new Dictionary<Mod, Dictionary<uint, UnsafeCustomRpc>>())
+            .GetOrCreate(customRpc.Mod, _ => new Dictionary<uint, UnsafeCustomRpc>())
+            .Add(customRpc.Id, customRpc);
 
         if (customRpc.IsSingleton)
         {
@@ -67,24 +53,28 @@ public class CustomRpcManager
 
         public static bool Prefix(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
         {
-            if (callId == CallId)
-            {
-                var manager = PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager;
-                var customRpcs = manager.Map[__instance.GetType()];
+            return !HandleRpc(__instance, callId, reader);
+        }
+    }
 
-                var pluginNetId = reader.ReadPackedUInt32();
-                var id = reader.ReadPackedUInt32();
+    public static bool HandleRpc(InnerNetObject innerNetObject, byte callId, MessageReader reader)
+    {
+        if (callId == CallId)
+        {
+            var manager = PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager;
+            var customRpcs = manager._map[innerNetObject.GetType()];
 
-                var pluginId = ModList.GetByNetId(pluginNetId).Id;
-                var customRpc = customRpcs.Single(x => x.PluginId == pluginId && x.Id == id);
+            var mod = reader.ReadMod();
+            var id = reader.ReadPackedUInt32();
 
-                customRpc.UnsafeHandle(__instance, customRpc.UnsafeRead(reader.ReadMessage()));
+            var customRpc = customRpcs[mod][id];
 
-                return false;
-            }
+            customRpc.UnsafeHandle(innerNetObject, customRpc.UnsafeRead(reader.ReadMessage()));
 
             return true;
         }
+
+        return false;
     }
 }
 

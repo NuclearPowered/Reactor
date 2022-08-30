@@ -17,7 +17,7 @@ public abstract class UnsafeCustomRpc
 
     public uint Id { get; }
     public BasePlugin UnsafePlugin { get; }
-    public string PluginId { get; }
+    public Mod Mod { get; }
 
     public abstract Type InnerNetObjectType { get; }
 
@@ -27,7 +27,7 @@ public abstract class UnsafeCustomRpc
     protected UnsafeCustomRpc(BasePlugin plugin, uint id)
     {
         UnsafePlugin = plugin;
-        PluginId = MetadataHelper.GetMetadata(plugin).GUID;
+        Mod = ModList.GetByPluginType(plugin.GetType());
         Id = id;
     }
 
@@ -55,8 +55,7 @@ public abstract class UnsafeCustomRpc
             true => AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId),
         };
 
-        var pluginNetId = ModList.GetById(PluginId).NetId;
-        writer.WritePacked(pluginNetId);
+        writer.Write(Mod);
         writer.WritePacked(Id);
 
         writer.StartMessage(0);

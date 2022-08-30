@@ -30,8 +30,10 @@ public partial class ReactorPlugin : BasePlugin
 
     public ReactorPlugin()
     {
+        PluginSingleton<ReactorPlugin>.Instance = this;
         PluginSingleton<BasePlugin>.Initialize();
         RegisterInIl2CppAttribute.Initialize();
+        ModList.Initialize();
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
         MethodRpcAttribute.Initialize();

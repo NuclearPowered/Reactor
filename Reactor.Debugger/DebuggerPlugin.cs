@@ -14,7 +14,6 @@ namespace Reactor.Debugger;
 [BepInAutoPlugin("gg.reactor.debugger")]
 [BepInProcess("Among Us.exe")]
 [BepInDependency(ReactorPlugin.Id)]
-[ReactorPluginSide(PluginSide.ClientOnly)]
 public partial class DebuggerPlugin : BasePlugin
 {
     public Harmony Harmony { get; } = new(Id);

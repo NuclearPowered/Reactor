@@ -1,17 +1,22 @@
 namespace Reactor.Networking;
 
 /// <summary>
-///     Version of the Reactor.Net protocol format.
+///     Version of the Reactor.Networking protocol format.
 /// </summary>
 public enum ReactorProtocolVersion : byte
 {
     /// <summary>
-    ///     Initial version.
+    ///     First public Reactor Protocol version.
     /// </summary>
-    Initial = 1,
+    V2 = 1,
+
+    /// <summary>
+    ///     Version introducing vanilla server support, syncer concept and registries.
+    /// </summary>
+    V3 = 2,
 
     /// <summary>
     ///     Latest version.
     /// </summary>
-    Latest = Initial,
+    Latest = V3,
 }

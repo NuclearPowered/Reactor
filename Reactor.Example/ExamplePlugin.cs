@@ -13,6 +13,7 @@ namespace Reactor.Example;
 [BepInAutoPlugin("gg.reactor.Example")]
 [BepInProcess("Among Us.exe")]
 [BepInDependency(ReactorPlugin.Id)]
+[ReactorModFlags(ModFlags.RequireOnAllClients)]
 public partial class ExamplePlugin : BasePlugin
 {
     public override void Load()
