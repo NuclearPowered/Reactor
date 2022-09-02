@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Hazel;
 using Reactor.Networking.Patches;
@@ -99,22 +99,30 @@ public static class ModList
         Debug(debug.ToString());
     }
 
+    private static void OnPluginLoad(PluginInfo pluginInfo, BasePlugin plugin)
+    {
+        var pluginType = plugin.GetType();
+
+        var mod = new Mod(
+            pluginInfo.Metadata.GUID,
+            pluginInfo.Metadata.Version.Clean(),
+            ReactorModFlagsAttribute.GetModFlags(pluginType),
+            pluginInfo.Metadata.Name
+        );
+
+        _mapById[mod.Id] = mod;
+        _mapByPluginType[pluginType] = mod;
+    }
+
     internal static void Initialize()
     {
-        IL2CPPChainloader.Instance.PluginLoad += (pluginInfo, _, plugin) =>
+        foreach (var existingPlugin in IL2CPPChainloader.Instance.Plugins.Values)
         {
-            var pluginType = plugin.GetType();
+            if (existingPlugin.Instance == null) continue;
+            OnPluginLoad(existingPlugin, (BasePlugin)existingPlugin.Instance);
+        }
 
-            var mod = new Mod(
-                pluginInfo.Metadata.GUID,
-                pluginInfo.Metadata.Version.Clean(),
-                ReactorModFlagsAttribute.GetModFlags(pluginType),
-                pluginInfo.Metadata.Name
-            );
-
-            _mapById[mod.Id] = mod;
-            _mapByPluginType[pluginType] = mod;
-        };
+        IL2CPPChainloader.Instance.PluginLoad += (pluginInfo, _, plugin) => OnPluginLoad(pluginInfo, plugin);
 
         IL2CPPChainloader.Instance.Finished += Refresh;
     }
