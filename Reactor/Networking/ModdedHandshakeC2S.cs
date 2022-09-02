@@ -3,7 +3,7 @@ using Hazel;
 
 namespace Reactor.Networking;
 
-public static class ModdedHandshakeC2S
+internal static class ModdedHandshakeC2S
 {
     public static void Serialize(MessageWriter writer, IReadOnlyCollection<Mod> mods)
     {
