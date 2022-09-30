@@ -48,7 +48,7 @@ public class CustomRpcManager
 
         public static IEnumerable<MethodBase> TargetMethods()
         {
-            return InnerNetObjectTypes.Select(x => x.GetMethod(nameof(InnerNetObject.HandleRpc), AccessTools.all)!);
+            return InnerNetObjectTypes.Select(x => x.GetMethod(nameof(InnerNetObject.HandleRpc), AccessTools.allDeclared)).Where(m => m != null)!;
         }
 
         public static bool Prefix(InnerNetObject __instance, [HarmonyArgument(0)] byte callId, [HarmonyArgument(1)] MessageReader reader)
