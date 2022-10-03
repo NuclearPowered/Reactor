@@ -1,5 +1,7 @@
 using Hazel;
 using Reactor.Networking;
+using Reactor.Networking.Attributes;
+using Reactor.Networking.Rpc;
 
 namespace Reactor.Example;
 

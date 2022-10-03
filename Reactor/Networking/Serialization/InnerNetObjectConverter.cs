@@ -4,6 +4,7 @@ using System.Reflection;
 using HarmonyLib;
 using Hazel;
 using InnerNet;
+using Reactor.Networking.Attributes;
 
 namespace Reactor.Networking.Serialization;
 

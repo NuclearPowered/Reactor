@@ -1,6 +1,7 @@
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Reactor.Plugins;
 using UnityEngine;
 
 namespace Reactor.Debugger;

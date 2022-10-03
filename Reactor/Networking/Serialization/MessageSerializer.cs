@@ -2,7 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Hazel;
-using Reactor.Extensions;
+using Reactor.Networking.Extensions;
+using Reactor.Networking.Rpc;
 using UnityEngine;
 
 namespace Reactor.Networking.Serialization;
@@ -83,7 +84,7 @@ public static class MessageSerializer
         }
     }
 
-    public static object[] Deserialize(MessageReader reader, MethodRpc.MethodRpc methodRpc)
+    public static object[] Deserialize(MessageReader reader, MethodRpc methodRpc)
     {
         var parameters = methodRpc.Method.GetParameters();
         var args = new object[parameters.Length - 1];

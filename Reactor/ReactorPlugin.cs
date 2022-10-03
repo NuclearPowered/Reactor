@@ -1,17 +1,21 @@
-﻿global using static Reactor.Logger<Reactor.ReactorPlugin>;
+﻿global using static Reactor.Plugins.Logger<Reactor.ReactorPlugin>;
 using System;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using Reactor.Extensions;
 using Reactor.Networking;
-using Reactor.Networking.MethodRpc;
-using Reactor.Networking.Serialization;
-using Reactor.Patches;
-using Reactor.Unstrip;
 using Il2CppInterop.Runtime.Attributes;
+using Reactor.Networking.Attributes;
+using Reactor.Networking.Rpc;
+using Reactor.Patches.QOL;
+using Reactor.Patches.Reactor;
+using Reactor.Plugins;
+using Reactor.Regions;
+using Reactor.Resources;
+using Reactor.Utilities;
+using Reactor.Utilities.Attributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -65,7 +69,7 @@ public partial class ReactorPlugin : BasePlugin
     public override bool Unload()
     {
         Harmony.UnpatchSelf();
-        RegionInfoWatcher?.Dispose();
+        RegionInfoWatcher.Dispose();
 
         return base.Unload();
     }
