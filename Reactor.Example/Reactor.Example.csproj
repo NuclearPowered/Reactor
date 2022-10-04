@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Reactor\Reactor.csproj" />
+        <ProjectReference Include="..\Reactor\Reactor.csproj" Private="false" />
     </ItemGroup>
 
     <Import Project="../AmongUs.props" />
