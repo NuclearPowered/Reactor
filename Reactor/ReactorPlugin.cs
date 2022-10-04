@@ -7,6 +7,8 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Reactor.Networking;
 using Il2CppInterop.Runtime.Attributes;
+using Reactor.Localization;
+using Reactor.Localization.Providers;
 using Reactor.Networking.Attributes;
 using Reactor.Networking.Rpc;
 using Reactor.Patches.QOL;
@@ -41,6 +43,7 @@ public partial class ReactorPlugin : BasePlugin
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
         MethodRpcAttribute.Initialize();
+        LocalizationManager.Register(new HardCodedLocalizationProvider());
     }
 
     public override void Load()
