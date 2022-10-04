@@ -2,15 +2,8 @@
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
 
-        <VersionPrefix>2.0.0</VersionPrefix>
-        <VersionSuffix>dev</VersionSuffix>
         <Description>Core mod and API for Among Us</Description>
-        <Authors>NuclearPowered</Authors>
 
-        <PackageIcon>icon.png</PackageIcon>
-        <RepositoryType>git</RepositoryType>
-        <RepositoryUrl>https://github.com/NuclearPowered/Reactor</RepositoryUrl>
-        <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
         <!-- SourceLink -->
@@ -21,14 +14,12 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
+        <Compile Include="..\Reactor.Networking.Shared\**\*.cs" LinkBase="Reactor.Networking.Shared" Visible="false" />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="Assets\**\*" Exclude="Assets\icon.png" />
-        <None Include="Assets\icon.png" Pack="true" PackagePath="" />
     </ItemGroup>
 
     <Import Project="../AmongUs.props" />
-
-    <Import Project="..\Reactor.Shared\Reactor.Shared.projitems" Label="Shared" />
 </Project>

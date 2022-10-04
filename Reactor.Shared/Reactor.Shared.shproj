@@ -1,3 +1,0 @@
-<Project>
-    <Import Project="Reactor.Shared.projitems" Label="Shared" />
-</Project>

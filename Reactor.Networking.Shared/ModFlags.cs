@@ -1,6 +1,6 @@
 using System;
 
-namespace Reactor;
+namespace Reactor.Networking;
 
 [Flags]
 public enum ModFlags : ushort
