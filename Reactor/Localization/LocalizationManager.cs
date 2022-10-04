@@ -22,18 +22,48 @@ public static class LocalizationManager
         Providers.RemoveAll(x => x is T);
     }
 
-    internal static bool TryGetText(StringNames stringNames, out string text)
+    internal static bool TryGetText(StringNames stringName, out string text)
     {
         foreach (var provider in Providers.OrderByDescending(p => p.Priority))
         {
-            if (provider.CanHandle(stringNames))
+            if (provider.CanHandle(stringName))
             {
-                text = provider.GetText(stringNames);
+                text = provider.GetText(stringName);
                 return true;
             }
         }
 
         text = string.Empty;
+        return false;
+    }
+
+    internal static bool TryGetStringName(SystemTypes systemType, out StringNames stringName)
+    {
+        foreach (var provider in Providers.OrderByDescending(p => p.Priority))
+        {
+            if (provider.CanHandle(systemType))
+            {
+                stringName = provider.GetStringName(systemType);
+                return true;
+            }
+        }
+
+        stringName = StringNames.NoTranslation;
+        return false;
+    }
+    
+    internal static bool TryGetStringName(TaskTypes taskTypes, out StringNames stringName)
+    {
+        foreach (var provider in Providers.OrderByDescending(p => p.Priority))
+        {
+            if (provider.CanHandle(taskTypes))
+            {
+                stringName = provider.GetStringName(taskTypes);
+                return true;
+            }
+        }
+
+        stringName = StringNames.NoTranslation;
         return false;
     }
 }
