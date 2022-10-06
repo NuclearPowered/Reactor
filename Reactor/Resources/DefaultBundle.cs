@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Reactor.Resources;
 
+// TODO: this needs to be moved
 internal static class DefaultBundle
 {
     public static DefaultControls.Resources StandardResources { get; internal set; } = null!;
