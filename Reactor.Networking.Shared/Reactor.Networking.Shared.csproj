@@ -1,0 +1,34 @@
+<Project>
+    <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>Reactor.Networking</RootNamespace>
+
+        <Description>Shared sources for Reactor.Networking (Reactor and Reactor.Impostor)</Description>
+
+        <ContentTargetFolders>contentFiles</ContentTargetFolders>
+        <IsPackable>true</IsPackable>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+        <NoBuild>true</NoBuild>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Update="@(Compile)">
+            <Pack>true</Pack>
+            <PackagePath>$(ContentTargetFolders)\cs\any\$(PackageId)\%(RecursiveDir)\</PackagePath>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Remove="@(PackageReference)" />
+    </ItemGroup>
+
+    <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
+
+    <Target Name="CopyFilesToOutputDirectory" />
+</Project>
