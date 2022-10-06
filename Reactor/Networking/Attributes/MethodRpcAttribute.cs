@@ -6,7 +6,7 @@ using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Hazel;
 using Reactor.Networking.Rpc;
-using Reactor.Plugins;
+using Reactor.Utilities;
 
 namespace Reactor.Networking.Attributes;
 

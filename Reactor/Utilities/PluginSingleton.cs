@@ -3,7 +3,7 @@ using System.Linq;
 using System.Reflection;
 using BepInEx.Unity.IL2CPP;
 
-namespace Reactor.Plugins;
+namespace Reactor.Utilities;
 
 public static class PluginSingleton<T> where T : BasePlugin
 {

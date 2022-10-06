@@ -4,7 +4,7 @@ using System.Reflection;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Reactor.Networking.Rpc;
-using Reactor.Plugins;
+using Reactor.Utilities;
 
 namespace Reactor.Networking.Attributes;
 

@@ -3,7 +3,7 @@ using BepInEx.Core.Logging.Interpolation;
 using BepInEx.Logging;
 using BepInEx.Unity.IL2CPP;
 
-namespace Reactor.Plugins;
+namespace Reactor.Utilities;
 
 public static class Logger<T> where T : BasePlugin
 {

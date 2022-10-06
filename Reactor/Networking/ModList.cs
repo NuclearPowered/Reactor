@@ -5,8 +5,8 @@ using System.Text;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Hazel;
+using Reactor.Networking.Attributes;
 using Reactor.Networking.Patches;
-using Reactor.Plugins.Attributes;
 
 namespace Reactor.Networking;
 

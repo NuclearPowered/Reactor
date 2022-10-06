@@ -1,4 +1,4 @@
-﻿namespace Reactor.Networking;
+﻿namespace Reactor.Networking.Rpc;
 
 public enum RpcLocalHandling
 {

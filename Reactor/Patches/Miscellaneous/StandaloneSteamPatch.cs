@@ -3,28 +3,29 @@ using System.IO;
 using System.Reflection;
 using HarmonyLib;
 
-namespace Reactor.Patches.Misc;
+namespace Reactor.Patches.Miscellaneous;
 
+/// <summary>
+/// Allows launching steam builds outside of steam
+/// </summary>
 [HarmonyPatch]
-internal static class SteamPatch
+internal static class StandaloneSteamPatch
 {
-    public const string TypeName = "Steamworks.SteamAPI, Assembly-CSharp-firstpass";
-    public const string MethodName = "RestartAppIfNecessary";
+    private static readonly Type? _type = Type.GetType("Steamworks.SteamAPI, Assembly-CSharp-firstpass", false);
 
     [HarmonyPrepare]
     public static bool Prepare()
     {
-        return Type.GetType(TypeName, false) != null;
+        return _type != null;
     }
 
     [HarmonyTargetMethod]
     public static MethodBase TargetMethod()
     {
-        return AccessTools.Method(TypeName + ":" + MethodName);
+        return AccessTools.Method(_type, "RestartAppIfNecessary");
     }
 
-    [HarmonyPrefix]
-    public static bool RestartAppIfNecessaryPatch(out bool __result)
+    public static bool Prefix(out bool __result)
     {
         const string file = "steam_appid.txt";
 

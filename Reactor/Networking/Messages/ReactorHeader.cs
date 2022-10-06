@@ -1,6 +1,6 @@
 using Hazel;
 
-namespace Reactor.Networking.Serialization;
+namespace Reactor.Networking.Messages;
 
 internal static class ReactorHeader
 {

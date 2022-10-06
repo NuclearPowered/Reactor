@@ -12,7 +12,7 @@ internal static class ServerInfoFixesPatch
 {
     [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.Connect))]
     [HarmonyPrefix]
-    public static void ConnectPatch(InnerNetClient __instance)
+    public static void LogConnect(InnerNetClient __instance)
     {
         Info($"Joining {__instance.networkAddress}:{__instance.networkPort}");
     }
@@ -22,7 +22,7 @@ internal static class ServerInfoFixesPatch
     /// </summary>
     [HarmonyPatch(typeof(DnsRegionInfo), nameof(DnsRegionInfo.PopulateServers))]
     [HarmonyPrefix]
-    public static bool Prefix(DnsRegionInfo __instance)
+    public static bool FixPopulateServers(DnsRegionInfo __instance)
     {
         try
         {

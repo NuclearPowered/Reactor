@@ -1,9 +1,8 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using Reactor.Networking;
 
-namespace Reactor.Plugins.Attributes;
+namespace Reactor.Networking.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
 public class ReactorModFlagsAttribute : Attribute

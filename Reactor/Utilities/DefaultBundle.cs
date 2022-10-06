@@ -1,16 +1,14 @@
-using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Reactor.Resources;
+namespace Reactor.Utilities;
 
-// TODO: this needs to be moved
-internal static class DefaultBundle
+public static class DefaultBundle
 {
     public static DefaultControls.Resources StandardResources { get; internal set; } = null!;
 
-    public static void Load()
+    internal static void Load()
     {
         var bundle = AssetBundleManager.Load("default");
 

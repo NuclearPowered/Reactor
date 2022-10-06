@@ -38,5 +38,4 @@ public static class UnityExtensions
             renderer.material.SetColor(_addColor, color.Value);
         }
     }
-
 }

@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Version = SemanticVersioning.Version;
 
-namespace Reactor.Patches.Reactor;
+namespace Reactor.Patches;
 
 public static class ReactorVersionShower
 {

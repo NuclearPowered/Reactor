@@ -100,9 +100,4 @@ public static class StreamExtensions
         input.CopyTo(ms);
         return ms.ToArray();
     }
-    
-    public static unsafe Span<T> ToSpan<T>(this Il2CppStructArray<T> array) where T : unmanaged
-    {
-        return new Span<T>(IntPtr.Add(array.Pointer, IntPtr.Size * 4).ToPointer(), array.Length);
-    }
 }

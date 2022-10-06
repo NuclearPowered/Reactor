@@ -7,13 +7,14 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
-namespace Reactor.Patches.QOL;
+namespace Reactor.Patches.Miscellaneous;
 
+[HarmonyPatch]
 internal static class FreeNamePatch
 {
     [HarmonyPatch(typeof(AccountManager), nameof(AccountManager.CheckAndRegenerateName))]
     [HarmonyPrefix]
-    public static bool ValidateRandomNamePatch()
+    public static bool DontRegenerateNames()
     {
         return false;
     }
