@@ -1,8 +1,8 @@
 ﻿using System;
-using Reactor.GUI.Extensions;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
-namespace Reactor.GUI;
+namespace Reactor.Utilities.ImGui;
 
 public class Window
 {

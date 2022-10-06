@@ -1,7 +1,7 @@
 ﻿using Il2CppInterop.Runtime;
 using UnityEngine;
 
-namespace Reactor.Resources.Extensions;
+namespace Reactor.Utilities.Extensions;
 
 public static class AssetBundleExtensions
 {

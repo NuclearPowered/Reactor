@@ -3,12 +3,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace Reactor.GUI;
+namespace Reactor.Utilities;
 
-public static class GUIUtils
+public static class CanvasUtilities
 {
-    public static DefaultControls.Resources StandardResources { get; internal set; } = null!;
-
     public static GameObject CreateCanvas()
     {
         var gameObject = new GameObject("Canvas");

@@ -5,10 +5,10 @@ using System.Linq;
 using System.Reflection;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MonoMod.Utils;
-using Reactor.Resources.Extensions;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
-namespace Reactor.Resources;
+namespace Reactor.Utilities;
 
 public static class AssetBundleManager
 {
