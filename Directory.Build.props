@@ -19,7 +19,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <!-- TODO: The icon file is located in the solution folder, yet the project folder is referenced here. Probably a mistake? -->
         <None Include="$(MSBuildThisFileDirectory)\assets\icon.png" Pack="true" PackagePath="" Visible="false" />
     </ItemGroup>
 </Project>
