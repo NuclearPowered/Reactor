@@ -2,9 +2,12 @@
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Attributes;
-using Reactor.Extensions;
 using Reactor.Networking;
-using Reactor.Networking.MethodRpc;
+using Reactor.Networking.Attributes;
+using Reactor.Networking.Rpc;
+using Reactor.Utilities;
+using Reactor.Utilities.Attributes;
+using Reactor.Utilities.ImGui;
 using UnityEngine;
 using Random = UnityEngine.Random;
 

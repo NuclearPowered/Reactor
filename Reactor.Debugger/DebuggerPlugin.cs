@@ -6,7 +6,8 @@ using HarmonyLib;
 using Il2CppInterop.Runtime.Attributes;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
-using Reactor.Extensions;
+using Reactor.Utilities.Attributes;
+using Reactor.Utilities.ImGui;
 using UnityEngine;
 
 namespace Reactor.Debugger;

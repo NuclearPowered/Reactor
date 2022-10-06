@@ -5,6 +5,7 @@ using System.Text;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Hazel;
+using Reactor.Networking.Attributes;
 using Reactor.Networking.Patches;
 
 namespace Reactor.Networking;
@@ -13,31 +14,31 @@ public static class ModList
 {
     public static IReadOnlyCollection<Mod> Current { get; private set; } = null!;
 
-    private static readonly Dictionary<string, Mod> _mapById = new();
-    private static readonly Dictionary<Type, Mod> _mapByPluginType = new();
+    private static readonly Dictionary<string, Mod> _modById = new();
+    private static readonly Dictionary<Type, Mod> _modByPluginType = new();
 
     public static Mod GetById(string id)
     {
-        return _mapById[id];
+        return _modById[id];
     }
 
     internal static Mod GetByPluginType(Type pluginType)
     {
-        return _mapByPluginType[pluginType];
+        return _modByPluginType[pluginType];
     }
 
-    private static readonly Dictionary<uint, Mod> _mapByNetId = new();
-    private static readonly Dictionary<Mod, uint> _netIdMap = new();
+    private static readonly Dictionary<uint, Mod> _modByNetId = new();
+    private static readonly Dictionary<Mod, uint> _netIdByMod = new();
 
     internal static Mod GetByNetId(uint netId)
     {
-        return _mapByNetId[netId];
+        return _modByNetId[netId];
     }
 
     internal static uint GetNetId(this Mod mod)
     {
         if (!mod.IsRequiredOnAllClients) throw new ArgumentException("Cannot get a net id for a mod without RequireOnAllClients flag", nameof(mod));
-        return _netIdMap[mod];
+        return _netIdByMod[mod];
     }
 
     public static Mod ReadMod(this MessageReader reader)
@@ -75,16 +76,16 @@ public static class ModList
             .ThenBy(x => x.Id, StringComparer.Ordinal)
             .ToHashSet();
 
-        _mapByNetId.Clear();
-        _netIdMap.Clear();
+        _modByNetId.Clear();
+        _netIdByMod.Clear();
 
         uint netId = 1;
         foreach (var mod in Current)
         {
             if (!mod.IsRequiredOnAllClients) continue;
 
-            _mapByNetId[netId] = mod;
-            _netIdMap[mod] = netId;
+            _modByNetId[netId] = mod;
+            _netIdByMod[mod] = netId;
             netId++;
         }
 
@@ -110,8 +111,8 @@ public static class ModList
             pluginInfo.Metadata.Name
         );
 
-        _mapById[mod.Id] = mod;
-        _mapByPluginType[pluginType] = mod;
+        _modById[mod.Id] = mod;
+        _modByPluginType[pluginType] = mod;
     }
 
     internal static void Initialize()

@@ -7,6 +7,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Example", "Reactor.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Benchmarks", "Reactor.Benchmarks\Reactor.Benchmarks.csproj", "{99B87307-3AEB-4A6A-BF45-871768308FDD}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution Files", "{4BBF0A80-F6E6-4FDD-ADD0-8CB4F28F88A4}"
+	ProjectSection(SolutionItems) = preProject
+		AmongUs.props = AmongUs.props
+		Directory.Build.props = Directory.Build.props
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Networking.Shared", "Reactor.Networking.Shared\Reactor.Networking.Shared.csproj", "{1E68CA20-22EB-4E57-B525-81970BE6363D}"
 EndProject
 Global
