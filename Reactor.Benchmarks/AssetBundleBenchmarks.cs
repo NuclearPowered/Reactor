@@ -6,8 +6,8 @@ using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Jobs;
 using BepInEx;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Reactor.Resources;
-using Reactor.Resources.Extensions;
+using Reactor.Utilities;
+using Reactor.Utilities.Extensions;
 using UnityEngine;
 
 namespace Reactor.Benchmarks;

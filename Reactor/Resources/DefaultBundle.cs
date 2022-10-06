@@ -1,5 +1,4 @@
-using Reactor.GUI;
-using Reactor.Resources.Extensions;
+using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +7,8 @@ namespace Reactor.Resources;
 
 internal static class DefaultBundle
 {
+    public static DefaultControls.Resources StandardResources { get; internal set; } = null!;
+
     public static void Load()
     {
         var bundle = AssetBundleManager.Load("default");
@@ -19,7 +20,7 @@ internal static class DefaultBundle
             Graphic.defaultGraphicMaterial.shader = backupShader;
         }
 
-        GUIUtils.StandardResources = new DefaultControls.Resources
+        StandardResources = new DefaultControls.Resources
         {
             background = bundle.LoadAsset<Sprite>("Background")!.DontUnload(),
             checkmark = bundle.LoadAsset<Sprite>("Checkmark")!.DontUnload(),

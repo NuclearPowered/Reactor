@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Reactor.GUI.Extensions;
+namespace Reactor.Utilities.Extensions;
 
 /// <summary>
 /// GUI utilities

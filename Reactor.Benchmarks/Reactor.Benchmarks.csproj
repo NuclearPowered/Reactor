@@ -2,10 +2,12 @@
     <PropertyGroup>
         <Version>0.1.0</Version>
         <Authors>NuclearPowered</Authors>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+        <SatelliteResourceLanguages>en-US</SatelliteResourceLanguages>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Reactor\Reactor.csproj" />
+        <ProjectReference Include="..\Reactor\Reactor.csproj" Private="false" />
         <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
     </ItemGroup>
 

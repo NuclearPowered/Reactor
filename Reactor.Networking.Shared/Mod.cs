@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Reactor.Networking;
 
-public struct Mod
+public readonly struct Mod
 {
     public Mod(string id, string version, ModFlags flags, string? name = null)
     {
@@ -33,6 +33,16 @@ public struct Mod
     public override bool Equals(object? obj)
     {
         return obj is Mod other && Equals(other);
+    }
+
+    public static bool operator ==(Mod left, Mod right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Mod left, Mod right)
+    {
+        return !(left == right);
     }
 
     public override int GetHashCode()

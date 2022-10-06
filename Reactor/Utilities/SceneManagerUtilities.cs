@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace Reactor.Utilities;
 
-public static class SceneManagerUtils
+public static class SceneManagerUtilities
 {
     /// <summary>
     /// Adds a delegate to get one notification when a scene has loaded.

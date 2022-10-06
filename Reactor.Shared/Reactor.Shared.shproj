@@ -1,6 +1,0 @@
-<Project>
-    <Import Project="Reactor.Shared.projitems" Label="Shared" />
-    <ItemGroup>
-        <None Include="Reactor.Shared.projitems" />
-    </ItemGroup>
-</Project>

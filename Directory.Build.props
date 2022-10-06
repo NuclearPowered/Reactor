@@ -7,5 +7,19 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+
+        <VersionPrefix>2.0.0</VersionPrefix>
+        <VersionSuffix>dev</VersionSuffix>
+
+        <Authors>NuclearPowered</Authors>
+        <PackageIcon>icon.png</PackageIcon>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/NuclearPowered/Reactor</RepositoryUrl>
+        <PackageLicenseExpression>LGPL-3.0-or-later</PackageLicenseExpression>
     </PropertyGroup>
+
+    <ItemGroup>
+        <!-- TODO: The icon file is located in the solution folder, yet the project folder is referenced here. Probably a mistake? -->
+        <None Include="$(MSBuildThisFileDirectory)\assets\icon.png" Pack="true" PackagePath="" Visible="false" />
+    </ItemGroup>
 </Project>

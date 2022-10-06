@@ -6,7 +6,7 @@ using Il2CppInterop.Runtime.Injection;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Reactor.Utilities.Attributes;
 
-namespace Reactor.Resources.Extensions;
+namespace Reactor.Utilities.Extensions;
 
 public static class StreamExtensions
 {
