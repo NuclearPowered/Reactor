@@ -12,7 +12,7 @@ public static class Rpc<T> where T : UnsafeCustomRpc
         {
             if (_instance == null)
             {
-                throw new Exception($"{typeof(T).FullName} isn't registered");
+                throw new InvalidOperationException($"{typeof(T).FullName} isn't registered");
             }
 
             return _instance;
@@ -22,7 +22,7 @@ public static class Rpc<T> where T : UnsafeCustomRpc
         {
             if (_instance != null)
             {
-                throw new Exception($"{typeof(T).FullName} is already registered");
+                throw new InvalidOperationException($"{typeof(T).FullName} is already registered");
             }
 
             _instance = value;

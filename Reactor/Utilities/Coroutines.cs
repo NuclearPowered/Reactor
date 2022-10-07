@@ -24,6 +24,7 @@ public static class Coroutines
             Instance = this;
         }
 
+        [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "OnDestroy is an unity event and can't be static")]
         private void OnDestroy()
         {
             Instance = null;

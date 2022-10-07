@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
@@ -43,7 +44,7 @@ public class CustomStringName
 
             if (customStringName != null)
             {
-                __result = string.Format(customStringName.Value, parts);
+                __result = string.Format(CultureInfo.InvariantCulture, customStringName.Value, parts);
                 return false;
             }
 

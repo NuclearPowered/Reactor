@@ -5,7 +5,7 @@ using System.Reflection;
 namespace Reactor.Networking.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class ReactorModFlagsAttribute : Attribute
+public sealed class ReactorModFlagsAttribute : Attribute
 {
     public ModFlags Flags { get; }
 

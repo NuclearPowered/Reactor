@@ -48,7 +48,7 @@ public static class ReflectionExtensions
             return t;
         }
 
-        throw new Exception("Failed to find a system type for " + type.AssemblyQualifiedName);
+        throw new TypeLoadException("Failed to find a system type for " + type.AssemblyQualifiedName);
     }
 
     public static MethodInfo EnumeratorMoveNext(Type type, string methodName)

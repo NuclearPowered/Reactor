@@ -125,7 +125,6 @@ internal static class ClientPatches
                     Debug("Injecting ReactorHandshakeC2S to CoSendSceneChange");
                     ReactorHeader.Write(writer);
                     ModdedHandshakeC2S.Serialize(writer, ModList.Current);
-                    //
 
                     writer.EndMessage();
                     writer.EndMessage();
@@ -206,7 +205,6 @@ internal static class ClientPatches
                 ReactorHeader.Write(msg);
                 ModdedHandshakeS2C.Serialize(msg, "Among Us", Application.version, 0); // TODO
             }
-            //
 
             msg.EndMessage();
 

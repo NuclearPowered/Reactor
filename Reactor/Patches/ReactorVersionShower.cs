@@ -56,7 +56,7 @@ public static class ReactorVersionShower
 
     private static string ToStringWithoutBuild(Version version)
     {
-        return $"{version.Major}.{version.Minor}.{version.Patch}{(version.PreRelease == null ? "" : $"-{version.PreRelease}")}";
+        return $"{version.Major}.{version.Minor}.{version.Patch}{(version.PreRelease == null ? string.Empty : $"-{version.PreRelease}")}";
     }
 
     public static void UpdateText()

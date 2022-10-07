@@ -8,7 +8,7 @@ using Reactor.Networking.Serialization;
 namespace Reactor.Networking.Attributes;
 
 [AttributeUsage(AttributeTargets.Class)]
-public class MessageConverterAttribute : Attribute
+public sealed class MessageConverterAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 

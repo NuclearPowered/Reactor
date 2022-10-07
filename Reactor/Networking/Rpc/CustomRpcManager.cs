@@ -15,7 +15,7 @@ public class CustomRpcManager
     public const byte CallId = byte.MaxValue;
 
     private readonly List<UnsafeCustomRpc> _list = new();
-    internal readonly Dictionary<Type, Dictionary<Mod, Dictionary<uint, UnsafeCustomRpc>>> _map = new();
+    private readonly Dictionary<Type, Dictionary<Mod, Dictionary<uint, UnsafeCustomRpc>>> _map = new();
 
     public IReadOnlyList<UnsafeCustomRpc> List => _list.AsReadOnly();
 

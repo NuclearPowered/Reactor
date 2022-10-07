@@ -12,7 +12,7 @@ namespace Reactor.Networking.Attributes;
 /// Utility attribute for automatically registering CustomRpc
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class RegisterCustomRpcAttribute : Attribute
+public sealed class RegisterCustomRpcAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 

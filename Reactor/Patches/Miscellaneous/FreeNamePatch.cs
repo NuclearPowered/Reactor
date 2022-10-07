@@ -23,7 +23,7 @@ internal static class FreeNamePatch
     {
         SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
         {
-            if (!scene.name.Equals("MMOnline")) return;
+            if (!scene.name.Equals("MMOnline", StringComparison.Ordinal)) return;
             if (!TryMoveObjects()) return;
 
             var editName = DestroyableSingleton<AccountManager>.Instance.accountTab.editNameScreen;

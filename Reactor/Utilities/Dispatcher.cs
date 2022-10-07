@@ -7,15 +7,11 @@ using UnityEngine;
 namespace Reactor.Utilities;
 
 [RegisterInIl2Cpp]
-public class Dispatcher : MonoBehaviour
+public sealed class Dispatcher : MonoBehaviour
 {
-    public Dispatcher(IntPtr ptr) : base(ptr)
-    {
-    }
-
     public static Dispatcher Instance { get; private set; } = null!;
 
-    private static readonly Queue<Action> _queue = new();
+    private readonly Queue<Action> _queue = new();
 
     private void Awake()
     {

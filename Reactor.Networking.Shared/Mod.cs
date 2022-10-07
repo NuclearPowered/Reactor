@@ -8,7 +8,7 @@ using System.Text;
 
 namespace Reactor.Networking;
 
-public readonly struct Mod
+public readonly struct Mod : IEquatable<Mod>
 {
     public Mod(string id, string version, ModFlags flags, string? name = null)
     {

@@ -84,7 +84,7 @@ public class AssetBundleBenchmarks
         var length = (int) stream.Length;
 
         var array = new Il2CppStructArray<byte>(length);
-        if (stream.Read(array.ToSpan()) < length) throw new Exception("Failed to read in full");
+        if (stream.Read(array.ToSpan()) < length) throw new IOException("Failed to read in full");
 
         return LoadAll(AssetBundle.LoadFromMemory(array));
     }

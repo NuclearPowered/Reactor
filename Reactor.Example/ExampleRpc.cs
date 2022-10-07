@@ -11,15 +11,7 @@ public class ExampleRpc : PlayerCustomRpc<ExamplePlugin, ExampleRpc.Data>
     {
     }
 
-    public readonly struct Data
-    {
-        public readonly string Message;
-
-        public Data(string message)
-        {
-            Message = message;
-        }
-    }
+    public readonly record struct Data(string Message);
 
     public override RpcLocalHandling LocalHandling => RpcLocalHandling.None;
 

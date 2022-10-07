@@ -20,18 +20,20 @@ public sealed class Il2CppEqualityComparer<T> : IEqualityComparer<T> where T : I
     {
     }
 
-    public int GetHashCode(T value)
+    /// <inheritdoc/>
+    public int GetHashCode(T obj)
     {
-        return RuntimeHelpers.GetHashCode(value);
+        return RuntimeHelpers.GetHashCode(obj);
     }
 
-    public bool Equals(T? left, T? right)
+    /// <inheritdoc/>
+    public bool Equals(T? x, T? y)
     {
-        if (left == null || right == null)
+        if (x == null || y == null)
         {
-            return left == null && right == null;
+            return x == null && y == null;
         }
 
-        return left.Equals(right);
+        return x.Equals(y);
     }
 }

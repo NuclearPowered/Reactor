@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,7 +11,7 @@ using Reactor.Utilities;
 namespace Reactor.Networking.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
-public class MethodRpcAttribute : Attribute
+public sealed class MethodRpcAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 

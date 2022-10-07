@@ -69,14 +69,14 @@ public static class AssetBundleManager
 
     private static bool TryLoadResource(Assembly assembly, string fileName, [NotNullWhen(true)] out Il2CppStructArray<byte>? data)
     {
-        var resourceName = assembly.GetManifestResourceNames().SingleOrDefault(n => n.EndsWith(fileName));
+        var resourceName = assembly.GetManifestResourceNames().SingleOrDefault(n => n.EndsWith(fileName, StringComparison.Ordinal));
         if (resourceName != null)
         {
-            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new NullReferenceException("Resource stream was null");
+            using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new InvalidOperationException("Resource stream was null");
 
             var length = (int) stream.Length;
             data = new Il2CppStructArray<byte>(length);
-            if (stream.Read(data.ToSpan()) < length) throw new Exception("Failed to read in full");
+            if (stream.Read(data.ToSpan()) < length) throw new IOException("Failed to read in full");
 
             return true;
         }

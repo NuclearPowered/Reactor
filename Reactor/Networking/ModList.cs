@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using BepInEx;
@@ -93,8 +94,8 @@ public static class ModList
         foreach (var mod in Current)
         {
             debug.AppendLine();
-            debug.Append($" - {mod.Id} version: {mod.Version}, flags: {mod.Flags}");
-            if (mod.IsRequiredOnAllClients) debug.Append($", netId: {mod.GetNetId()}");
+            debug.Append(CultureInfo.InvariantCulture, $" - {mod.Id} version: {mod.Version}, flags: {mod.Flags}");
+            if (mod.IsRequiredOnAllClients) debug.Append(CultureInfo.InvariantCulture, $", netId: {mod.GetNetId()}");
         }
 
         Debug(debug.ToString());
