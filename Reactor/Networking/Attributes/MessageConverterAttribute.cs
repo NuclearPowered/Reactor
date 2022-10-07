@@ -11,7 +11,7 @@ namespace Reactor.Networking.Attributes;
 public class MessageConverterAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
-    
+
     public static void Register(Assembly assembly)
     {
         if (_registeredAssemblies.Contains(assembly)) return;

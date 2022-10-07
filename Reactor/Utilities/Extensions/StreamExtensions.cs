@@ -90,7 +90,7 @@ public static class StreamExtensions
     /// Wraps a System Stream into an Il2Cpp Stream
     /// </summary>
     public static StreamWrapper AsIl2Cpp(this Stream stream) => new(stream);
-    
+
     /// <summary>
     /// Fully read <paramref name="input"/> stream, can be used as workaround for il2cpp streams.
     /// </summary>

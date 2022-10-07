@@ -120,7 +120,7 @@ public static class ModList
         foreach (var existingPlugin in IL2CPPChainloader.Instance.Plugins.Values)
         {
             if (existingPlugin.Instance == null) continue;
-            OnPluginLoad(existingPlugin, (BasePlugin)existingPlugin.Instance);
+            OnPluginLoad(existingPlugin, (BasePlugin) existingPlugin.Instance);
         }
 
         IL2CPPChainloader.Instance.PluginLoad += (pluginInfo, _, plugin) => OnPluginLoad(pluginInfo, plugin);

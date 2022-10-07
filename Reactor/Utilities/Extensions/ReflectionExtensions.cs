@@ -8,9 +8,9 @@ using Il2CppInterop.Common.Attributes;
 using Il2CppInterop.Runtime;
 using Il2CppSystem.Runtime.CompilerServices;
 using Il2CppCustomAttributeExtensions = Il2CppSystem.Reflection.CustomAttributeExtensions;
-using MethodInfo = System.Reflection.MethodInfo;
 using Il2CppMethodInfo = Il2CppSystem.Reflection.MethodInfo;
 using Il2CppSystemType = Il2CppSystem.Type;
+using MethodInfo = System.Reflection.MethodInfo;
 
 namespace Reactor.Utilities.Extensions;
 
@@ -55,7 +55,7 @@ public static class ReflectionExtensions
     {
         return AccessTools.Method(AccessTools.Method(type, methodName).ToIl2CppMethodInfo().GetEnumeratorMoveNextType().ToSystemType(), "MoveNext");
     }
-    
+
     public static IEnumerable<MethodBase> GetMethods(this Type type, BindingFlags bindingAttr, Type returnType, params Type[] parameterTypes)
     {
         return type.GetMethods(bindingAttr).Where(x => x.ReturnType == returnType && x.GetParameters().Select(x => x.ParameterType).SequenceEqual(parameterTypes));

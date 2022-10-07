@@ -21,7 +21,7 @@ public class ReactorModFlagsAttribute : Attribute
         {
             return attribute.Flags;
         }
-        
+
         var metadataAttribute = type.Assembly.GetCustomAttributes<AssemblyMetadataAttribute>().SingleOrDefault(x => x.Key == "Reactor.ModFlags");
         if (metadataAttribute is { Value: not null })
         {

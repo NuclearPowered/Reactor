@@ -20,7 +20,7 @@ public static class RandomExtensions
     {
         return random.NextDouble() * (maxValue - minValue) + minValue;
     }
-    
+
     /// <summary>
     /// Returns random <typeparamref name="T"/> from <paramref name="input"/>
     /// </summary>

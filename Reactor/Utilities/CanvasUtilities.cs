@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -32,7 +32,7 @@ public static class CanvasUtilities
 
         return gameObject;
     }
-    
+
     /// <summary>
     /// Shortcut for empty texture
     /// </summary>

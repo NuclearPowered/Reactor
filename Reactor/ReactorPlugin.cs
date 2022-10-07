@@ -1,12 +1,12 @@
-﻿global using static Reactor.Utilities.Logger<Reactor.ReactorPlugin>;
+global using static Reactor.Utilities.Logger<Reactor.ReactorPlugin>;
 using System;
 using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
-using Reactor.Networking;
 using Il2CppInterop.Runtime.Attributes;
+using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using Reactor.Networking.Rpc;
 using Reactor.Patches;

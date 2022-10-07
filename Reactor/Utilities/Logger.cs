@@ -10,11 +10,11 @@ public static class Logger<T> where T : BasePlugin
     public static ManualLogSource Instance => PluginSingleton<T>.Instance.Log;
 
     /// <inheritdoc cref="ManualLogSource.Log(BepInEx.Logging.LogLevel,object)"/>
-    public static void Log(LogLevel level, object data) => Instance.Log(level,data);
+    public static void Log(LogLevel level, object data) => Instance.Log(level, data);
 
     /// <inheritdoc cref="ManualLogSource.LogFatal(object)"/>
     public static void Log(LogLevel level, [InterpolatedStringHandlerArgument("level")] BepInExLogInterpolatedStringHandler logHandler) => Instance.Log(level, logHandler);
-    
+
     /// <inheritdoc cref="ManualLogSource.LogFatal(object)"/>
     public static void Fatal(object data) => Instance.LogFatal(data);
 

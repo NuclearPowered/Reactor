@@ -11,7 +11,7 @@ namespace Reactor.Utilities.Attributes;
 /// Utility attribute for automatically calling <see cref="ClassInjector.RegisterTypeInIl2Cpp{T}()"/>
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class RegisterInIl2CppAttribute : Attribute
+public sealed class RegisterInIl2CppAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 
@@ -58,7 +58,7 @@ public class RegisterInIl2CppAttribute : Attribute
     {
         if (_registeredAssemblies.Contains(assembly)) return;
         _registeredAssemblies.Add(assembly);
-        
+
         foreach (var type in assembly.GetTypes())
         {
             var attribute = type.GetCustomAttribute<RegisterInIl2CppAttribute>();

@@ -6,7 +6,6 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using Reactor.Networking.Extensions;
 using Reactor.Networking.Messages;
-using Reactor.Networking.Serialization;
 using UnityEngine;
 
 namespace Reactor.Networking.Patches;
@@ -183,7 +182,7 @@ internal static class ClientPatches
             msg.Write((byte) flags);
             InnerNetObject[] componentsInChildren = netObjParent.GetComponentsInChildren<InnerNetObject>();
             msg.WritePacked(componentsInChildren.Length);
-            foreach (InnerNetObject innerNetObject in componentsInChildren)
+            foreach (var innerNetObject in componentsInChildren)
             {
                 innerNetObject.OwnerId = ownerId;
                 innerNetObject.SpawnFlags = flags;

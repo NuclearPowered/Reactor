@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using BenchmarkDotNet.Running;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;

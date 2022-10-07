@@ -1,4 +1,4 @@
-﻿using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime;
 using UnityEngine;
 
 namespace Reactor.Utilities.Extensions;
