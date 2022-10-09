@@ -5,8 +5,15 @@ using BepInEx.Unity.IL2CPP;
 
 namespace Reactor.Utilities;
 
+/// <summary>
+/// Provides singleton access to plugins logger.
+/// </summary>
+/// <typeparam name="T">The type of the plugin.</typeparam>
 public static class Logger<T> where T : BasePlugin
 {
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
     public static ManualLogSource Instance => PluginSingleton<T>.Instance.Log;
 
     /// <inheritdoc cref="ManualLogSource.Log(BepInEx.Logging.LogLevel,object)"/>

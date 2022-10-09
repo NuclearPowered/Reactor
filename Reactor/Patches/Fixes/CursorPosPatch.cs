@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Reactor.Patches.Fixes;
 
 /// <summary>
-/// "Fixes" an issue where empty TextBoxes have wrong cursor positions
+/// "Fixes" an issue where empty TextBoxes have wrong cursor positions.
 /// </summary>
 [HarmonyPatch(typeof(TextMeshProExtensions), nameof(TextMeshProExtensions.CursorPos))]
 internal static class CursorPosPatch

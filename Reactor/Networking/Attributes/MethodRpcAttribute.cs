@@ -10,21 +10,49 @@ using Reactor.Utilities;
 
 namespace Reactor.Networking.Attributes;
 
+/// <summary>
+/// Automatically registers a method rpc.
+/// </summary>
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class MethodRpcAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 
+    /// <summary>
+    /// Gets the id of the rpc.
+    /// </summary>
     public uint Id { get; }
-    public SendOption Option { get; set; } = SendOption.Reliable;
+
+    /// <summary>
+    /// Gets or sets the send option of the rpc.
+    /// </summary>
+    public SendOption SendOption { get; set; } = SendOption.Reliable;
+
+    /// <summary>
+    /// Gets or sets the local handling of the rpc.
+    /// </summary>
     public RpcLocalHandling LocalHandling { get; set; } = RpcLocalHandling.Before;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the rpc should be sent immediately.
+    /// </summary>
     public bool SendImmediately { get; set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MethodRpcAttribute"/> class.
+    /// </summary>
+    /// <param name="id">The id of the rpc.</param>
     public MethodRpcAttribute(uint id)
     {
         Id = id;
     }
 
+    /// <summary>
+    /// Registers all method rpc's annotated with <see cref="MethodRpcAttribute"/> in the specified <paramref name="assembly"/>.
+    /// </summary>
+    /// <remarks>This is called automatically on plugin assemblies so you probably don't need to call this.</remarks>
+    /// <param name="assembly">The assembly to search.</param>
+    /// <param name="plugin">The plugin to register the rpc to.</param>
     public static void Register(Assembly assembly, BasePlugin plugin)
     {
         if (_registeredAssemblies.Contains(assembly)) return;
@@ -43,7 +71,7 @@ public sealed class MethodRpcAttribute : Attribute
 
             try
             {
-                var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.Option, attribute.LocalHandling, attribute.SendImmediately);
+                var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.SendOption, attribute.LocalHandling, attribute.SendImmediately);
                 PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
             }
             catch (Exception e)

@@ -4,17 +4,27 @@ using System.Reflection;
 
 namespace Reactor.Networking.Attributes;
 
+/// <summary>
+/// Describes the <see cref="ModFlags"/> of the annotated plugin class.
+/// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class ReactorModFlagsAttribute : Attribute
 {
+    /// <summary>
+    /// Gets flags of the mod.
+    /// </summary>
     public ModFlags Flags { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ReactorModFlagsAttribute"/> class.
+    /// </summary>
+    /// <param name="flags">Flags of the mod.</param>
     public ReactorModFlagsAttribute(ModFlags flags)
     {
         Flags = flags;
     }
 
-    public static ModFlags GetModFlags(Type type)
+    internal static ModFlags GetModFlags(Type type)
     {
         var attribute = type.GetCustomAttribute<ReactorModFlagsAttribute>();
         if (attribute != null)

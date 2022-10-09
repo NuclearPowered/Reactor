@@ -17,9 +17,7 @@ internal static class ServerInfoFixesPatch
         Info($"Joining {__instance.networkAddress}:{__instance.networkPort}");
     }
 
-    /// <summary>
-    /// Fixes hardcoded port and filters out IPv6 in DnsRegionInfo
-    /// </summary>
+    // Fixes hardcoded port and filters out IPv6 in DnsRegionInfo.
     [HarmonyPatch(typeof(DnsRegionInfo), nameof(DnsRegionInfo.PopulateServers))]
     [HarmonyPrefix]
     public static bool FixPopulateServers(DnsRegionInfo __instance)

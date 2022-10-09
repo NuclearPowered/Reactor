@@ -15,10 +15,24 @@ using Reactor.Utilities;
 
 namespace Reactor.Networking.Rpc;
 
+/// <summary>
+/// Provides a custom rpc for method rpc.
+/// </summary>
 public class MethodRpc : UnsafeCustomRpc
 {
-    public delegate object HandleDelegate(InnerNetObject innerNetObject, object[] args);
+    private delegate object HandleDelegate(InnerNetObject innerNetObject, object[] args);
 
+    private readonly HandleDelegate _handle;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MethodRpc"/> class.
+    /// </summary>
+    /// <param name="plugin">The plugin that the rpc is attached to.</param>
+    /// <param name="method">The method of the method rpc.</param>
+    /// <param name="id">The id of the rpc.</param>
+    /// <param name="option">The send option of the rpc.</param>
+    /// <param name="localHandling">The local handling method of the rpc.</param>
+    /// <param name="sendImmediately">The value indicating whether the rpc should be sent immediately.</param>
     public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately) : base(plugin, id)
     {
         Method = method;
@@ -54,35 +68,58 @@ public class MethodRpc : UnsafeCustomRpc
             InnerNetObjectType = method.DeclaringType;
         }
 
-        Handle = Hook(method, parameters, method.IsStatic);
+        _handle = Hook(method, parameters, method.IsStatic);
     }
 
+    /// <summary>
+    /// Gets the method of the method rpc.
+    /// </summary>
     public MethodInfo Method { get; }
-    public HandleDelegate Handle { get; }
 
+    /// <inheritdoc />
     protected internal override bool IsSingleton => false;
 
+    /// <inheritdoc />
     public override Type InnerNetObjectType { get; }
+
+    /// <inheritdoc />
     public override RpcLocalHandling LocalHandling { get; }
+
+    /// <inheritdoc />
     public override SendOption SendOption { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the method rpc should be sent immediately.
+    /// </summary>
     public bool SendImmediately { get; }
 
+    /// <inheritdoc />
     public override void UnsafeWrite(MessageWriter writer, object? data)
     {
         var args = (object[]) data!;
         MessageSerializer.Serialize(writer, args);
     }
 
+    /// <inheritdoc />
     public override object UnsafeRead(MessageReader reader)
     {
-        var args = MessageSerializer.Deserialize(reader, this);
+        var parameters = Method.GetParameters();
+        var args = new object[parameters.Length - 1];
+
+        for (var i = 1; i < parameters.Length; i++)
+        {
+            var parameter = parameters[i];
+            args[i - 1] = reader.Deserialize(parameter.ParameterType);
+        }
+
         return args;
     }
 
+    /// <inheritdoc />
     public override void UnsafeHandle(InnerNetObject innerNetObject, object? data)
     {
         var args = (object[]) data!;
-        var result = Handle(innerNetObject, args);
+        var result = _handle(innerNetObject, args);
 
         if (result is IEnumerator enumerator)
         {
@@ -90,6 +127,11 @@ public class MethodRpc : UnsafeCustomRpc
         }
     }
 
+    /// <summary>
+    /// Sends this method rpc on the specified <paramref name="innerNetObject"/> with the specified <paramref name="args"/>.
+    /// </summary>
+    /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
+    /// <param name="args">The arguments to serialize and send.</param>
     public void Send(InnerNetObject innerNetObject, object[] args)
     {
         UnsafeSend(innerNetObject, args, SendImmediately);
@@ -98,7 +140,7 @@ public class MethodRpc : UnsafeCustomRpc
     private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));
 
     /// <summary>
-    /// Hooks the <paramref name="method"/> rpc with a dynamic method that sends it
+    /// Hooks the <paramref name="method"/> rpc with a dynamic method that sends it.
     /// </summary>
     private HandleDelegate Hook(MethodInfo method, ParameterInfo[] parameters, bool isStatic)
     {

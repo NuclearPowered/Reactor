@@ -6,9 +6,15 @@ using UnityEngine;
 
 namespace Reactor.Utilities;
 
+/// <summary>
+/// Dispatches actions on Unity main thread.
+/// </summary>
 [RegisterInIl2Cpp]
 public sealed class Dispatcher : MonoBehaviour
 {
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
     public static Dispatcher Instance { get; private set; } = null!;
 
     private readonly Queue<Action> _queue = new();
@@ -29,6 +35,10 @@ public sealed class Dispatcher : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enqueues an <paramref name="action"/>.
+    /// </summary>
+    /// <param name="action">The action to enqueue.</param>
     [HideFromIl2Cpp]
     public void Enqueue(Action action)
     {

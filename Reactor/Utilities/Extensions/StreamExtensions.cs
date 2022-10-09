@@ -8,13 +8,20 @@ using Reactor.Utilities.Attributes;
 
 namespace Reactor.Utilities.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="Stream"/>.
+/// </summary>
 public static class StreamExtensions
 {
+    /// <summary>
+    /// Provides a <see cref="Il2CppSystem.IO.Stream"/> which uses <see cref="System.IO.Stream"/> under the hood.
+    /// </summary>
     [RegisterInIl2Cpp]
     public class StreamWrapper : Il2CppSystem.IO.Stream
     {
         private readonly Stream _stream;
 
+        /// <inheritdoc />
         public StreamWrapper(Stream stream) : base(ClassInjector.DerivedConstructorPointer<StreamWrapper>())
         {
             ClassInjector.DerivedConstructorBody(this);
@@ -29,31 +36,37 @@ public static class StreamExtensions
             return new Span<byte>(rawBuffer + offset, count);
         }
 
+        /// <inheritdoc />
         public override int Read(Il2CppStructArray<byte> buffer, int offset, int count)
         {
             return _stream.Read(GetSpan(buffer, offset, count));
         }
 
+        /// <inheritdoc />
         public override void Write(Il2CppStructArray<byte> buffer, int offset, int count)
         {
             _stream.Write(GetSpan(buffer, offset, count));
         }
 
+        /// <inheritdoc />
         public override void Flush()
         {
             _stream.Flush();
         }
 
+        /// <inheritdoc />
         public override void Close()
         {
             _stream.Close();
         }
 
+        /// <inheritdoc />
         public override void Dispose()
         {
             _stream.Dispose();
         }
 
+        /// <inheritdoc />
         public override long Seek(long offset, Il2CppSystem.IO.SeekOrigin origin)
         {
             return _stream.Seek(offset, origin switch
@@ -65,16 +78,25 @@ public static class StreamExtensions
             });
         }
 
+        /// <inheritdoc />
         public override void SetLength(long value)
         {
             _stream.SetLength(value);
         }
 
+        /// <inheritdoc />
         public override bool CanRead => _stream.CanRead;
+
+        /// <inheritdoc />
         public override bool CanSeek => _stream.CanSeek;
+
+        /// <inheritdoc />
         public override bool CanWrite => _stream.CanWrite;
+
+        /// <inheritdoc />
         public override long Length => _stream.Length;
 
+        /// <inheritdoc />
         public override long Position
         {
             get => _stream.Position;
@@ -83,13 +105,17 @@ public static class StreamExtensions
     }
 
     /// <summary>
-    /// Wraps a System Stream into an Il2Cpp Stream
+    /// Wraps a <see cref="System.IO.Stream"/> into a <see cref="Il2CppSystem.IO.Stream"/>.
     /// </summary>
+    /// <param name="stream">The stream to wrap.</param>
+    /// <returns>A <see cref="StreamWrapper"/> for the specified <paramref name="stream"/>.</returns>
     public static StreamWrapper AsIl2Cpp(this Stream stream) => new(stream);
 
     /// <summary>
-    /// Fully read <paramref name="input"/> stream, can be used as workaround for il2cpp streams.
+    /// Fully reads the <paramref name="input"/> stream.
     /// </summary>
+    /// <param name="input">The stream to read.</param>
+    /// <returns>A byte array read from the <see cref="Stream"/>.</returns>
     public static byte[] ReadFully(this Stream input)
     {
         using var ms = new MemoryStream();

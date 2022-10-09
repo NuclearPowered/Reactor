@@ -8,20 +8,30 @@ using Il2CppInterop.Runtime.Injection;
 namespace Reactor.Utilities.Attributes;
 
 /// <summary>
-/// Utility attribute for automatically calling <see cref="ClassInjector.RegisterTypeInIl2Cpp{T}()"/>
+/// Automatically registers an il2cpp type using <see cref="ClassInjector.RegisterTypeInIl2Cpp{T}()"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
 public sealed class RegisterInIl2CppAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 
+    /// <summary>
+    /// Gets il2cpp interfaces to be injected with this type.
+    /// </summary>
     public Type[] Interfaces { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegisterInIl2CppAttribute"/> class without any interfaces.
+    /// </summary>
     public RegisterInIl2CppAttribute()
     {
         Interfaces = Type.EmptyTypes;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegisterInIl2CppAttribute"/> class with interfaces.
+    /// </summary>
+    /// <param name="interfaces">Il2Cpp interfaces to be injected with this type.</param>
     public RegisterInIl2CppAttribute(params Type[] interfaces)
     {
         Interfaces = interfaces;
@@ -51,9 +61,10 @@ public sealed class RegisterInIl2CppAttribute : Attribute
     }
 
     /// <summary>
-    /// Registers in Il2Cpp all types marked with <see cref="RegisterInIl2CppAttribute"/> from the specified assembly.<br/>
+    /// Registers all Il2Cpp types annotated with <see cref="RegisterInIl2CppAttribute"/> in the specified <paramref name="assembly"/>.
     /// </summary>
-    /// <param name="assembly"></param>
+    /// <remarks>This is called automatically on plugin assemblies so you probably don't need to call this.</remarks>
+    /// <param name="assembly">The assembly to search.</param>
     public static void Register(Assembly assembly)
     {
         if (_registeredAssemblies.Contains(assembly)) return;

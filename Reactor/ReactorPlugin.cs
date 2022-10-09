@@ -18,17 +18,28 @@ using UnityEngine.SceneManagement;
 
 namespace Reactor;
 
+/// <summary>
+/// Reactor's main class.
+/// </summary>
 [BepInAutoPlugin("gg.reactor.api")]
 [BepInProcess("Among Us.exe")]
 public partial class ReactorPlugin : BasePlugin
 {
+    /// <summary>
+    /// Gets harmony instance.
+    /// </summary>
     public Harmony Harmony { get; } = new(Id);
+
+    /// <summary>
+    /// Gets custom rpc manager.
+    /// </summary>
     public CustomRpcManager CustomRpcManager { get; } = new();
 
-    public ConfigEntry<bool>? AllowVanillaServers { get; private set; }
+    internal ConfigEntry<bool>? AllowVanillaServers { get; private set; }
 
     internal RegionInfoWatcher RegionInfoWatcher { get; } = new();
 
+    /// <inheritdoc />
     public ReactorPlugin()
     {
         PluginSingleton<ReactorPlugin>.Instance = this;
@@ -40,6 +51,7 @@ public partial class ReactorPlugin : BasePlugin
         MethodRpcAttribute.Initialize();
     }
 
+    /// <inheritdoc />
     public override void Load()
     {
         AllowVanillaServers = Config.Bind("Features", "Allow vanilla servers", false, "Whether reactor should ignore servers not responding to modded handshake. This config is ignored if any plugin uses custom rpcs!");
@@ -63,6 +75,7 @@ public partial class ReactorPlugin : BasePlugin
         }));
     }
 
+    /// <inheritdoc />
     public override bool Unload()
     {
         Harmony.UnpatchSelf();

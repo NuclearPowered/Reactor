@@ -3,10 +3,14 @@ using Il2CppSystem.Runtime.CompilerServices;
 
 namespace Reactor.Utilities;
 
+/// <inheritdoc />
 public sealed class Il2CppEqualityComparer<T> : IEqualityComparer<T> where T : Il2CppSystem.Object
 {
     private static Il2CppEqualityComparer<T>? _instance;
 
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
     public static Il2CppEqualityComparer<T> Instance
     {
         get

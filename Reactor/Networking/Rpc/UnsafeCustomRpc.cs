@@ -11,20 +11,53 @@ using Buffer = Il2CppSystem.Buffer;
 
 namespace Reactor.Networking.Rpc;
 
+/// <summary>
+/// Base type for custom rpc's.
+/// </summary>
 public abstract class UnsafeCustomRpc
 {
     internal CustomRpcManager? Manager { get; set; }
+
+    /// <summary>
+    /// Gets a value indicating whether the rpc is a singleton and can be used with <see cref="Rpc{T}"/>.
+    /// </summary>
     protected internal virtual bool IsSingleton => true;
 
+    /// <summary>
+    /// Gets the id of the rpc.
+    /// </summary>
     public uint Id { get; }
+
+    /// <summary>
+    /// Gets the plugin of the rpc.
+    /// </summary>
     public BasePlugin UnsafePlugin { get; }
+
+    /// <summary>
+    /// Gets the mod of the rpc.
+    /// </summary>
     public Mod Mod { get; }
 
+    /// <summary>
+    /// Gets the InnerNetObject type the rpc targets.
+    /// </summary>
     public abstract Type InnerNetObjectType { get; }
 
+    /// <summary>
+    /// Gets the send option of the rpc.
+    /// </summary>
     public virtual SendOption SendOption => SendOption.Reliable;
+
+    /// <summary>
+    /// Gets the local handling method of the rpc.
+    /// </summary>
     public abstract RpcLocalHandling LocalHandling { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnsafeCustomRpc"/> class.
+    /// </summary>
+    /// <param name="plugin">The plugin that the rpc is attached to.</param>
+    /// <param name="id">The id of the rpc.</param>
     protected UnsafeCustomRpc(BasePlugin plugin, uint id)
     {
         UnsafePlugin = plugin;
@@ -32,10 +65,35 @@ public abstract class UnsafeCustomRpc
         Id = id;
     }
 
+    /// <summary>
+    /// Writes <paramref name="data"/> to the <paramref name="writer"/>.
+    /// </summary>
+    /// <param name="writer">The writer to write to.</param>
+    /// <param name="data">The data to be written.</param>
     public abstract void UnsafeWrite(MessageWriter writer, object? data);
+
+    /// <summary>
+    /// Reads rpc data from the <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">The reader to read from.</param>
+    /// <returns>The rpc data from the <paramref name="reader"/>.</returns>
     public abstract object? UnsafeRead(MessageReader reader);
+
+    /// <summary>
+    /// Handles rpc data.
+    /// </summary>
+    /// <param name="innerNetObject">The <see cref="InnerNetObject"/> the rpc is being handled on.</param>
+    /// <param name="data">The data associated with the rpc.</param>
     public abstract void UnsafeHandle(InnerNetObject innerNetObject, object? data);
 
+    /// <summary>
+    /// Sends this custom rpc on the specified <paramref name="innerNetObject"/> with the specified <paramref name="data"/>.
+    /// </summary>
+    /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
+    /// <param name="data">The data to send.</param>
+    /// <param name="immediately">Whether to send it immediately.</param>
+    /// <param name="targetClientId">Target client id, defaults to broadcast.</param>
+    /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
     public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1, Action? ackCallback = null)
     {
         if (innerNetObject == null) throw new ArgumentNullException(nameof(innerNetObject));

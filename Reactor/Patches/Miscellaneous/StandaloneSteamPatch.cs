@@ -6,7 +6,7 @@ using HarmonyLib;
 namespace Reactor.Patches.Miscellaneous;
 
 /// <summary>
-/// Allows launching steam builds outside of steam
+/// Allows launching steam builds outside of steam.
 /// </summary>
 [HarmonyPatch]
 internal static class StandaloneSteamPatch

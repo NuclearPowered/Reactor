@@ -15,12 +15,17 @@
         <NoBuild>true</NoBuild>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
         <Compile Update="@(Compile)">
             <Pack>true</Pack>
             <PackagePath>$(ContentTargetFolders)\cs\any\$(PackageId)\%(RecursiveDir)\</PackagePath>
+        </Compile>
+        <Compile Update="Mod.cs">
+          <Pack>true</Pack>
+          <PackagePath>contentFiles\cs\any\Reactor.Networking.Shared\\</PackagePath>
         </Compile>
     </ItemGroup>
 

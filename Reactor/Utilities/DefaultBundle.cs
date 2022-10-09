@@ -4,8 +4,14 @@ using UnityEngine.UI;
 
 namespace Reactor.Utilities;
 
+/// <summary>
+/// Provides unity things that were stripped.
+/// </summary>
 public static class DefaultBundle
 {
+    /// <summary>
+    /// Gets standard resources used for canvas ui.
+    /// </summary>
     public static DefaultControls.Resources StandardResources { get; internal set; } = null!;
 
     internal static void Load()

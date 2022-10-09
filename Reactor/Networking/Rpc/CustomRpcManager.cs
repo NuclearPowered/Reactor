@@ -10,16 +10,29 @@ using Reactor.Utilities;
 
 namespace Reactor.Networking.Rpc;
 
+/// <summary>
+/// Manages custom rpc's.
+/// </summary>
 public class CustomRpcManager
 {
+    /// <summary>
+    /// Rpc call id for the reactor's custom rpc wrapper.
+    /// </summary>
     public const byte CallId = byte.MaxValue;
 
     private readonly List<UnsafeCustomRpc> _list = new();
     private readonly Dictionary<Type, Dictionary<Mod, Dictionary<uint, UnsafeCustomRpc>>> _map = new();
 
+    /// <summary>
+    /// Gets a list of all custom rpc's.
+    /// </summary>
     public IReadOnlyList<UnsafeCustomRpc> List => _list.AsReadOnly();
 
-    public UnsafeCustomRpc Register(UnsafeCustomRpc customRpc)
+    /// <summary>
+    /// Registers a custom rpc.
+    /// </summary>
+    /// <param name="customRpc">The custom rpc to register.</param>
+    public void Register(UnsafeCustomRpc customRpc)
     {
         customRpc.Manager = this;
         _list.Add(customRpc);
@@ -31,10 +44,17 @@ public class CustomRpcManager
         {
             typeof(Rpc<>).MakeGenericType(customRpc.GetType()).GetProperty("Instance")!.SetValue(null, customRpc);
         }
-
-        return customRpc;
     }
 
+    /// <summary>
+    /// Implementation of <see cref="InnerNetObject.HandleRpc"/> for reading and handling reactor custom rpc's.
+    /// You can use this in your custom <see cref="InnerNetObject"/> to use reactor custom rpc's on it.
+    /// </summary>
+    /// <param name="innerNetObject">The <see cref="InnerNetObject"/> the rpc is handled on.</param>
+    /// <param name="callId">The call id of the rpc.</param>
+    /// <param name="reader">The <see cref="MessageReader"/> with the data of the rpc.</param>
+    /// <returns>A value indicating whether the rpc was handled.</returns>
+    /// <remarks>Reactor patches base game <see cref="InnerNetObject"/>s to use this.</remarks>
     public static bool HandleRpc(InnerNetObject innerNetObject, byte callId, MessageReader reader)
     {
         if (callId == CallId)
