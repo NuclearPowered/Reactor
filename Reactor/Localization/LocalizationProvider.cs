@@ -27,7 +27,7 @@ public abstract class LocalizationProvider
     /// </summary>
     /// <param name="stringName"></param>
     /// <returns></returns>
-    public virtual string GetText(StringNames stringName) => "STRMISS";
+    public virtual string GetText(StringNames stringName, SupportedLangs language) => "STRMISS";
 
     /// <summary>
     /// Whether or not this <see cref="LocalizationProvider"/> can handle this <see cref="SystemTypes"/>

@@ -2,6 +2,7 @@ using System;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Attributes;
+using Reactor.Localization;
 using Reactor.Localization.Utilities;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
@@ -25,7 +26,9 @@ public partial class ExamplePlugin : BasePlugin
     public override void Load()
     {
         this.AddComponent<ExampleComponent>();
+
         _helloStringName = CustomStringName.Register("Hello!");
+        LocalizationManager.Register(new ExampleLocalizationProvider());
     }
 
     [RegisterInIl2Cpp]
@@ -59,9 +62,14 @@ public partial class ExamplePlugin : BasePlugin
                         RpcSay(PlayerControl.LocalPlayer, "Hello from method rpc", Random.value, PlayerControl.LocalPlayer);
                     }
 
-                    if (GUILayout.Button("Debug.Log CustomStringName"))
+                    if (GUILayout.Button("Log CustomStringName"))
                     {
-                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName));
+                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName!));
+                    }
+
+                    if (GUILayout.Button("Log localized string"))
+                    {
+                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString((StringNames) 1337));
                     }
                 }
             })

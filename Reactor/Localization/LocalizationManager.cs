@@ -22,13 +22,13 @@ public static class LocalizationManager
         Providers.RemoveAll(x => x is T);
     }
 
-    internal static bool TryGetText(StringNames stringName, out string text)
+    internal static bool TryGetText(StringNames stringName, SupportedLangs language, out string text)
     {
         foreach (var provider in Providers.OrderByDescending(p => p.Priority))
         {
             if (provider.CanHandle(stringName))
             {
-                text = provider.GetText(stringName);
+                text = provider.GetText(stringName, language);
                 return true;
             }
         }

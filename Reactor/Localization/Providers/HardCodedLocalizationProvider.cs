@@ -16,7 +16,7 @@ public sealed class HardCodedLocalizationProvider : LocalizationProvider
         return Strings.ContainsKey(stringName);
     }
 
-    public override string GetText(StringNames stringName)
+    public override string GetText(StringNames stringName, SupportedLangs _)
     {
         if (!Strings.ContainsKey(stringName)) throw new InvalidOperationException("StringName not found: " + stringName);
         return Strings[stringName].Value;
