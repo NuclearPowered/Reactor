@@ -14,7 +14,7 @@ public static class LocalizationManager
     /// Registers a new <see cref="LocalizationProvider"/> to be used for obtaining translations.
     /// </summary>
     /// <param name="provider">A <see cref="LocalizationProvider"/> instance.</param>
-    public static void RegisterProvider(LocalizationProvider provider)
+    public static void Register(LocalizationProvider provider)
     {
         if (!_providers.Contains(provider)) _providers.Add(provider);
     }
@@ -23,7 +23,7 @@ public static class LocalizationManager
     /// Unregisters a <see cref="LocalizationProvider"/>.
     /// </summary>
     /// <param name="provider">The <see cref="LocalizationProvider"/> to unregister.</param>
-    public static void UnregisterProvider(LocalizationProvider provider)
+    public static void Unregister(LocalizationProvider provider)
     {
         _providers.Remove(provider);
     }
@@ -32,7 +32,7 @@ public static class LocalizationManager
     /// Unregisters all <see cref="LocalizationProvider"/>s of the given type.
     /// </summary>
     /// <typeparam name="T">The type of the <see cref="LocalizationProvider"/>s to be unregistered.</typeparam>
-    public static void UnregisterProvidersByType<T>() where T : LocalizationProvider
+    public static void UnregisterAllByType<T>() where T : LocalizationProvider
     {
         _providers.RemoveAll(x => x is T);
     }

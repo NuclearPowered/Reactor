@@ -54,7 +54,7 @@ public partial class ReactorPlugin : BasePlugin
 
         ModList.Initialize();
 
-        LocalizationManager.RegisterProvider(new HardCodedLocalizationProvider());
+        LocalizationManager.Register(new HardCodedLocalizationProvider());
     }
 
     /// <inheritdoc />

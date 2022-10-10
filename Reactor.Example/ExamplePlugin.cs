@@ -28,7 +28,7 @@ public partial class ExamplePlugin : BasePlugin
         this.AddComponent<ExampleComponent>();
 
         _helloStringName = CustomStringName.CreateAndRegister("Hello!");
-        LocalizationManager.RegisterProvider(new ExampleLocalizationProvider());
+        LocalizationManager.Register(new ExampleLocalizationProvider());
     }
 
     [RegisterInIl2Cpp]

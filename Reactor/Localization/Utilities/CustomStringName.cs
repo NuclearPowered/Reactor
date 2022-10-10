@@ -27,7 +27,7 @@ public static class CustomStringName
     public static StringNames CreateAndRegister(string text)
     {
         var stringName = Create();
-        HardCodedLocalizationProvider.RegisterStringName(stringName, text);
+        HardCodedLocalizationProvider.Register(stringName, text);
         return stringName;
     }
 }

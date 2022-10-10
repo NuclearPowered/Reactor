@@ -16,7 +16,7 @@ public sealed class HardCodedLocalizationProvider : LocalizationProvider
     /// </summary>
     /// <param name="stringName">The <see cref="StringNames"/>.</param>
     /// <param name="value">The text.</param>
-    public static void RegisterStringName(StringNames stringName, string value)
+    public static void Register(StringNames stringName, string value)
     {
         if (Strings.ContainsKey(stringName))
         {
