@@ -22,6 +22,12 @@ public static class StreamExtensions
         private readonly Stream _stream;
 
         /// <inheritdoc />
+        public StreamWrapper(IntPtr pointer) : base(pointer)
+        {
+            throw new NotSupportedException("This shouldn't ever be called because StreamWrapper is injected from managed side");
+        }
+
+        /// <inheritdoc />
         public StreamWrapper(Stream stream) : base(ClassInjector.DerivedConstructorPointer<StreamWrapper>())
         {
             ClassInjector.DerivedConstructorBody(this);
