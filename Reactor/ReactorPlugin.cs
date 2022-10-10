@@ -51,7 +51,7 @@ public partial class ReactorPlugin : BasePlugin
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
         MethodRpcAttribute.Initialize();
-        LocalizationManager.Register(new HardCodedLocalizationProvider());
+        LocalizationManager.RegisterProvider(new HardCodedLocalizationProvider());
     }
 
     /// <inheritdoc />

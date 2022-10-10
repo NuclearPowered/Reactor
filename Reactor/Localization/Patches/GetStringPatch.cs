@@ -16,7 +16,10 @@ internal static class GetStringPatch
 
         if (LocalizationManager.TryGetText(id, currentLanguage, out var text))
         {
+#pragma warning disable CA1305
+            // Warning disabled because this is how base-game does it
             __result = string.Format(text, parts);
+#pragma warning restore CA1305
             return false;
         }
 

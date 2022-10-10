@@ -3,28 +3,43 @@ using System.Linq;
 
 namespace Reactor.Localization;
 
+/// <summary>
+/// Handles custom <see cref="StringNames"/> localization.
+/// </summary>
 public static class LocalizationManager
 {
-    internal static List<LocalizationProvider> Providers = new();
+    private static readonly List<LocalizationProvider> _providers = new();
 
-    public static void Register(LocalizationProvider provider)
+    /// <summary>
+    /// Registers a new <see cref="LocalizationProvider"/> to be used for obtaining translations.
+    /// </summary>
+    /// <param name="provider">A <see cref="LocalizationProvider"/> instance.</param>
+    public static void RegisterProvider(LocalizationProvider provider)
     {
-        if (!Providers.Contains(provider)) Providers.Add(provider);
+        if (!_providers.Contains(provider)) _providers.Add(provider);
     }
 
-    public static void Unregister(LocalizationProvider provider)
+    /// <summary>
+    /// Unregisters a <see cref="LocalizationProvider"/>.
+    /// </summary>
+    /// <param name="provider">The <see cref="LocalizationProvider"/> to unregister.</param>
+    public static void UnregisterProvider(LocalizationProvider provider)
     {
-        Providers.Remove(provider);
+        _providers.Remove(provider);
     }
-    
-    public static void UnregisterAllByType<T>() where T : LocalizationProvider
+
+    /// <summary>
+    /// Unregisters all <see cref="LocalizationProvider"/>s of the given type.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="LocalizationProvider"/>s to be unregistered.</typeparam>
+    public static void UnregisterProvidersByType<T>() where T : LocalizationProvider
     {
-        Providers.RemoveAll(x => x is T);
+        _providers.RemoveAll(x => x is T);
     }
 
     internal static bool TryGetText(StringNames stringName, SupportedLangs language, out string text)
     {
-        foreach (var provider in Providers.OrderByDescending(p => p.Priority))
+        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
             if (provider.CanHandle(stringName))
             {
@@ -39,7 +54,7 @@ public static class LocalizationManager
 
     internal static bool TryGetStringName(SystemTypes systemType, out StringNames stringName)
     {
-        foreach (var provider in Providers.OrderByDescending(p => p.Priority))
+        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
             if (provider.CanHandle(systemType))
             {
@@ -51,10 +66,10 @@ public static class LocalizationManager
         stringName = StringNames.NoTranslation;
         return false;
     }
-    
+
     internal static bool TryGetStringName(TaskTypes taskTypes, out StringNames stringName)
     {
-        foreach (var provider in Providers.OrderByDescending(p => p.Priority))
+        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
             if (provider.CanHandle(taskTypes))
             {
