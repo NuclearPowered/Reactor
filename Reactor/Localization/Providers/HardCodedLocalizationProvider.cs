@@ -1,5 +1,5 @@
 ﻿using System;
-using Il2CppSystem.Collections.Generic;
+using System.Collections.Generic;
 using Reactor.Localization.Utilities;
 using Reactor.Utilities;
 

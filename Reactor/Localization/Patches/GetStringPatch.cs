@@ -7,9 +7,8 @@ namespace Reactor.Localization.Patches;
 [HarmonyPatch]
 internal static class GetStringPatch
 {
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), 
-        typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
-    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetStringWithDefault))]
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetStringWithDefault), typeof(StringNames), typeof(string), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     [HarmonyPrefix]
     public static bool StringNamesPatch(StringNames id, Il2CppReferenceArray<Il2CppSystem.Object> parts, ref string __result)
     {
@@ -53,7 +52,7 @@ internal static class GetStringPatch
 
         return true;
     }
-    
+
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(TaskTypes))]
     [HarmonyPrefix]
     public static bool TaskTypesStringPatch(TranslationController __instance, TaskTypes task, ref string __result)
@@ -72,7 +71,7 @@ internal static class GetStringPatch
 
         return true;
     }
-    
+
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetTaskName))]
     [HarmonyPrefix]
     public static bool TaskTypesStringNamesPatch(TaskTypes task, ref StringNames __result)

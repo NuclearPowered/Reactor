@@ -2,6 +2,7 @@ using System;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Attributes;
+using Reactor.Localization.Utilities;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using Reactor.Networking.Rpc;
@@ -19,9 +20,12 @@ namespace Reactor.Example;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public partial class ExamplePlugin : BasePlugin
 {
+    private static CustomStringName? _helloStringName;
+
     public override void Load()
     {
         this.AddComponent<ExampleComponent>();
+        _helloStringName = CustomStringName.Register("Hello!");
     }
 
     [RegisterInIl2Cpp]
@@ -53,6 +57,11 @@ public partial class ExamplePlugin : BasePlugin
                     if (GUILayout.Button("Send MethodExampleRpc"))
                     {
                         RpcSay(PlayerControl.LocalPlayer, "Hello from method rpc", Random.value, PlayerControl.LocalPlayer);
+                    }
+
+                    if (GUILayout.Button("Debug.Log CustomStringName"))
+                    {
+                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName));
                     }
                 }
             })
