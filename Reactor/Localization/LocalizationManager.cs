@@ -10,6 +10,9 @@ public static class LocalizationManager
 {
     private static readonly List<LocalizationProvider> _providers = new();
 
+    internal static readonly Dictionary<SystemTypes, StringNames> SystemTypes = new();
+    internal static readonly Dictionary<TaskTypes, StringNames> TaskTypes = new();
+
     /// <summary>
     /// Registers a new <see cref="LocalizationProvider"/> to be used for obtaining translations.
     /// </summary>
@@ -37,6 +40,36 @@ public static class LocalizationManager
         _providers.RemoveAll(x => x is T);
     }
 
+    /// <summary>
+    /// Assigns a <see cref="global::SystemTypes"/> to a <see cref="global::StringNames"/>.
+    /// </summary>
+    /// <param name="systemType">The <see cref="global::SystemTypes"/>.</param>
+    /// <param name="stringName">The <see cref="global::StringNames"/>.</param>
+    public static void AssignSystemType(SystemTypes systemType, StringNames stringName)
+    {
+        if (SystemTypes.ContainsKey(systemType))
+        {
+            Warning($"Assigning SystemType {stringName} that is already assigned");
+        }
+
+        SystemTypes[systemType] = stringName;
+    }
+
+    /// <summary>
+    /// Assigns a <see cref="global::TaskTypes"/> to a <see cref="global::StringNames"/>.
+    /// </summary>
+    /// <param name="taskTypes">The <see cref="global::TaskTypes"/>.</param>
+    /// <param name="stringName">The <see cref="global::StringNames"/>.</param>
+    public static void AssignTaskType(TaskTypes taskTypes, StringNames stringName)
+    {
+        if (TaskTypes.ContainsKey(taskTypes))
+        {
+            Warning($"Assigning SystemType {stringName} that is already assigned");
+        }
+
+        TaskTypes[taskTypes] = stringName;
+    }
+
     internal static bool TryGetText(StringNames stringName, SupportedLangs language, out string text)
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
@@ -49,36 +82,6 @@ public static class LocalizationManager
         }
 
         text = string.Empty;
-        return false;
-    }
-
-    internal static bool TryGetStringName(SystemTypes systemType, out StringNames stringName)
-    {
-        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
-        {
-            if (provider.CanHandle(systemType))
-            {
-                stringName = provider.GetStringName(systemType);
-                return true;
-            }
-        }
-
-        stringName = StringNames.NoTranslation;
-        return false;
-    }
-
-    internal static bool TryGetStringName(TaskTypes taskTypes, out StringNames stringName)
-    {
-        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
-        {
-            if (provider.CanHandle(taskTypes))
-            {
-                stringName = provider.GetStringName(taskTypes);
-                return true;
-            }
-        }
-
-        stringName = StringNames.NoTranslation;
         return false;
     }
 }
