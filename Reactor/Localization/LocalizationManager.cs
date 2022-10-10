@@ -41,9 +41,8 @@ public static class LocalizationManager
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
-            if (provider.CanHandle(stringName))
+            if (provider.TryGetText(stringName, language, out text!))
             {
-                text = provider.GetText(stringName, language);
                 return true;
             }
         }
@@ -56,14 +55,14 @@ public static class LocalizationManager
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
-            if (provider.CanHandle(systemType))
+            if (provider.TryGetStringName(systemType, out var stringNameNullable))
             {
-                stringName = provider.GetStringName(systemType);
+                stringName = stringNameNullable!.Value;
                 return true;
             }
         }
 
-        stringName = StringNames.NoTranslation;
+        stringName = StringNames.ExitButton;
         return false;
     }
 
@@ -71,14 +70,14 @@ public static class LocalizationManager
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
-            if (provider.CanHandle(taskTypes))
+            if (provider.TryGetStringName(taskTypes, out var stringNameNullable))
             {
-                stringName = provider.GetStringName(taskTypes);
+                stringName = stringNameNullable!.Value;
                 return true;
             }
         }
 
-        stringName = StringNames.NoTranslation;
+        stringName = StringNames.ExitButton;
         return false;
     }
 }

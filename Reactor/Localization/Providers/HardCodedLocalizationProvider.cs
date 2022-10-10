@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Reactor.Utilities;
 
 namespace Reactor.Localization.Providers;
@@ -30,15 +30,15 @@ public sealed class HardCodedLocalizationProvider : LocalizationProvider
     public override int Priority => ReactorPriority.Low;
 
     /// <inheritdoc/>
-    public override bool CanHandle(StringNames stringName)
+    public override bool TryGetText(StringNames stringName, SupportedLangs language, [NotNullWhen(true)] out string? result)
     {
-        return Strings.ContainsKey(stringName);
-    }
+        if (!Strings.ContainsKey(stringName))
+        {
+            result = null;
+            return false;
+        }
 
-    /// <inheritdoc/>
-    public override string GetText(StringNames stringName, SupportedLangs language)
-    {
-        if (!Strings.ContainsKey(stringName)) throw new InvalidOperationException("StringName not found: " + stringName);
-        return Strings[stringName];
+        result = Strings[stringName];
+        return true;
     }
 }
