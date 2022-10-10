@@ -1,5 +1,14 @@
 using System;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Double = Il2CppSystem.Double;
+using Int16 = Il2CppSystem.Int16;
+using Int32 = Il2CppSystem.Int32;
+using Int64 = Il2CppSystem.Int64;
+using Object = Il2CppSystem.Object;
+using Single = Il2CppSystem.Single;
+using UInt16 = Il2CppSystem.UInt16;
+using UInt32 = Il2CppSystem.UInt32;
+using UInt64 = Il2CppSystem.UInt64;
 
 namespace Reactor.Utilities.Extensions;
 
@@ -8,6 +17,28 @@ namespace Reactor.Utilities.Extensions;
 /// </summary>
 public static class Il2CppInteropExtensions
 {
+    public readonly struct Il2CppBoxedPrimitive
+    {
+        public readonly Object Object;
+
+        public Il2CppBoxedPrimitive(Object obj) => Object = obj;
+
+        public static implicit operator Object(Il2CppBoxedPrimitive parsable) => parsable.Object;
+
+        public static implicit operator Il2CppBoxedPrimitive(short value) => new(new Int16 { m_value = value }.BoxIl2CppObject());
+        public static implicit operator Il2CppBoxedPrimitive(int value) => new(new Int32 { m_value = value }.BoxIl2CppObject());
+        public static implicit operator Il2CppBoxedPrimitive(long value) => new(new Int64 { m_value = value }.BoxIl2CppObject());
+
+        public static implicit operator Il2CppBoxedPrimitive(ushort value) => new(new UInt16 { m_value = value }.BoxIl2CppObject());
+        public static implicit operator Il2CppBoxedPrimitive(uint value) => new(new UInt32 { m_value = value }.BoxIl2CppObject());
+        public static implicit operator Il2CppBoxedPrimitive(ulong value) => new(new UInt64 { m_value = value }.BoxIl2CppObject());
+
+        public static implicit operator Il2CppBoxedPrimitive(float value) => new(new Single { m_value = value }.BoxIl2CppObject());
+        public static implicit operator Il2CppBoxedPrimitive(double value) => new(new Double { m_value = value }.BoxIl2CppObject());
+
+        public static implicit operator Il2CppBoxedPrimitive(string value) => new(value);
+    }
+
     /// <summary>
     /// Creates a span over a <see cref="Il2CppStructArray{T}"/>.
     /// </summary>
