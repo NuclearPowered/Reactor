@@ -1,3 +1,5 @@
+#pragma warning disable SA1611, SA1615
+
 using BenchmarkDotNet.Engines;
 using BenchmarkDotNet.Loggers;
 using BenchmarkDotNet.Toolchains;

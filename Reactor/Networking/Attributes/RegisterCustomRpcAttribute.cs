@@ -9,25 +9,33 @@ using Reactor.Utilities;
 namespace Reactor.Networking.Attributes;
 
 /// <summary>
-/// Utility attribute for automatically registering CustomRpc
+/// Automatically registers a rpc.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class RegisterCustomRpcAttribute : Attribute
+public sealed class RegisterCustomRpcAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
 
+    /// <summary>
+    /// Gets the id of the rpc.
+    /// </summary>
     public uint Id { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="RegisterCustomRpcAttribute"/> class.
+    /// </summary>
+    /// <param name="id">The id of the rpc.</param>
     public RegisterCustomRpcAttribute(uint id)
     {
         Id = id;
     }
 
     /// <summary>
-    /// Registers all types marked with <see cref="RegisterCustomRpcAttribute"/> from the specified assembly as custom rpcs
+    /// Registers all rpc's annotated with <see cref="RegisterCustomRpcAttribute"/> in the specified <paramref name="assembly"/>.
     /// </summary>
-    /// <param name="assembly"></param>
-    /// <param name="plugin"></param>
+    /// <remarks>This is called automatically on plugin assemblies so you probably don't need to call this.</remarks>
+    /// <param name="assembly">The assembly to search.</param>
+    /// <param name="plugin">The plugin to register the rpc to.</param>
     public static void Register(Assembly assembly, BasePlugin plugin)
     {
         if (_registeredAssemblies.Contains(assembly)) return;

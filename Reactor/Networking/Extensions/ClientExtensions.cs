@@ -3,8 +3,17 @@ using InnerNet;
 
 namespace Reactor.Networking.Extensions;
 
+/// <summary>
+/// Provides extension methods for <see cref="InnerNetClient"/>.
+/// </summary>
 public static class ClientExtensions
 {
+    /// <summary>
+    /// Kicks a client with id equal to <paramref name="targetClientId"/> with a <paramref name="reason"/>.
+    /// </summary>
+    /// <param name="innerNetClient">The <see cref="InnerNetClient"/> to send the message from.</param>
+    /// <param name="targetClientId">The target client's id.</param>
+    /// <param name="reason">The kick reason.</param>
     public static void KickWithReason(this InnerNetClient innerNetClient, int targetClientId, string reason)
     {
         var writer = MessageWriter.Get(SendOption.Reliable);
@@ -22,6 +31,11 @@ public static class ClientExtensions
         writer.Recycle();
     }
 
+    /// <summary>
+    /// Disconnects a local <see cref="InnerNetClient"/> with a custom reason.
+    /// </summary>
+    /// <param name="innerNetClient">The <see cref="InnerNetClient"/> to disconnect.</param>
+    /// <param name="reason">The custom reason to disconnect with.</param>
     public static void DisconnectWithReason(this InnerNetClient innerNetClient, string reason)
     {
         innerNetClient.LastCustomDisconnect = reason;

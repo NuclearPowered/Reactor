@@ -3,10 +3,14 @@ using Il2CppSystem.Runtime.CompilerServices;
 
 namespace Reactor.Utilities;
 
+/// <inheritdoc />
 public sealed class Il2CppEqualityComparer<T> : IEqualityComparer<T> where T : Il2CppSystem.Object
 {
     private static Il2CppEqualityComparer<T>? _instance;
 
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
     public static Il2CppEqualityComparer<T> Instance
     {
         get
@@ -20,18 +24,20 @@ public sealed class Il2CppEqualityComparer<T> : IEqualityComparer<T> where T : I
     {
     }
 
-    public int GetHashCode(T value)
+    /// <inheritdoc/>
+    public int GetHashCode(T obj)
     {
-        return RuntimeHelpers.GetHashCode(value);
+        return RuntimeHelpers.GetHashCode(obj);
     }
 
-    public bool Equals(T? left, T? right)
+    /// <inheritdoc/>
+    public bool Equals(T? x, T? y)
     {
-        if (left == null || right == null)
+        if (x == null || y == null)
         {
-            return left == null && right == null;
+            return x == null && y == null;
         }
 
-        return left.Equals(right);
+        return x.Equals(y);
     }
 }

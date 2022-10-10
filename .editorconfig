@@ -149,6 +149,16 @@ dotnet_diagnostic.IDE0043.severity = warning
 # IDE0044: Make field readonly
 dotnet_diagnostic.IDE0044.severity = warning
 
+dotnet_diagnostic.CA1000.severity = none
+dotnet_diagnostic.CA1016.severity = none
+dotnet_diagnostic.CA1711.severity = none
+dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1720.severity = none
+
+[Reactor.Benchmarks/*.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1822.severity = none
+
 # CSharp code style settings:
 [*.cs]
 # Newline settings

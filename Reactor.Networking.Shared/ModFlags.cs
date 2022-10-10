@@ -2,9 +2,15 @@ using System;
 
 namespace Reactor.Networking;
 
+/// <summary>
+/// Represents flags of the mod.
+/// </summary>
 [Flags]
 public enum ModFlags : ushort
 {
+    /// <summary>
+    /// No flags.
+    /// </summary>
     None = 0,
 
     /// <summary>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using BepInEx;
@@ -10,13 +11,24 @@ using Reactor.Networking.Patches;
 
 namespace Reactor.Networking;
 
+/// <summary>
+/// Represents currently loaded mods.
+/// </summary>
 public static class ModList
 {
+    /// <summary>
+    /// Gets current mods.
+    /// </summary>
     public static IReadOnlyCollection<Mod> Current { get; private set; } = null!;
 
     private static readonly Dictionary<string, Mod> _modById = new();
     private static readonly Dictionary<Type, Mod> _modByPluginType = new();
 
+    /// <summary>
+    /// Gets a mod by it's id.
+    /// </summary>
+    /// <param name="id">The id of the mod.</param>
+    /// <returns>The mod with the specified <paramref name="id"/>.</returns>
     public static Mod GetById(string id)
     {
         return _modById[id];
@@ -41,6 +53,12 @@ public static class ModList
         return _netIdByMod[mod];
     }
 
+    /// <summary>
+    /// Reads a <see cref="Mod"/> reference from the <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
+    /// <returns>A <see cref="Mod"/> from the <paramref name="reader"/>.</returns>
+    /// <remarks>This will try to read by net id and fallback to a regular id otherwise.</remarks>
     public static Mod ReadMod(this MessageReader reader)
     {
         var netId = reader.ReadPackedUInt32();
@@ -53,16 +71,22 @@ public static class ModList
         return GetById(id);
     }
 
-    public static void Write(this MessageWriter writer, Mod mod)
+    /// <summary>
+    /// Writes a <see cref="Mod"/> reference to the <paramref name="writer"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
+    /// <param name="value">The <see cref="Mod"/> to write.</param>
+    /// <remarks>This will write the net id if <see cref="Mod.IsRequiredOnAllClients"/> is true, regular id otherwise.</remarks>
+    public static void Write(this MessageWriter writer, Mod value)
     {
-        if (mod.IsRequiredOnAllClients)
+        if (value.IsRequiredOnAllClients)
         {
-            writer.WritePacked(mod.GetNetId());
+            writer.WritePacked(value.GetNetId());
         }
         else
         {
             writer.WritePacked(0);
-            writer.Write(mod.Id);
+            writer.Write(value.Id);
         }
     }
 
@@ -93,8 +117,8 @@ public static class ModList
         foreach (var mod in Current)
         {
             debug.AppendLine();
-            debug.Append($" - {mod.Id} version: {mod.Version}, flags: {mod.Flags}");
-            if (mod.IsRequiredOnAllClients) debug.Append($", netId: {mod.GetNetId()}");
+            debug.Append(CultureInfo.InvariantCulture, $" - {mod.Id} version: {mod.Version}, flags: {mod.Flags}");
+            if (mod.IsRequiredOnAllClients) debug.Append(CultureInfo.InvariantCulture, $", netId: {mod.GetNetId()}");
         }
 
         Debug(debug.ToString());
@@ -120,7 +144,7 @@ public static class ModList
         foreach (var existingPlugin in IL2CPPChainloader.Instance.Plugins.Values)
         {
             if (existingPlugin.Instance == null) continue;
-            OnPluginLoad(existingPlugin, (BasePlugin)existingPlugin.Instance);
+            OnPluginLoad(existingPlugin, (BasePlugin) existingPlugin.Instance);
         }
 
         IL2CPPChainloader.Instance.PluginLoad += (pluginInfo, _, plugin) => OnPluginLoad(pluginInfo, plugin);

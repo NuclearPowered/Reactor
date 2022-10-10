@@ -7,11 +7,19 @@ using Reactor.Networking.Serialization;
 
 namespace Reactor.Networking.Attributes;
 
+/// <summary>
+/// Automatically registers a <see cref="MessageConverter{T}"/>.
+/// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-public class MessageConverterAttribute : Attribute
+public sealed class MessageConverterAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
-    
+
+    /// <summary>
+    /// Registers all <see cref="MessageConverter{T}"/>s annotated with <see cref="MessageConverterAttribute"/> in the specified <paramref name="assembly"/>.
+    /// </summary>
+    /// <remarks>This is called automatically on plugin assemblies so you probably don't need to call this.</remarks>
+    /// <param name="assembly">The assembly to search.</param>
     public static void Register(Assembly assembly)
     {
         if (_registeredAssemblies.Contains(assembly)) return;

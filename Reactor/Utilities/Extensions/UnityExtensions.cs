@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace Reactor.Utilities.Extensions;
 
+/// <summary>
+/// Provides extension methods for unity.
+/// </summary>
 public static class UnityExtensions
 {
     /// <summary>
@@ -9,7 +12,7 @@ public static class UnityExtensions
     /// </summary>
     /// <param name="color">The color to be converted.</param>
     /// <returns>Hexadecimal string representing the color.</returns>
-    /// <remarks>https://docs.unity3d.com/ScriptReference/ColorUtility.ToHtmlStringRGBA.html</remarks>
+    /// <remarks>https://docs.unity3d.com/ScriptReference/ColorUtility.ToHtmlStringRGBA.html.</remarks>
     public static string ToHtmlStringRGBA(this Color32 color)
     {
         return $"{color.r:X2}{color.g:X2}{color.b:X2}{color.a:X2}";
@@ -26,8 +29,10 @@ public static class UnityExtensions
     private static readonly int _addColor = Shader.PropertyToID("_AddColor");
 
     /// <summary>
-    /// Sets color outline for renderers using default Among Us shader
+    /// Sets the outline for renderer using the default Among Us shader.
     /// </summary>
+    /// <param name="renderer">The renderer to set the color on.</param>
+    /// <param name="color">The color or null to disable the outline.</param>
     public static void SetOutline(this Renderer renderer, Color? color)
     {
         renderer.material.SetFloat(_outline, color.HasValue ? 1 : 0);

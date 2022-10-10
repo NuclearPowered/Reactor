@@ -5,6 +5,7 @@
         <Description>Core mod and API for Among Us</Description>
 
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <!-- SourceLink -->
         <EmbedUntrackedSources>true</EmbedUntrackedSources>

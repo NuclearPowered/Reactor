@@ -5,10 +5,17 @@ using BepInEx.Unity.IL2CPP;
 
 namespace Reactor.Utilities;
 
+/// <summary>
+/// Provides singleton access to plugins instance.
+/// </summary>
+/// <typeparam name="T">The type of the plugin.</typeparam>
 public static class PluginSingleton<T> where T : BasePlugin
 {
     private static T? _instance;
 
+    /// <summary>
+    /// Gets or sets an instance of <typeparamref name="T"/> plugin.
+    /// </summary>
     public static T Instance
     {
         get => _instance ??= IL2CPPChainloader.Instance.Plugins.Values.Select(x => x.Instance).OfType<T>().Single();

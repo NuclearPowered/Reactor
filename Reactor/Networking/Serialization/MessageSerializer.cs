@@ -3,23 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using Hazel;
 using Reactor.Networking.Extensions;
-using Reactor.Networking.Rpc;
 using UnityEngine;
 
 namespace Reactor.Networking.Serialization;
 
+/// <summary>
+/// Provides de/serializing of objects from/into <see cref="MessageReader"/>/<see cref="MessageWriter"/>.
+/// </summary>
 public static class MessageSerializer
 {
     private static List<UnsafeMessageConverter> MessageConverters { get; } = new();
 
     private static Dictionary<Type, UnsafeMessageConverter?> MessageConverterMap { get; } = new();
 
+    /// <summary>
+    /// Registers a MessageConverter.
+    /// </summary>
+    /// <param name="messageConverter">The MessageConverter to be registered.</param>
     public static void Register(UnsafeMessageConverter messageConverter)
     {
         MessageConverters.Add(messageConverter);
         MessageConverterMap.Clear();
     }
 
+    /// <summary>
+    /// Finds a MessageConverter for the specified <paramref name="type"/>.
+    /// </summary>
+    /// <param name="type">The type of an object.</param>
+    /// <returns>A MessageConverted that can convert the specified <see cref="Type"/>.</returns>
     public static UnsafeMessageConverter? FindConverter(Type type)
     {
         if (MessageConverterMap.TryGetValue(type, out var value))
@@ -33,6 +44,11 @@ public static class MessageSerializer
         return converter;
     }
 
+    /// <summary>
+    /// Serializes <paramref name="args"/> to the <paramref name="writer"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
+    /// <param name="args">The args to be written.</param>
     public static void Serialize(MessageWriter writer, object[] args)
     {
         foreach (var arg in args)
@@ -41,9 +57,14 @@ public static class MessageSerializer
         }
     }
 
-    public static void Serialize(this MessageWriter writer, object o)
+    /// <summary>
+    /// Serializes an <paramref name="object"/> to the <paramref name="writer"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
+    /// <param name="object">The <see cref="object"/> to be written.</param>
+    public static void Serialize(this MessageWriter writer, object @object)
     {
-        switch (o)
+        switch (@object)
         {
             case int i:
                 writer.WritePacked(i);
@@ -73,84 +94,76 @@ public static class MessageSerializer
                 writer.Write(i);
                 break;
             default:
-                var converter = FindConverter(o.GetType());
+                var converter = FindConverter(@object.GetType());
                 if (converter != null)
                 {
-                    converter.UnsafeWrite(writer, o);
+                    converter.UnsafeWrite(writer, @object);
                     break;
                 }
 
-                throw new NotSupportedException("Couldn't serialize " + o.GetType());
+                throw new NotSupportedException("Couldn't serialize " + @object.GetType());
         }
     }
 
-    public static object[] Deserialize(MessageReader reader, MethodRpc methodRpc)
+    /// <summary>
+    /// Deserializes an <see cref="object"/> of <paramref name="objectType"/> from the <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
+    /// <param name="objectType">The <see cref="Type"/> of the object.</param>
+    /// <returns>An <see cref="object"/> from the <paramref name="reader"/>.</returns>
+    public static object Deserialize(this MessageReader reader, Type objectType)
     {
-        var parameters = methodRpc.Method.GetParameters();
-        var args = new object[parameters.Length - 1];
-
-        for (var i = 1; i < parameters.Length; i++)
-        {
-            var parameter = parameters[i];
-            args[i - 1] = reader.Deserialize(parameter.ParameterType);
-        }
-
-        return args;
-    }
-
-    public static object Deserialize(this MessageReader reader, Type t)
-    {
-        if (t == typeof(int))
+        if (objectType == typeof(int))
         {
             return reader.ReadPackedInt32();
         }
 
-        if (t == typeof(uint))
+        if (objectType == typeof(uint))
         {
             return reader.ReadPackedUInt32();
         }
 
-        if (t == typeof(byte))
+        if (objectType == typeof(byte))
         {
             return reader.ReadByte();
         }
 
-        if (t == typeof(float))
+        if (objectType == typeof(float))
         {
             return reader.ReadSingle();
         }
 
-        if (t == typeof(sbyte))
+        if (objectType == typeof(sbyte))
         {
             return reader.ReadSByte();
         }
 
-        if (t == typeof(ushort))
+        if (objectType == typeof(ushort))
         {
             return reader.ReadUInt16();
         }
 
-        if (t == typeof(bool))
+        if (objectType == typeof(bool))
         {
             return reader.ReadBoolean();
         }
 
-        if (t == typeof(Vector2))
+        if (objectType == typeof(Vector2))
         {
             return reader.ReadVector2();
         }
 
-        if (t == typeof(string))
+        if (objectType == typeof(string))
         {
             return reader.ReadString();
         }
 
-        var converter = FindConverter(t);
+        var converter = FindConverter(objectType);
         if (converter != null)
         {
-            return converter.UnsafeRead(reader, t);
+            return converter.UnsafeRead(reader, objectType);
         }
 
-        throw new NotSupportedException("Couldn't deserialize " + t);
+        throw new NotSupportedException("Couldn't deserialize " + objectType);
     }
 }

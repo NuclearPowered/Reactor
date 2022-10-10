@@ -7,6 +7,7 @@ namespace System.Runtime.CompilerServices;
 /// It should be generated automatically, but for whatever reason its not.
 /// </summary>
 [Obsolete("Do not use directly.", true)]
-internal class IsUnmanagedAttribute : Attribute
+[AttributeUsage(AttributeTargets.All)]
+internal sealed class IsUnmanagedAttribute : Attribute
 {
 }

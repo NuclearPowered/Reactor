@@ -6,7 +6,6 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using Reactor.Networking.Extensions;
 using Reactor.Networking.Messages;
-using Reactor.Networking.Serialization;
 using UnityEngine;
 
 namespace Reactor.Networking.Patches;
@@ -126,7 +125,6 @@ internal static class ClientPatches
                     Debug("Injecting ReactorHandshakeC2S to CoSendSceneChange");
                     ReactorHeader.Write(writer);
                     ModdedHandshakeC2S.Serialize(writer, ModList.Current);
-                    //
 
                     writer.EndMessage();
                     writer.EndMessage();
@@ -183,7 +181,7 @@ internal static class ClientPatches
             msg.Write((byte) flags);
             InnerNetObject[] componentsInChildren = netObjParent.GetComponentsInChildren<InnerNetObject>();
             msg.WritePacked(componentsInChildren.Length);
-            foreach (InnerNetObject innerNetObject in componentsInChildren)
+            foreach (var innerNetObject in componentsInChildren)
             {
                 innerNetObject.OwnerId = ownerId;
                 innerNetObject.SpawnFlags = flags;
@@ -207,7 +205,6 @@ internal static class ClientPatches
                 ReactorHeader.Write(msg);
                 ModdedHandshakeS2C.Serialize(msg, "Among Us", Application.version, 0); // TODO
             }
-            //
 
             msg.EndMessage();
 

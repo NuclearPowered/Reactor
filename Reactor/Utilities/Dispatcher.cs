@@ -6,16 +6,18 @@ using UnityEngine;
 
 namespace Reactor.Utilities;
 
+/// <summary>
+/// Dispatches actions on Unity main thread.
+/// </summary>
 [RegisterInIl2Cpp]
-public class Dispatcher : MonoBehaviour
+public sealed class Dispatcher : MonoBehaviour
 {
-    public Dispatcher(IntPtr ptr) : base(ptr)
-    {
-    }
-
+    /// <summary>
+    /// Gets the instance.
+    /// </summary>
     public static Dispatcher Instance { get; private set; } = null!;
 
-    private static readonly Queue<Action> _queue = new();
+    private readonly Queue<Action> _queue = new();
 
     private void Awake()
     {
@@ -33,6 +35,10 @@ public class Dispatcher : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Enqueues an <paramref name="action"/>.
+    /// </summary>
+    /// <param name="action">The action to enqueue.</param>
     [HideFromIl2Cpp]
     public void Enqueue(Action action)
     {

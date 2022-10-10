@@ -10,13 +10,20 @@ using Version = SemanticVersioning.Version;
 
 namespace Reactor.Patches;
 
+/// <summary>
+/// Shows the reactor version on the main menu.
+/// </summary>
 public static class ReactorVersionShower
 {
+    /// <summary>
+    /// Gets the <see cref="TextMeshPro"/> text.
+    /// </summary>
     public static TextMeshPro? Text { get; private set; }
 
-    public static event TextUpdatedHandler? TextUpdated;
-
-    public delegate void TextUpdatedHandler(TextMeshPro text);
+    /// <summary>
+    /// Occurs when <see cref="Text"/> is updated.
+    /// </summary>
+    public static event Action<TextMeshPro>? TextUpdated;
 
     internal static void Initialize()
     {
@@ -56,9 +63,12 @@ public static class ReactorVersionShower
 
     private static string ToStringWithoutBuild(Version version)
     {
-        return $"{version.Major}.{version.Minor}.{version.Patch}{(version.PreRelease == null ? "" : $"-{version.PreRelease}")}";
+        return $"{version.Major}.{version.Minor}.{version.Patch}{(version.PreRelease == null ? string.Empty : $"-{version.PreRelease}")}";
     }
 
+    /// <summary>
+    /// Updates <see cref="Text"/> with reactor version and fires <see cref="TextUpdated"/>.
+    /// </summary>
     public static void UpdateText()
     {
         if (Text == null) return;
