@@ -1,16 +1,30 @@
 ﻿using System;
 using System.Collections.Generic;
-using Reactor.Localization.Utilities;
 using Reactor.Utilities;
 
 namespace Reactor.Localization.Providers;
 
 /// <summary>
-/// Adds localization for strings registered through <see cref="CustomStringName.Register"/>.
+/// Utility for adding hard-coded localization.
 /// </summary>
 public sealed class HardCodedLocalizationProvider : LocalizationProvider
 {
-    internal static readonly Dictionary<StringNames, CustomStringName> Strings = new();
+    internal static readonly Dictionary<StringNames, string> Strings = new();
+
+    /// <summary>
+    /// Adds a custom, hard-coded translation for a <see cref="StringNames"/>.
+    /// </summary>
+    /// <param name="stringName">The <see cref="StringNames"/>.</param>
+    /// <param name="value">The text.</param>
+    public static void RegisterStringName(StringNames stringName, string value)
+    {
+        if (Strings.ContainsKey(stringName))
+        {
+            Warning($"Registering StringName {stringName} that already exists");
+        }
+
+        Strings[stringName] = value;
+    }
 
     /// <inheritdoc/>
     public override int Priority => ReactorPriority.Low;
@@ -25,6 +39,6 @@ public sealed class HardCodedLocalizationProvider : LocalizationProvider
     public override string GetText(StringNames stringName, SupportedLangs language)
     {
         if (!Strings.ContainsKey(stringName)) throw new InvalidOperationException("StringName not found: " + stringName);
-        return Strings[stringName].Value;
+        return Strings[stringName];
     }
 }

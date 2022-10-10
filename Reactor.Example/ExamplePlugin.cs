@@ -21,13 +21,13 @@ namespace Reactor.Example;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public partial class ExamplePlugin : BasePlugin
 {
-    private static CustomStringName? _helloStringName;
+    private static StringNames _helloStringName;
 
     public override void Load()
     {
         this.AddComponent<ExampleComponent>();
 
-        _helloStringName = CustomStringName.Register("Hello!");
+        _helloStringName = CustomStringName.CreateAndRegister("Hello!");
         LocalizationManager.RegisterProvider(new ExampleLocalizationProvider());
     }
 
@@ -45,15 +45,15 @@ public partial class ExamplePlugin : BasePlugin
                 {
                     if (GUILayout.Button("Send ExampleRpc"))
                     {
-                        var name = PlayerControl.LocalPlayer.Data.PlayerName;
-                        Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {name}"), ackCallback: () =>
+                        var playerName = PlayerControl.LocalPlayer.Data.PlayerName;
+                        Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {playerName}"), ackCallback: () =>
                         {
                             Logger<ExamplePlugin>.Info("Got an acknowledgement for example rpc");
                         });
 
                         if (!AmongUsClient.Instance.AmHost)
                         {
-                            Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {name} to host"));
+                            Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {playerName} to host"));
                         }
                     }
 
@@ -64,7 +64,7 @@ public partial class ExamplePlugin : BasePlugin
 
                     if (GUILayout.Button("Log CustomStringName"))
                     {
-                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName!));
+                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName));
                     }
 
                     if (GUILayout.Button("Log localized string"))

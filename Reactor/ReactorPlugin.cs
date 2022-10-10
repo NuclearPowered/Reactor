@@ -46,11 +46,14 @@ public partial class ReactorPlugin : BasePlugin
     {
         PluginSingleton<ReactorPlugin>.Instance = this;
         PluginSingleton<BasePlugin>.Initialize();
+
         RegisterInIl2CppAttribute.Initialize();
-        ModList.Initialize();
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
         MethodRpcAttribute.Initialize();
+
+        ModList.Initialize();
+
         LocalizationManager.RegisterProvider(new HardCodedLocalizationProvider());
     }
 
