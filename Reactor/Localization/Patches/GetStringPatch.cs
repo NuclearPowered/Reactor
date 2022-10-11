@@ -10,13 +10,12 @@ internal static class GetStringPatch
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetStringWithDefault), typeof(StringNames), typeof(string), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     [HarmonyPrefix]
-    public static bool StringNamesPatch(TranslationController __instance, StringNames id, Il2CppReferenceArray<Il2CppSystem.Object> parts, ref string __result)
+    public static bool StringNamesPatch(TranslationController __instance, StringNames id, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string __result)
     {
         var currentLanguage = __instance.currentLanguage.languageID;
 
-        if (LocalizationManager.TryGetText(id, currentLanguage, out var text))
+        if (LocalizationManager.TryGetTextFormatted(id, currentLanguage, parts, out __result))
         {
-            __result = Il2CppSystem.String.Format(text, parts);
             return false;
         }
 

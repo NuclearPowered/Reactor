@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 
 namespace Reactor.Localization;
 
@@ -35,6 +36,20 @@ public static class LocalizationManager
     public static void UnregisterAllByType<T>() where T : LocalizationProvider
     {
         _providers.RemoveAll(x => x is T);
+    }
+
+    internal static bool TryGetTextFormatted(StringNames stringName, SupportedLangs language, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string text)
+    {
+        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
+        {
+            if (provider.TryGetTextFormatted(stringName, language, parts, out text!))
+            {
+                return true;
+            }
+        }
+
+        text = string.Empty;
+        return false;
     }
 
     internal static bool TryGetText(StringNames stringName, SupportedLangs language, out string text)
