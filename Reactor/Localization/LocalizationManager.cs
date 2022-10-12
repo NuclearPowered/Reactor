@@ -95,4 +95,12 @@ public static class LocalizationManager
         stringName = StringNames.ExitButton;
         return false;
     }
+
+    internal static void OnLanguageChanged(SupportedLangs newLanguage)
+    {
+        foreach (var provider in _providers.OrderByDescending(p => p.Priority))
+        {
+            provider.OnLanguageChanged(newLanguage);
+        }
+    }
 }

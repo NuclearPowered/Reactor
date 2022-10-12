@@ -68,4 +68,12 @@ public abstract class LocalizationProvider
         result = null;
         return false;
     }
+
+    /// <summary>
+    /// This method is called when the Among Us language is changed by the user.
+    /// </summary>
+    /// <param name="newLanguage">The new language that Among Us has been set to.</param>
+    public virtual void OnLanguageChanged(SupportedLangs newLanguage)
+    {
+    }
 }
