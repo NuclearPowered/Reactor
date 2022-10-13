@@ -9,7 +9,7 @@ namespace Reactor.Localization.Providers;
 /// </summary>
 public sealed class HardCodedLocalizationProvider : LocalizationProvider
 {
-    internal static readonly Dictionary<StringNames, string> Strings = new();
+    private static readonly Dictionary<StringNames, string> _strings = new();
 
     /// <summary>
     /// Adds a custom, hard-coded translation for a <see cref="StringNames"/>.
@@ -18,27 +18,20 @@ public sealed class HardCodedLocalizationProvider : LocalizationProvider
     /// <param name="value">The text.</param>
     public static void Register(StringNames stringName, string value)
     {
-        if (Strings.ContainsKey(stringName))
+        if (_strings.ContainsKey(stringName))
         {
             Warning($"Registering StringName {stringName} that already exists");
         }
 
-        Strings[stringName] = value;
+        _strings[stringName] = value;
     }
 
     /// <inheritdoc/>
     public override int Priority => ReactorPriority.Low;
 
     /// <inheritdoc/>
-    public override bool TryGetText(StringNames stringName, [NotNullWhen(true)] out string? result)
+    public override bool TryGetText(StringNames stringName, out string? result)
     {
-        if (!Strings.ContainsKey(stringName))
-        {
-            result = null;
-            return false;
-        }
-
-        result = Strings[stringName];
-        return true;
+        return _strings.TryGetValue(stringName, out result);
     }
 }

@@ -41,6 +41,16 @@ public partial class ExamplePlugin : BasePlugin
         {
             TestWindow = new DragWindow(new Rect(60, 20, 0, 0), "Example", () =>
             {
+                if (GUILayout.Button("Log CustomStringName"))
+                {
+                    Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName));
+                }
+
+                if (GUILayout.Button("Log localized string"))
+                {
+                    Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString((StringNames) 1337));
+                }
+
                 if (AmongUsClient.Instance && PlayerControl.LocalPlayer)
                 {
                     if (GUILayout.Button("Send ExampleRpc"))
@@ -60,16 +70,6 @@ public partial class ExamplePlugin : BasePlugin
                     if (GUILayout.Button("Send MethodExampleRpc"))
                     {
                         RpcSay(PlayerControl.LocalPlayer, "Hello from method rpc", Random.value, PlayerControl.LocalPlayer);
-                    }
-
-                    if (GUILayout.Button("Log CustomStringName"))
-                    {
-                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName));
-                    }
-
-                    if (GUILayout.Button("Log localized string"))
-                    {
-                        Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString((StringNames) 1337));
                     }
                 }
             })
