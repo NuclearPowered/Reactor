@@ -19,7 +19,12 @@ public static class LocalizationManager
         if (!_providers.Contains(provider))
         {
             _providers.Add(provider);
-            provider.SetLanguage(TranslationController.Instance.currentLanguage.languageID);
+
+            if (TranslationController.InstanceExists)
+            {
+                provider.SetLanguage(TranslationController.Instance.currentLanguage.languageID);
+            }
+
             _providers.Sort((a, b) => b.Priority - a.Priority);
         }
     }
