@@ -38,11 +38,11 @@ public static class LocalizationManager
         _providers.RemoveAll(x => x is T);
     }
 
-    internal static bool TryGetTextFormatted(StringNames stringName, SupportedLangs language, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string text)
+    internal static bool TryGetTextFormatted(StringNames stringName, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string text)
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
-            if (provider.TryGetTextFormatted(stringName, language, parts, out text!))
+            if (provider.TryGetTextFormatted(stringName, parts, out text!))
             {
                 return true;
             }
@@ -52,11 +52,11 @@ public static class LocalizationManager
         return false;
     }
 
-    internal static bool TryGetText(StringNames stringName, SupportedLangs language, out string text)
+    internal static bool TryGetText(StringNames stringName, out string text)
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
-            if (provider.TryGetText(stringName, language, out text!))
+            if (provider.TryGetText(stringName, out text!))
             {
                 return true;
             }
@@ -100,7 +100,7 @@ public static class LocalizationManager
     {
         foreach (var provider in _providers.OrderByDescending(p => p.Priority))
         {
-            provider.OnLanguageChanged(newLanguage);
+            provider.SetLanguage(newLanguage);
         }
     }
 }

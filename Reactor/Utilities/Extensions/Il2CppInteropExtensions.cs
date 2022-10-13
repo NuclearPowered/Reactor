@@ -20,7 +20,7 @@ public static class Il2CppInteropExtensions
     /// <summary>
     /// Utility class used for calling IL2CPP methods with boxed paramters.
     /// </summary>
-    public readonly struct Il2CppBoxedPrimitive
+    public readonly struct Il2CppBoxedPrimitive // TODO: Remove this when Il2CppInterop updates
     {
         /// <summary>
         /// The boxed <see cref="Il2CppSystem.Object"/>.

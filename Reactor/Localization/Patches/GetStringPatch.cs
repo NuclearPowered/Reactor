@@ -10,11 +10,9 @@ internal static class GetStringPatch
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(StringNames), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetStringWithDefault), typeof(StringNames), typeof(string), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
     [HarmonyPrefix]
-    public static bool StringNamesPatch(TranslationController __instance, StringNames id, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string __result)
+    public static bool StringNamesPatch(StringNames id, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string __result)
     {
-        var currentLanguage = __instance.currentLanguage.languageID;
-
-        if (LocalizationManager.TryGetTextFormatted(id, currentLanguage, parts, out __result))
+        if (LocalizationManager.TryGetTextFormatted(id, parts, out __result))
         {
             return false;
         }
@@ -26,11 +24,9 @@ internal static class GetStringPatch
     [HarmonyPrefix]
     public static bool SystemTypesStringPatch(TranslationController __instance, SystemTypes room, ref string __result)
     {
-        var currentLanguage = __instance.currentLanguage.languageID;
-
         if (LocalizationManager.TryGetStringName(room, out var stringName))
         {
-            if (LocalizationManager.TryGetText(stringName, currentLanguage, out var text))
+            if (LocalizationManager.TryGetText(stringName, out var text))
             {
                 __result = text;
                 return false;
@@ -60,11 +56,9 @@ internal static class GetStringPatch
     [HarmonyPrefix]
     public static bool TaskTypesStringPatch(TranslationController __instance, TaskTypes task, ref string __result)
     {
-        var currentLanguage = __instance.currentLanguage.languageID;
-
         if (LocalizationManager.TryGetStringName(task, out var stringName))
         {
-            if (LocalizationManager.TryGetText(stringName, currentLanguage, out var text))
+            if (LocalizationManager.TryGetText(stringName, out var text))
             {
                 __result = text;
                 return false;

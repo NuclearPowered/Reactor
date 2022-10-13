@@ -4,18 +4,18 @@ namespace Reactor.Example;
 
 public class ExampleLocalizationProvider : LocalizationProvider
 {
-    public override bool TryGetText(StringNames stringName, SupportedLangs language, out string? result)
+    public override bool TryGetText(StringNames stringName, out string? result)
     {
         if (stringName == (StringNames) 1337)
         {
-            switch (language)
+            switch (CurrentLanguage)
             {
                 case SupportedLangs.English:
                     result = "Cringe English";
                     return true;
 
                 default:
-                    result = "Based " + language;
+                    result = "Based " + CurrentLanguage;
                     return true;
             }
         }

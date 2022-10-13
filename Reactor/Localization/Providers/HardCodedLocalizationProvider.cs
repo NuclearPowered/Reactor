@@ -30,7 +30,7 @@ public sealed class HardCodedLocalizationProvider : LocalizationProvider
     public override int Priority => ReactorPriority.Low;
 
     /// <inheritdoc/>
-    public override bool TryGetText(StringNames stringName, SupportedLangs language, [NotNullWhen(true)] out string? result)
+    public override bool TryGetText(StringNames stringName, [NotNullWhen(true)] out string? result)
     {
         if (!Strings.ContainsKey(stringName))
         {

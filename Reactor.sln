@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 		AmongUs.props = AmongUs.props
 		Directory.Build.props = Directory.Build.props
 		nuget.config = nuget.config
+		stylecop.json = stylecop.json
+		stylecop.ruleset = stylecop.ruleset
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Networking.Shared", "Reactor.Networking.Shared\Reactor.Networking.Shared.csproj", "{1E68CA20-22EB-4E57-B525-81970BE6363D}"
