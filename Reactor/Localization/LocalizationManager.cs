@@ -86,7 +86,7 @@ public static class LocalizationManager
             }
         }
 
-        stringName = StringNames.ExitButton;
+        stringName = default;
         return false;
     }
 
@@ -101,7 +101,7 @@ public static class LocalizationManager
             }
         }
 
-        stringName = StringNames.ExitButton;
+        stringName = default;
         return false;
     }
 
