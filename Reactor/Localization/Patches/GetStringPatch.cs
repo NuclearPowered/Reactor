@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Reactor.Localization.Extensions;
 
 namespace Reactor.Localization.Patches;
 
@@ -32,7 +31,7 @@ internal static class GetStringPatch
                 return false;
             }
 
-            __result = __instance.GetStringFixed(stringName);
+            __result = __instance.GetString(stringName);
             return false;
         }
 
@@ -64,7 +63,7 @@ internal static class GetStringPatch
                 return false;
             }
 
-            __result = __instance.GetStringFixed(stringName);
+            __result = __instance.GetString(stringName);
             return false;
         }
 
