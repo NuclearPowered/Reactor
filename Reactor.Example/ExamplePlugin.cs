@@ -2,6 +2,8 @@ using System;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using Il2CppInterop.Runtime.Attributes;
+using Reactor.Localization;
+using Reactor.Localization.Utilities;
 using Reactor.Networking;
 using Reactor.Networking.Attributes;
 using Reactor.Networking.Rpc;
@@ -19,9 +21,14 @@ namespace Reactor.Example;
 [ReactorModFlags(ModFlags.RequireOnAllClients)]
 public partial class ExamplePlugin : BasePlugin
 {
+    private static StringNames _helloStringName;
+
     public override void Load()
     {
         this.AddComponent<ExampleComponent>();
+
+        _helloStringName = CustomStringName.CreateAndRegister("Hello!");
+        LocalizationManager.Register(new ExampleLocalizationProvider());
     }
 
     [RegisterInIl2Cpp]
@@ -34,19 +41,29 @@ public partial class ExamplePlugin : BasePlugin
         {
             TestWindow = new DragWindow(new Rect(60, 20, 0, 0), "Example", () =>
             {
+                if (GUILayout.Button("Log CustomStringName"))
+                {
+                    Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString(_helloStringName));
+                }
+
+                if (GUILayout.Button("Log localized string"))
+                {
+                    Logger<ExamplePlugin>.Info(TranslationController.Instance.GetString((StringNames) 1337));
+                }
+
                 if (AmongUsClient.Instance && PlayerControl.LocalPlayer)
                 {
                     if (GUILayout.Button("Send ExampleRpc"))
                     {
-                        var name = PlayerControl.LocalPlayer.Data.PlayerName;
-                        Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {name}"), ackCallback: () =>
+                        var playerName = PlayerControl.LocalPlayer.Data.PlayerName;
+                        Rpc<ExampleRpc>.Instance.Send(new ExampleRpc.Data($"Send: from {playerName}"), ackCallback: () =>
                         {
                             Logger<ExamplePlugin>.Info("Got an acknowledgement for example rpc");
                         });
 
                         if (!AmongUsClient.Instance.AmHost)
                         {
-                            Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {name} to host"));
+                            Rpc<ExampleRpc>.Instance.SendTo(AmongUsClient.Instance.HostId, new ExampleRpc.Data($"SendTo: from {playerName} to host"));
                         }
                     }
 
