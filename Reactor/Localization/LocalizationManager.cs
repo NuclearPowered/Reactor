@@ -11,6 +11,11 @@ public static class LocalizationManager
     private static readonly List<LocalizationProvider> _providers = new();
 
     /// <summary>
+    /// Gets registered <see cref="LocalizationProvider"/>s.
+    /// </summary>
+    public static IReadOnlyList<LocalizationProvider> Providers { get; } = _providers.AsReadOnly();
+
+    /// <summary>
     /// Registers a new <see cref="LocalizationProvider"/> to be used for obtaining translations.
     /// </summary>
     /// <param name="provider">A <see cref="LocalizationProvider"/> instance.</param>
@@ -36,15 +41,6 @@ public static class LocalizationManager
     public static void Unregister(LocalizationProvider provider)
     {
         _providers.Remove(provider);
-    }
-
-    /// <summary>
-    /// Unregisters all <see cref="LocalizationProvider"/>s of the given type.
-    /// </summary>
-    /// <typeparam name="T">The type of the <see cref="LocalizationProvider"/>s to be unregistered.</typeparam>
-    public static void UnregisterAllByType<T>() where T : LocalizationProvider
-    {
-        _providers.RemoveAll(x => x is T);
     }
 
     internal static bool TryGetTextFormatted(StringNames stringName, Il2CppReferenceArray<Il2CppSystem.Object> parts, out string text)
