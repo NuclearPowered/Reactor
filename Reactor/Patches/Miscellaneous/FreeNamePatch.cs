@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AmongUs.Data;
 using HarmonyLib;
 using TMPro;
 using UnityEngine;
@@ -38,7 +39,7 @@ internal static class FreeNamePatch
 
             textBox.OnChange.AddListener((Action) (() =>
             {
-                SaveManager.PlayerName = textBox.text;
+                DataManager.Player.Customization.Name = textBox.text;
             }));
             textBox.OnEnter = textBox.OnFocusLost = textBox.OnChange;
 

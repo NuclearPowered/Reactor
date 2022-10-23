@@ -30,11 +30,12 @@ internal static class SplashSkipPatch
         return true;
     }
 
+    // TODO add back when new epic version releases
     // EpicManager calls SaveManager.LoadPlayerPrefs(true) both on successful and unsuccessful EOS login
-    [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.LoadPlayerPrefs))]
-    [HarmonyPostfix]
-    private static void WaitForEpicAuth(bool overrideLoad)
-    {
-        if (overrideLoad) _loginFinished = true;
-    }
+    // [HarmonyPatch(typeof(SaveManager), nameof(SaveManager.LoadPlayerPrefs))]
+    // [HarmonyPostfix]
+    // private static void WaitForEpicAuth(bool overrideLoad)
+    // {
+    //     if (overrideLoad) _loginFinished = true;
+    // }
 }
