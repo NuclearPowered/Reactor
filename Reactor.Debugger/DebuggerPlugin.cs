@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AmongUs.Data;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
@@ -43,7 +44,7 @@ public partial class DebuggerPlugin : BasePlugin
         {
             TestWindow = new DragWindow(new Rect(20, 20, 0, 0), "Debugger", () =>
             {
-                GUILayout.Label("Name: " + SaveManager.PlayerName);
+                GUILayout.Label("Name: " + DataManager.Player.Customization.Name);
                 DisableGameEnd = GUILayout.Toggle(DisableGameEnd, "Disable game end");
 
                 if (ShipStatus.Instance && AmongUsClient.Instance.AmHost)

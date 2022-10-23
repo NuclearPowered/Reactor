@@ -12,10 +12,23 @@ namespace Reactor.Networking.Patches;
 
 internal static class ClientPatches
 {
-    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__38), nameof(InnerNetClient._HandleGameDataInner_d__38.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal))]
+    public static class DisconnectInternalPatch
+    {
+        public static void Prefix(InnerNetClient __instance, ref DisconnectReasons reason)
+        {
+            if (reason == DisconnectReasons.Kicked && ReactorConnection.Instance?.LastKickReason is { } lastKickReason)
+            {
+                reason = DisconnectReasons.Custom;
+                __instance.LastCustomDisconnect = lastKickReason;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__39), nameof(InnerNetClient._HandleGameDataInner_d__39.MoveNext))]
     public static class HandleGameDataInnerPatch
     {
-        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__38 __instance, ref bool __result)
+        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__39 __instance, ref bool __result)
         {
             var innerNetClient = __instance.__4__this;
             var reader = __instance.reader;
@@ -27,11 +40,15 @@ internal static class ClientPatches
                 var flag = (ReactorGameDataFlag) reader.ReadByte();
                 switch (flag)
                 {
-                    case ReactorGameDataFlag.KickWithReason:
+                    case ReactorGameDataFlag.SetKickReason:
                     {
                         var reason = reader.ReadString();
-                        Debug("Received KickWithReason: " + reason);
-                        innerNetClient.DisconnectWithReason(reason);
+                        Debug("Received SetKickReason: " + reason);
+                        if (ReactorConnection.Instance != null)
+                        {
+                            ReactorConnection.Instance.LastKickReason = reason;
+                        }
+
                         break;
                     }
                 }
@@ -101,10 +118,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__29), nameof(InnerNetClient._CoSendSceneChange_d__29.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__30), nameof(InnerNetClient._CoSendSceneChange_d__30.MoveNext))]
     public static class CoSendSceneChangePatch
     {
-        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__29 __instance, ref bool __result)
+        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__30 __instance, ref bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return true;
 
@@ -141,10 +158,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__39), nameof(InnerNetClient._CoHandleSpawn_d__39.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__40), nameof(InnerNetClient._CoHandleSpawn_d__40.MoveNext))]
     public static class CoHandleSpawnPatch
     {
-        public static void Postfix(InnerNetClient._CoHandleSpawn_d__39 __instance, bool __result)
+        public static void Postfix(InnerNetClient._CoHandleSpawn_d__40 __instance, bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return;
 

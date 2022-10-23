@@ -8,5 +8,5 @@ public enum ReactorGameDataFlag : byte
     /// <summary>
     /// KickWithReason GameData message.
     /// </summary>
-    KickWithReason,
+    SetKickReason,
 }

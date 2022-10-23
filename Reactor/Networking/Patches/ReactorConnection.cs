@@ -13,6 +13,8 @@ public class ReactorConnection
     /// </summary>
     public Syncer? Syncer { get; internal set; }
 
+    internal string? LastKickReason { get; set; }
+
     /// <summary>
     /// Gets the current instance of <see cref="ReactorConnection"/>.
     /// </summary>

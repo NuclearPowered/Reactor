@@ -14,7 +14,7 @@ public static class ClientExtensions
     /// <param name="innerNetClient">The <see cref="InnerNetClient"/> to send the message from.</param>
     /// <param name="targetClientId">The target client's id.</param>
     /// <param name="reason">The kick reason.</param>
-    public static void KickWithReason(this InnerNetClient innerNetClient, int targetClientId, string reason)
+    internal static void KickWithReason(this InnerNetClient innerNetClient, int targetClientId, string reason)
     {
         var writer = MessageWriter.Get(SendOption.Reliable);
         writer.StartMessage(Tags.GameDataTo);
@@ -22,13 +22,15 @@ public static class ClientExtensions
         writer.WritePacked(targetClientId);
         {
             writer.StartMessage(byte.MaxValue);
-            writer.Write((byte) ReactorGameDataFlag.KickWithReason);
+            writer.Write((byte) ReactorGameDataFlag.SetKickReason);
             writer.Write(reason);
             writer.EndMessage();
         }
         writer.EndMessage();
         innerNetClient.SendOrDisconnect(writer);
         writer.Recycle();
+
+        innerNetClient.KickPlayer(targetClientId, false);
     }
 
     /// <summary>

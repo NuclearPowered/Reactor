@@ -4,9 +4,9 @@
     "net6.0": {
       "AmongUs.GameLibs.Steam": {
         "type": "Direct",
-        "requested": "[2022.9.20, )",
-        "resolved": "2022.9.20",
-        "contentHash": "NxKOtn4ScIOCc53z+6YlNvwQ+rorGdbuAofp6GSOjnF9LJ+GRW/G18rDUnwZH+g9c+Q8j3JLADkC30j+NIIYXg=="
+        "requested": "[2022.10.25, )",
+        "resolved": "2022.10.25",
+        "contentHash": "PWgkH/VvMlShVhZB8G432q0tnMaNVZrbIdbEMCZN/fETUlT/ch+qQj4PdTcZhPHREbnJHH3ijHxlca1d7QMBcQ=="
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
