@@ -12,6 +12,19 @@ namespace Reactor.Networking.Patches;
 
 internal static class ClientPatches
 {
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal))]
+    public static class DisconnectInternalPatch
+    {
+        public static void Prefix(InnerNetClient __instance, ref DisconnectReasons reason)
+        {
+            if (reason == DisconnectReasons.Kicked && ReactorConnection.Instance?.LastKickReason is { } lastKickReason)
+            {
+                reason = DisconnectReasons.Custom;
+                __instance.LastCustomDisconnect = lastKickReason;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__39), nameof(InnerNetClient._HandleGameDataInner_d__39.MoveNext))]
     public static class HandleGameDataInnerPatch
     {
@@ -27,11 +40,15 @@ internal static class ClientPatches
                 var flag = (ReactorGameDataFlag) reader.ReadByte();
                 switch (flag)
                 {
-                    case ReactorGameDataFlag.KickWithReason:
+                    case ReactorGameDataFlag.SetKickReason:
                     {
                         var reason = reader.ReadString();
-                        Debug("Received KickWithReason: " + reason);
-                        innerNetClient.DisconnectWithReason(reason);
+                        Debug("Received SetKickReason: " + reason);
+                        if (ReactorConnection.Instance != null)
+                        {
+                            ReactorConnection.Instance.LastKickReason = reason;
+                        }
+
                         break;
                     }
                 }
