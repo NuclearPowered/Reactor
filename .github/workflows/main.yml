@@ -54,4 +54,4 @@ jobs:
       - name: Push nightly NuGet package
         if: github.repository == 'NuclearPowered/Reactor' && github.ref == 'refs/heads/master'
         run: |
-          dotnet nuget push Reactor/bin/Release/Reactor.*.nupkg --source https://nuget.reactor.gg/v3/index.json --api-key ${{ secrets.REACTOR_NUGET_KEY }}
+          dotnet nuget push {Reactor/bin/Release/Reactor.*.nupkg,Reactor.Networking.Shared/bin/Release/*.nupkg} --source https://nuget.reactor.gg/v3/index.json --api-key ${{ secrets.REACTOR_NUGET_KEY }}
