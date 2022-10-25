@@ -42,6 +42,11 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
+          name: Reactor.Networking.Shared.nupkg
+          path: Reactor.Networking.Shared/bin/Release/*.nupkg
+
+      - uses: actions/upload-artifact@v3
+        with:
           name: Reactor.Debugger.dll
           path: Reactor.Debugger/bin/Release/net6.0/Reactor.Debugger.dll
 
