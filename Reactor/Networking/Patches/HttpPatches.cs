@@ -87,7 +87,7 @@ internal static class HttpPatches
                     {
                         if (responseHeader == null)
                         {
-                            DisconnectPopup.Instance.ShowCustom("This region doesn't support modded handshake.\nThe lobbies shown may not be compatible with your current mods.\nFor more info see https://reactor.gg/handshake");
+                            DisconnectPopup.Instance.ShowCustom(Translate.Messages.VanillaServerWarning);
                         }
                     }
 
@@ -126,7 +126,7 @@ internal static class HttpPatches
                     size.x *= 2.5f;
                     background.size = size;
                     popup.TextAreaTMP.fontSizeMin = 2;
-                    popup.Show("You can't make public lobbies on regions that don't support modded handshake.\nFor more info see https://reactor.gg/handshake");
+                    popup.Show(Translate.Messages.PublicLobbyWarning);
                 }));
 
                 if (AmongUsClient.Instance.AmHost && AmongUsClient.Instance.IsGamePublic)

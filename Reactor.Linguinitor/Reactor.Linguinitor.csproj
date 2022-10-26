@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net6.0;net472</TargetFrameworks>
+        <LangVersion>latest</LangVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CSharpPoet" Version="0.2.0-dev" Private="true" GeneratePathProperty="true" />
+
+        <PackageReference Include="Linguini.Shared" Version="0.3.0" Private="true" GeneratePathProperty="true" />
+        <PackageReference Include="Linguini.Syntax" Version="0.3.0" Private="true" GeneratePathProperty="true" />
+
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.3.1" PrivateAssets="all" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <GetTargetPathDependsOn>$(GetTargetPathDependsOn);GetDependencyTargetPaths</GetTargetPathDependsOn>
+    </PropertyGroup>
+
+    <Target Name="GetDependencyTargetPaths">
+        <PropertyGroup>
+            <_LinguiniTargetFramework Condition="'$(TargetFramework)' == 'net6.0'">netstandard2.1</_LinguiniTargetFramework>
+            <_LinguiniTargetFramework Condition="'$(TargetFramework)' == 'net472'">net451</_LinguiniTargetFramework>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <TargetPathWithTargetPlatformMoniker Include="$(PkgCSharpPoet)\lib\netstandard2.0\CSharpPoet.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PkgLinguini_Shared)\lib\$(_LinguiniTargetFramework)\Linguini.Shared.dll" IncludeRuntimeDependency="false" />
+            <TargetPathWithTargetPlatformMoniker Include="$(PkgLinguini_Syntax)\lib\$(_LinguiniTargetFramework)\Linguini.Syntax.dll" IncludeRuntimeDependency="false" />
+        </ItemGroup>
+    </Target>
+</Project>
