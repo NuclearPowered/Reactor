@@ -84,7 +84,7 @@ internal static class ClientPatches
 
                         if (innerNetClient.AmHost)
                         {
-                            if (reactorClientData == null)
+                            if (reactorClientData == null && ModList.IsAnyModIsRequiredOnAllClients)
                             {
                                 Warning("Kicking " + clientData.PlayerName + " for not having Reactor installed");
 
@@ -100,7 +100,7 @@ internal static class ClientPatches
                                 return false;
                             }
 
-                            if (!Mod.Validate(reactorClientData.Mods, ModList.Current, out var reason))
+                            if (!Mod.Validate(reactorClientData?.Mods ?? Array.Empty<Mod>(), ModList.Current, out var reason))
                             {
                                 innerNetClient.KickWithReason(clientData.Id, reason);
                                 __result = false;

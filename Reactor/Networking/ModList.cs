@@ -39,6 +39,8 @@ public static class ModList
         return _modByPluginType[pluginType];
     }
 
+    internal static bool IsAnyModIsRequiredOnAllClients { get; private set; }
+
     private static readonly Dictionary<uint, Mod> _modByNetId = new();
     private static readonly Dictionary<Mod, uint> _netIdByMod = new();
 
@@ -112,6 +114,8 @@ public static class ModList
             _netIdByMod[mod] = netId;
             netId++;
         }
+
+        IsAnyModIsRequiredOnAllClients = Current.Any(m => m.IsRequiredOnAllClients);
 
         var debug = new StringBuilder("Mod list:");
         foreach (var mod in Current)
