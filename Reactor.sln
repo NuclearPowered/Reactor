@@ -18,6 +18,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Files", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Networking.Shared", "Reactor.Networking.Shared\Reactor.Networking.Shared.csproj", "{1E68CA20-22EB-4E57-B525-81970BE6363D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reactor.Linguinitor", "Reactor.Linguinitor\Reactor.Linguinitor.csproj", "{B4740F75-B657-4515-A8F6-8A84D64E8814}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{1E68CA20-22EB-4E57-B525-81970BE6363D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E68CA20-22EB-4E57-B525-81970BE6363D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E68CA20-22EB-4E57-B525-81970BE6363D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4740F75-B657-4515-A8F6-8A84D64E8814}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4740F75-B657-4515-A8F6-8A84D64E8814}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4740F75-B657-4515-A8F6-8A84D64E8814}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4740F75-B657-4515-A8F6-8A84D64E8814}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

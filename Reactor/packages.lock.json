@@ -37,6 +37,16 @@
           "Samboy063.Cpp2IL.Core": "2022.0.7.2"
         }
       },
+      "Linguini.Bundle": {
+        "type": "Direct",
+        "requested": "[0.3.1, )",
+        "resolved": "0.3.1",
+        "contentHash": "k3D0IBSsS91T0G9rYACRYtAS27NDTGz4T3ygHhbhaFdA9i3cCfCpR39MqYEpoA1Ark3lzmvklHePmRCX5EQi1A==",
+        "dependencies": {
+          "Linguini.Shared": "0.3.0",
+          "Linguini.Syntax": "0.3.0"
+        }
+      },
       "Microsoft.SourceLink.GitHub": {
         "type": "Direct",
         "requested": "[1.1.1, )",
@@ -140,6 +150,19 @@
         "type": "Transitive",
         "resolved": "2.1.0",
         "contentHash": "YYpq7NM50bSSVUDjXyV/eiITk6syXqItPjKBOb3jEWS6RFsk0DNhpWMPW6b3hKDmArARuWDU6S2pVu1IeVrvIA=="
+      },
+      "Linguini.Shared": {
+        "type": "Transitive",
+        "resolved": "0.3.0",
+        "contentHash": "rEYA9jWU1Nc9iDuPKar+4IVXjFbGrcNyYZCeU6hiWQoS4nA2UecHu36Rp4bxzasvRGda4FB2JZqty75m4e26VQ=="
+      },
+      "Linguini.Syntax": {
+        "type": "Transitive",
+        "resolved": "0.3.0",
+        "contentHash": "v8YV3xPFZfP+OSWjMd6yysp+o7cNnQXxq/slN8Yekoi+dFjsTNF0YiQWJIwg1j2FUbs6claJxY9R1FFlc4s6MA==",
+        "dependencies": {
+          "Linguini.Shared": "0.3.0"
+        }
       },
       "Microsoft.Build.Tasks.Git": {
         "type": "Transitive",

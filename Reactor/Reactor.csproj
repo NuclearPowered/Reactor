@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <LangVersion>latest</LangVersion>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
 
         <Description>Core mod and API for Among Us</Description>
 
@@ -16,10 +17,14 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
         <Compile Include="..\Reactor.Networking.Shared\**\*.cs" LinkBase="Networking" Visible="false" />
+
+        <PackageReference Include="Linguini.Bundle" Version="0.3.1" />
+        <ProjectReference Include="..\Reactor.Linguinitor\Reactor.Linguinitor.csproj" ReferenceOutputAssembly="false" OutputItemType="Analyzer" />
     </ItemGroup>
 
     <ItemGroup>
         <EmbeddedResource Include="Assets\**\*" Exclude="Assets\icon.png" />
+        <AdditionalFiles Include="Assets\Localization\en\*.ftl" />
     </ItemGroup>
 
     <Import Project="../AmongUs.props" />

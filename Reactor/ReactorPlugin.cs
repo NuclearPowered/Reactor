@@ -41,6 +41,8 @@ public partial class ReactorPlugin : BasePlugin
 
     internal RegionInfoWatcher RegionInfoWatcher { get; } = new();
 
+    internal FluentLocalizationProvider LocalizationProvider { get; } = FluentLocalizationProvider.FromEmbeddedResources("Reactor.Assets.Localization");
+
     /// <inheritdoc />
     public ReactorPlugin()
     {
@@ -55,6 +57,7 @@ public partial class ReactorPlugin : BasePlugin
         MethodRpcAttribute.Initialize();
 
         LocalizationManager.Register(new HardCodedLocalizationProvider());
+        LocalizationManager.Register(Translate.Provider = LocalizationProvider);
     }
 
     /// <inheritdoc />

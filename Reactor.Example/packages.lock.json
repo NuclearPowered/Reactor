@@ -131,6 +131,28 @@
         "resolved": "2.1.0",
         "contentHash": "YYpq7NM50bSSVUDjXyV/eiITk6syXqItPjKBOb3jEWS6RFsk0DNhpWMPW6b3hKDmArARuWDU6S2pVu1IeVrvIA=="
       },
+      "Linguini.Bundle": {
+        "type": "Transitive",
+        "resolved": "0.3.1",
+        "contentHash": "k3D0IBSsS91T0G9rYACRYtAS27NDTGz4T3ygHhbhaFdA9i3cCfCpR39MqYEpoA1Ark3lzmvklHePmRCX5EQi1A==",
+        "dependencies": {
+          "Linguini.Shared": "0.3.0",
+          "Linguini.Syntax": "0.3.0"
+        }
+      },
+      "Linguini.Shared": {
+        "type": "Transitive",
+        "resolved": "0.3.0",
+        "contentHash": "rEYA9jWU1Nc9iDuPKar+4IVXjFbGrcNyYZCeU6hiWQoS4nA2UecHu36Rp4bxzasvRGda4FB2JZqty75m4e26VQ=="
+      },
+      "Linguini.Syntax": {
+        "type": "Transitive",
+        "resolved": "0.3.0",
+        "contentHash": "v8YV3xPFZfP+OSWjMd6yysp+o7cNnQXxq/slN8Yekoi+dFjsTNF0YiQWJIwg1j2FUbs6claJxY9R1FFlc4s6MA==",
+        "dependencies": {
+          "Linguini.Shared": "0.3.0"
+        }
+      },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
         "resolved": "6.0.1",
@@ -867,7 +889,8 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.Unity.IL2CPP": "[6.0.0-be.662, )"
+          "BepInEx.Unity.IL2CPP": "[6.0.0-be.662, )",
+          "Linguini.Bundle": "[0.3.1, )"
         }
       }
     }
