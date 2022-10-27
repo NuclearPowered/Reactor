@@ -1,4 +1,5 @@
 using System;
+using AmongUs.Data;
 using HarmonyLib;
 using Hazel;
 using Il2CppInterop.Runtime;
@@ -86,7 +87,13 @@ internal static class ClientPatches
                             if (reactorClientData == null)
                             {
                                 Warning("Kicking " + clientData.PlayerName + " for not having Reactor installed");
-                                PlayerControl.LocalPlayer.RpcSendChat(clientData.PlayerName + " tried joining without Reactor installed");
+
+                                var chatText = clientData.PlayerName + " tried joining without Reactor installed";
+                                if (DataManager.Settings.Multiplayer.ChatMode == QuickChatModes.FreeChatOrQuickChat)
+                                    PlayerControl.LocalPlayer.RpcSendChat(chatText);
+                                else
+                                    HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, chatText);
+
                                 innerNetClient.KickPlayer(clientData.Id, false);
 
                                 __result = false;
