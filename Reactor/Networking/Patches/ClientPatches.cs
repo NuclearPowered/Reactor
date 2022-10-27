@@ -60,7 +60,7 @@ internal static class ClientPatches
                 return false;
             }
 
-            if (ReactorConnection.Instance!.Syncer == Syncer.Host && reader.Tag == InnerNetClient.SceneChangeFlag)
+            if (reader.Tag == InnerNetClient.SceneChangeFlag && ReactorConnection.Instance?.Syncer == Syncer.Host)
             {
                 var clientId = reader.ReadPackedInt32();
                 var clientData = innerNetClient.FindClientById(clientId);
