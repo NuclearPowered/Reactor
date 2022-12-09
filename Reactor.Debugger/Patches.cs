@@ -1,4 +1,5 @@
 using System.Linq;
+using AmongUs.GameOptions;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Reactor.Utilities;
@@ -35,10 +36,13 @@ internal static class Patches
         }
     }
 
-    [HarmonyPatch(typeof(ShipStatus), nameof(ShipStatus.CheckEndCriteria))]
+    [HarmonyPatch]
     [HarmonyPriority(Priority.First)]
     public static class CheckEndCriteriaPatch
     {
+        [HarmonyPatch(typeof(LogicGameFlow), nameof(LogicGameFlow.CheckEndCriteria))]
+        [HarmonyPatch(typeof(LogicGameFlowNormal), nameof(LogicGameFlow.CheckEndCriteria))]
+        [HarmonyPatch(typeof(LogicGameFlowHnS), nameof(LogicGameFlow.CheckEndCriteria))]
         public static bool Prefix()
         {
             return !PluginSingleton<DebuggerPlugin>.Instance.Component.DisableGameEnd;
@@ -61,6 +65,8 @@ internal static class Patches
     {
         public static void Postfix(GameOptionsMenu __instance)
         {
+            if (GameOptionsManager.Instance.CurrentGameOptions.GameMode != GameModes.Normal) return;
+
             __instance.Children
                 .Single(o => o.Title == StringNames.GameNumImpostors)
                 .Cast<NumberOption>()

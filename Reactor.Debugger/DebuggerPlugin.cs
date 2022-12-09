@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AmongUs.Data;
+using AmongUs.GameOptions;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
@@ -52,7 +53,7 @@ public partial class DebuggerPlugin : BasePlugin
                     if (GUILayout.Button("Force game end"))
                     {
                         ShipStatus.Instance.enabled = false;
-                        ShipStatus.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
+                        GameManager.Instance.RpcEndGame(GameOverReason.ImpostorDisconnect, false);
                     }
 
                     if (GUILayout.Button("Call a meeting"))

@@ -241,7 +241,7 @@ internal static class ClientPatches
     {
         public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(0)] MessageReader reader)
         {
-            if (__instance.GameMode == GameModes.FreePlay) return true;
+            if (__instance.NetworkMode == NetworkModes.FreePlay) return true;
 
             var isFirst = false;
 

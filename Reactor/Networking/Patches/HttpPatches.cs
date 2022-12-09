@@ -102,7 +102,7 @@ internal static class HttpPatches
     {
         public static void Postfix(GameStartManager __instance)
         {
-            if (AmongUsClient.Instance.GameMode != GameModes.OnlineGame) return;
+            if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return;
             if (ModList.IsAnyModIsRequiredOnAllClients && !IsCurrentRegionModded())
             {
                 Warning("Vanilla region, locking public toggle");
