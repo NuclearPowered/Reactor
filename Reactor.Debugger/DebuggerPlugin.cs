@@ -26,8 +26,15 @@ public partial class DebuggerPlugin : BasePlugin
     {
         Component = this.AddComponent<DebuggerComponent>();
 
-        GameOptionsData.MaxImpostors = GameOptionsData.RecommendedImpostors = Enumerable.Repeat((int) byte.MaxValue, byte.MaxValue).ToArray();
-        GameOptionsData.MinPlayers = Enumerable.Repeat(1, 4).ToArray();
+        var maxImpostors = (Il2CppStructArray<int>) Enumerable.Repeat((int) byte.MaxValue, byte.MaxValue).ToArray();
+        GameOptionsData.MaxImpostors = GameOptionsData.RecommendedImpostors = maxImpostors;
+        NormalGameOptionsV07.MaxImpostors = NormalGameOptionsV07.RecommendedImpostors = maxImpostors;
+        HideNSeekGameOptionsV07.MaxImpostors = maxImpostors;
+
+        var minPlayers = (Il2CppStructArray<int>) Enumerable.Repeat(1, byte.MaxValue).ToArray();
+        GameOptionsData.MinPlayers = minPlayers;
+        NormalGameOptionsV07.MinPlayers = minPlayers;
+        HideNSeekGameOptionsV07.MinPlayers = minPlayers;
 
         Harmony.PatchAll();
     }
