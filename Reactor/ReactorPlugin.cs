@@ -44,6 +44,8 @@ public partial class ReactorPlugin : BasePlugin
     /// <inheritdoc />
     public ReactorPlugin()
     {
+        Log.LogMessage($"Among Us {Application.version} {Constants.GetCurrentPlatformName()}");
+
         PluginSingleton<ReactorPlugin>.Instance = this;
         PluginSingleton<BasePlugin>.Initialize();
 
