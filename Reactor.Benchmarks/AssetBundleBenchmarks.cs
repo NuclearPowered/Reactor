@@ -16,7 +16,7 @@ namespace Reactor.Benchmarks;
 [StopOnFirstError, Config(typeof(Config))]
 public class AssetBundleBenchmarks
 {
-    private class Config : ManualConfig
+    private sealed class Config : ManualConfig
     {
         public Config()
         {

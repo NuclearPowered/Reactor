@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 namespace Reactor.Utilities;
 
-internal class RegionInfoWatcher : IDisposable
+internal sealed class RegionInfoWatcher : IDisposable
 {
     private FileSystemWatcher Watcher { get; }
 

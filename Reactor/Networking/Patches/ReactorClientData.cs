@@ -4,7 +4,7 @@ using InnerNet;
 
 namespace Reactor.Networking.Patches;
 
-internal class ReactorClientData
+internal sealed class ReactorClientData
 {
     public ClientData ClientData { get; }
 

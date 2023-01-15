@@ -14,7 +14,7 @@ namespace Reactor.Utilities;
 public static class Coroutines
 {
     [RegisterInIl2Cpp]
-    internal class Component : MonoBehaviour
+    internal sealed class Component : MonoBehaviour
     {
         internal static Component? Instance { get; set; }
 

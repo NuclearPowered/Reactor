@@ -93,7 +93,7 @@ public partial class ReactorPlugin : BasePlugin
     }
 
     [RegisterInIl2Cpp]
-    private class ReactorComponent : MonoBehaviour
+    private sealed class ReactorComponent : MonoBehaviour
     {
         [HideFromIl2Cpp]
         public ReactorPlugin? Plugin { get; internal set; }
