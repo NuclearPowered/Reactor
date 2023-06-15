@@ -30,7 +30,7 @@ internal static class FreeNamePatch
             var editName = DestroyableSingleton<AccountManager>.Instance.accountTab.editNameScreen;
             var nameText = Object.Instantiate(editName.nameText.gameObject);
 
-            nameText.transform.localPosition += Vector3.up * 2.2f;
+            nameText.transform.localPosition += Vector3.up * (AccountManager.Instance.isActiveAndEnabled ? 1.85f : 2.2f);
 
             var textBox = nameText.GetComponent<TextBoxTMP>();
             textBox.outputText.alignment = TextAlignmentOptions.CenterGeoAligned;
@@ -56,10 +56,10 @@ internal static class FreeNamePatch
             "JoinGameButton",
         };
 
-        var yStart = Vector3.up;
+        var yStart = Vector3.up * (AccountManager.Instance.isActiveAndEnabled ? 0.9f : 1.1f);
         var yOffset = Vector3.down * 1.5f;
 
-        var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/" + x)).ToList();
+        var gameObjects = toMove.Select(x => GameObject.Find("NormalMenu/Buttons/" + x)).ToList();
         if (gameObjects.Any(x => x == null)) return false;
 
         for (var i = 0; i < gameObjects.Count; i++)

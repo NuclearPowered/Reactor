@@ -27,35 +27,50 @@ public static class ReactorVersionShower
 
     internal static void Initialize()
     {
-        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((_, _) =>
+        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
         {
             var original = UnityEngine.Object.FindObjectOfType<VersionShower>();
             if (!original)
                 return;
 
-            var gameObject = new GameObject("ReactorVersion " + Guid.NewGuid());
-            gameObject.transform.parent = original.transform.parent;
+            var originalAspectPosition = original.GetComponent<AspectPosition>();
+            var originalText = original.GetComponentInChildren<TextMeshPro>();
+
+            var gameObject = new GameObject("ReactorVersion");
 
             var aspectPosition = gameObject.AddComponent<AspectPosition>();
 
-            aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
+            if (scene.name == "MainMenu")
+            {
+                aspectPosition.Alignment = AspectPosition.EdgeAlignments.Left;
+                aspectPosition.DistanceFromEdge = new Vector3(5f, 1.55f, 2f);
+            }
+            else
+            {
+                var distanceFromEdge = new Vector3(1, 0.4f, -1);
+                if (originalAspectPosition.Alignment == AspectPosition.EdgeAlignments.LeftTop)
+                {
+                    distanceFromEdge += new Vector3(0.05f, 0.15f, 0);
+                }
+                else if (AccountManager.Instance.isActiveAndEnabled)
+                {
+                    distanceFromEdge += new Vector3(0.2f, 0.6f, 0);
+                }
 
-            var originalAspectPosition = original.GetComponent<AspectPosition>();
-            var originalPosition = originalAspectPosition.DistanceFromEdge;
-            originalPosition.y = 0.15f;
-            originalAspectPosition.DistanceFromEdge = originalPosition;
-            originalAspectPosition.AdjustPosition();
-
-            var position = originalPosition;
-            position.x += 10.075f - 0.1f;
-            position.y += 2.75f - 0.15f;
-            position.z -= 1;
-            aspectPosition.DistanceFromEdge = position;
+                aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
+                aspectPosition.DistanceFromEdge = distanceFromEdge;
+            }
 
             aspectPosition.AdjustPosition();
 
             Text = gameObject.AddComponent<TextMeshPro>();
+            Text.font = originalText.font;
+            Text.fontMaterial = originalText.fontMaterial;
+            Text.UpdateFontAsset();
+            Text.alignment = TextAlignmentOptions.TopLeft;
+            Text.autoSizeTextContainer = true;
             Text.fontSize = 2;
+            Text.outlineWidth = 0.1f;
 
             UpdateText();
         }));
