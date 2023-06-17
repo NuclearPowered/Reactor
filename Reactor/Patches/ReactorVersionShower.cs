@@ -49,11 +49,9 @@ public static class ReactorVersionShower
             Text.font = originalText.font;
             Text.fontMaterial = originalText.fontMaterial;
             Text.UpdateFontAsset();
-            Text.alignment = TextAlignmentOptions.TopLeft;
             Text.overflowMode = TextOverflowModes.Overflow;
             Text.fontSize = 2;
             Text.outlineWidth = 0.1f;
-
             Text.enableWordWrapping = false;
             Text.alignment = TextAlignmentOptions.TopLeft;
 
