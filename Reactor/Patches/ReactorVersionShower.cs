@@ -64,14 +64,14 @@ public static class ReactorVersionShower
             {
                 ResolutionManager.remove_ResolutionChanged(_setMainMenuPositionFromAspect);
                 var aspectPosition = gameObject.AddComponent<AspectPosition>();
-                var distanceFromEdge = new Vector3(10.33f, 2.55f, -1);
+                var distanceFromEdge = new Vector3(10.13f, 2.55f, -1);
                 if (originalAspectPosition.Alignment == AspectPosition.EdgeAlignments.LeftTop)
                 {
                     distanceFromEdge.y += 0.2f;
-                    distanceFromEdge.x -= 0.2f;
                 }
                 else if (AccountManager.Instance.isActiveAndEnabled)
                 {
+                    distanceFromEdge.x += 0.2f;
                     distanceFromEdge.y += 0.575f;
                 }
 
@@ -79,6 +79,7 @@ public static class ReactorVersionShower
                 aspectPosition.DistanceFromEdge = distanceFromEdge;
                 aspectPosition.AdjustPosition();
             }
+
             UpdateText();
         }));
     }
