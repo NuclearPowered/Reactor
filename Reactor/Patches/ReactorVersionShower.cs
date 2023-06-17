@@ -25,6 +25,13 @@ public static class ReactorVersionShower
     /// </summary>
     public static event Action<TextMeshPro>? TextUpdated;
 
+    private static readonly Il2CppSystem.Action<float> _setMainMenuPositionFromAspect = (Action<float>) (aspect =>
+    {
+        if (Text == null) return;
+        var pos = new Vector3(-1.2287f * aspect + 10.9f, -0.57f, 4.5f);
+        Text.transform.position = pos;
+    });
+
     internal static void Initialize()
     {
         SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
@@ -38,39 +45,40 @@ public static class ReactorVersionShower
 
             var gameObject = new GameObject("ReactorVersion");
 
-            var aspectPosition = gameObject.AddComponent<AspectPosition>();
-
-            if (scene.name == "MainMenu")
-            {
-                aspectPosition.Alignment = AspectPosition.EdgeAlignments.Left;
-                aspectPosition.DistanceFromEdge = new Vector3(5f, 1.55f, 2f);
-            }
-            else
-            {
-                var distanceFromEdge = new Vector3(1, 0.4f, -1);
-                if (originalAspectPosition.Alignment == AspectPosition.EdgeAlignments.LeftTop)
-                {
-                    distanceFromEdge += new Vector3(0.05f, 0.15f, 0);
-                }
-                else if (AccountManager.Instance.isActiveAndEnabled)
-                {
-                    distanceFromEdge += new Vector3(0.2f, 0.6f, 0);
-                }
-
-                aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
-                aspectPosition.DistanceFromEdge = distanceFromEdge;
-            }
-
-            aspectPosition.AdjustPosition();
-
             Text = gameObject.AddComponent<TextMeshPro>();
             Text.font = originalText.font;
             Text.fontMaterial = originalText.fontMaterial;
             Text.UpdateFontAsset();
-            Text.alignment = TextAlignmentOptions.TopLeft;
-            Text.autoSizeTextContainer = true;
+            Text.overflowMode = TextOverflowModes.Overflow;
             Text.fontSize = 2;
             Text.outlineWidth = 0.1f;
+            Text.enableWordWrapping = false;
+            Text.alignment = TextAlignmentOptions.TopLeft;
+
+            if (scene.name == "MainMenu")
+            {
+                ResolutionManager.add_ResolutionChanged(_setMainMenuPositionFromAspect);
+                _setMainMenuPositionFromAspect.Invoke(Screen.width / (float) Screen.height);
+            }
+            else
+            {
+                ResolutionManager.remove_ResolutionChanged(_setMainMenuPositionFromAspect);
+                var aspectPosition = gameObject.AddComponent<AspectPosition>();
+                var distanceFromEdge = new Vector3(10.13f, 2.55f, -1);
+                if (originalAspectPosition.Alignment == AspectPosition.EdgeAlignments.LeftTop)
+                {
+                    distanceFromEdge.y += 0.2f;
+                }
+                else if (AccountManager.Instance.isActiveAndEnabled)
+                {
+                    distanceFromEdge.x += 0.2f;
+                    distanceFromEdge.y += 0.575f;
+                }
+
+                aspectPosition.Alignment = AspectPosition.EdgeAlignments.LeftTop;
+                aspectPosition.DistanceFromEdge = distanceFromEdge;
+                aspectPosition.AdjustPosition();
+            }
 
             UpdateText();
         }));
