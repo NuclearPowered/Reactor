@@ -25,11 +25,16 @@ public static class ReactorVersionShower
     /// </summary>
     public static event Action<TextMeshPro>? TextUpdated;
 
-    private static readonly Il2CppSystem.Action<float> _setMainMenuPositionFromAspect = (Action<float>) (aspect =>
+    private static void SetMainMenuPositionFromAspect(float aspectRatio)
     {
         if (Text == null) return;
-        var pos = new Vector3(-1.2287f * aspect + 10.9f, -0.57f, 4.5f);
+        var pos = new Vector3(-1.2287f * aspectRatio + 10.9f, -0.57f, 4.5f);
         Text.transform.position = pos;
+    }
+
+    private static readonly ResolutionManager.ResolutionChangedHandler _resolutionChangedHandler = (Action<float, int, int, bool>) ((aspectRatio, _, _, _) =>
+    {
+        SetMainMenuPositionFromAspect(aspectRatio);
     });
 
     internal static void Initialize()
@@ -57,12 +62,12 @@ public static class ReactorVersionShower
 
             if (scene.name == "MainMenu")
             {
-                ResolutionManager.add_ResolutionChanged(_setMainMenuPositionFromAspect);
-                _setMainMenuPositionFromAspect.Invoke(Screen.width / (float) Screen.height);
+                ResolutionManager.add_ResolutionChanged(_resolutionChangedHandler);
+                SetMainMenuPositionFromAspect(Screen.width / (float) Screen.height);
             }
             else
             {
-                ResolutionManager.remove_ResolutionChanged(_setMainMenuPositionFromAspect);
+                ResolutionManager.remove_ResolutionChanged(_resolutionChangedHandler);
                 var aspectPosition = gameObject.AddComponent<AspectPosition>();
                 var distanceFromEdge = new Vector3(10.13f, 2.55f, -1);
                 if (originalAspectPosition.Alignment == AspectPosition.EdgeAlignments.LeftTop)
