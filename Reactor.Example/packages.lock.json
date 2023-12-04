@@ -4,9 +4,9 @@
     "net6.0": {
       "AmongUs.GameLibs.Steam": {
         "type": "Direct",
-        "requested": "[2023.7.11, )",
-        "resolved": "2023.7.11",
-        "contentHash": "e5zbU+4AYnp1zAQDizO5GRIh1kemkgCa8rFVAcr9bxeupkBu5dwwdHxArWv/pUybIJTZfOPjkOnicZ2qKWLX7g=="
+        "requested": "[2023.11.28, )",
+        "resolved": "2023.11.28",
+        "contentHash": "EsKrZS4tjTRrY7mtZls3tMy54zije4vleEA9s0UGUr4SF3qm2axR6wMncyIJCk4ACXlN5Bxpsd3/upDe9Gnx6A=="
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
@@ -22,28 +22,28 @@
       },
       "BepInEx.Unity.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.670, )",
-        "resolved": "6.0.0-be.670",
-        "contentHash": "dhzCrem44oFxhOICCJ9eoSUbaKSsGGyBUfUQW9WFljCwIK8o4Cx5BiuXAkYoRjr2DhpzLpPDyPZDRImUqH0bwA==",
+        "requested": "[6.0.0-be.679, )",
+        "resolved": "6.0.0-be.679",
+        "contentHash": "KnfMjWSXI5+dxbkLCy8VssEnZtTN3MXUHDdBkvPbMiZ6oR1RGZWdLlA90/XQkY/4kMA5P4OCZP4eQ1o0XftbSQ==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.670",
-          "BepInEx.Unity.Common": "6.0.0-be.670",
+          "BepInEx.Core": "6.0.0-be.679",
+          "BepInEx.Unity.Common": "6.0.0-be.679",
           "HarmonyX": "2.10.1",
           "Iced": "1.18.0",
-          "Il2CppInterop.Generator": "1.4.6-ci.354",
-          "Il2CppInterop.HarmonySupport": "1.4.6-ci.354",
-          "Il2CppInterop.Runtime": "1.4.6-ci.354",
+          "Il2CppInterop.Generator": "1.4.6-ci.389",
+          "Il2CppInterop.HarmonySupport": "1.4.6-ci.389",
+          "Il2CppInterop.Runtime": "1.4.6-ci.389",
           "MonoMod.RuntimeDetour": "22.5.1.1",
           "Samboy063.Cpp2IL.Core": "2022.1.0-development.866"
         }
       },
       "StyleCop.Analyzers": {
         "type": "Direct",
-        "requested": "[1.2.0-beta.435, )",
-        "resolved": "1.2.0-beta.435",
-        "contentHash": "TADk7vdGXtfTnYCV7GyleaaRTQjfoSfZXprQrVMm7cSJtJbFc1QIbWPyLvrgrfGdfHbGmUPvaN4ODKNxg2jgPQ==",
+        "requested": "[1.2.0-beta.507, )",
+        "resolved": "1.2.0-beta.507",
+        "contentHash": "/FtugDT66cKJJ+GGH7rNpG6UDrT4iIWz45M6lrXXHobDUFDHw+q5VgkbiR+6ffTO564ge7w6fQh/eoQhVdJO8Q==",
         "dependencies": {
-          "StyleCop.Analyzers.Unstable": "1.2.0.435"
+          "StyleCop.Analyzers.Unstable": "1.2.0.507"
         }
       },
       "AsmResolver": {
@@ -83,8 +83,8 @@
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.670",
-        "contentHash": "7CbbMNZfb+1VHjFKh/ErFBOOEYrVCIkng/B3/HPcbNioySC7qdT1ztfYqs6YjQia4krEic+LV3ew86B/hTg+hw==",
+        "resolved": "6.0.0-be.679",
+        "contentHash": "yg6NSGeevv86P2ERe3VDEa7W/l0lmM7m+AdPSW78dcBOe36Zc3QK/vmNEq57txGa+1kwv+macXLSwkL4UpucjA==",
         "dependencies": {
           "HarmonyX": "2.10.1",
           "MonoMod.Utils": "22.5.1.1",
@@ -93,8 +93,8 @@
       },
       "BepInEx.Unity.Common": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.670",
-        "contentHash": "FSzWILgwepZ7CpA34ew1WyO75lNjxkfX86uwo2172lbhmLkgoAdQbNun8dxKJCDlIevmTDga76yr/WPrTXELvA==",
+        "resolved": "6.0.0-be.679",
+        "contentHash": "q4Sux3ULBDasSQAtlAWzAKpAfCyV3ujxVJpK7ydV1bUIksaHNqw9yYTLCUrw8p4DQ/wHvShECFjzeMGHi+wylA==",
         "dependencies": {
           "AssetRipper.VersionUtilities": "1.2.1",
           "MonoMod.Utils": "22.5.1.1"
@@ -121,8 +121,8 @@
       },
       "Il2CppInterop.Common": {
         "type": "Transitive",
-        "resolved": "1.4.6-ci.354",
-        "contentHash": "aCP3kr39YQw5GVqE9Q8c5y7f9CEKdFxpUhIqYgQBtrEz5Z/KCbHhjuOf/lSuFrjl6Vub/BKk6k+UbMRdoSvC1w==",
+        "resolved": "1.4.6-ci.389",
+        "contentHash": "KTyf2f66Q2mS9a6xhvoPWwD0VzRIoskPMVQehaVMo1dx4Di1FPFsKqukQ+ob6wgP5Rbnx53kiH0PY+IRSb35XA==",
         "dependencies": {
           "Iced": "1.17.0",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.1",
@@ -131,29 +131,29 @@
       },
       "Il2CppInterop.Generator": {
         "type": "Transitive",
-        "resolved": "1.4.6-ci.354",
-        "contentHash": "y30sxc9mMv0bUzCPDr73xiI6fiu7ksmnEm6XULTGU/5JEGv2aw++/71bLOEYCscNbZTa2JT4yYrLCXCj3GSekg==",
+        "resolved": "1.4.6-ci.389",
+        "contentHash": "XJX4sn/RzAEBNIZZXuyDcLZrFx5tCoahujDu5aKWjApiMj/nTRQAxZn17daIIvd9aHqLaAfiWWth5QDLIt2bKw==",
         "dependencies": {
-          "Il2CppInterop.Common": "1.4.6-ci.354",
+          "Il2CppInterop.Common": "1.4.6-ci.389",
           "Mono.Cecil": "0.11.3"
         }
       },
       "Il2CppInterop.HarmonySupport": {
         "type": "Transitive",
-        "resolved": "1.4.6-ci.354",
-        "contentHash": "mQV5A+B/qtI6kSXEGx/UswiqjFKw13/yyviawnStfRKbLMW+XFsdMgGSkOVZd/TiDtF9ZG4Xt7DbkbFu26WjyA==",
+        "resolved": "1.4.6-ci.389",
+        "contentHash": "Xd2zK6sLqwA0ReyUy83SWKcALwY99fq6vVL5gFOMN5Ct8OOVhtNIws0ysCWsfx1GL0RJiRYfR4pza/MmWRz4PQ==",
         "dependencies": {
           "HarmonyX": "2.10.0",
-          "Il2CppInterop.Runtime": "1.4.6-ci.354"
+          "Il2CppInterop.Runtime": "1.4.6-ci.389"
         }
       },
       "Il2CppInterop.Runtime": {
         "type": "Transitive",
-        "resolved": "1.4.6-ci.354",
-        "contentHash": "Xe5md9z+KIthdEcjfUjmoOhvM3gTI3SPyocqvuzEHoov5jQ/HhIPv5hUZzTSm+2nzn3XplENNE8vlBPvQ1o6OA==",
+        "resolved": "1.4.6-ci.389",
+        "contentHash": "nzYjuVzDG/O8+AQ8ax3WVHf+ZVsQKrVtp/yvuW8XoEPLdkbgryIrMo75dvN+tPqxOU3o2MPt9MZ9j25P5aVJMw==",
         "dependencies": {
           "Iced": "1.17.0",
-          "Il2CppInterop.Common": "1.4.6-ci.354"
+          "Il2CppInterop.Common": "1.4.6-ci.389"
         }
       },
       "js6pak.Gee.External.Capstone": {
@@ -347,8 +347,8 @@
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",
-        "resolved": "1.2.0.435",
-        "contentHash": "ouwPWZxbOV3SmCZxIRqHvljkSzkCyi1tDoMzQtDb/bRP8ctASV/iRJr+A2Gdj0QLaLmWnqTWDrH82/iP+X80Lg=="
+        "resolved": "1.2.0.507",
+        "contentHash": "gTY3IQdRqDJ4hbhSA3e/R48oE8b/OiKfvwkt1QdNVfrJK2gMHBV8ldaHJ885jxWZfllK66soa/sdcjh9bX49Tw=="
       },
       "System.Collections": {
         "type": "Transitive",
@@ -917,7 +917,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.Unity.IL2CPP": "[6.0.0-be.670, )"
+          "BepInEx.Unity.IL2CPP": "[6.0.0-be.679, )"
         }
       }
     }

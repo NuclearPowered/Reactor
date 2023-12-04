@@ -8,7 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Reactor\Reactor.csproj" Private="false" />
-        <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+        <PackageReference Include="BenchmarkDotNet" Version="0.13.10" />
     </ItemGroup>
 
     <Import Project="../AmongUs.props" />
