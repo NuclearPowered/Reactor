@@ -94,18 +94,18 @@ public readonly struct Mod : IEquatable<Mod>
         var clientMissing = hostMods.Where(mod => mod.IsRequiredOnAllClients && !clientMods.Contains(mod)).ToArray();
         var hostMissing = clientMods.Where(mod => mod.IsRequiredOnAllClients && !hostMods.Contains(mod)).ToArray();
 
-        if (clientMissing.Any() || hostMissing.Any())
+        if (clientMissing.Length != 0 || hostMissing.Length != 0)
         {
             var message = new StringBuilder();
 
-            if (clientMissing.Any())
+            if (clientMissing.Length != 0)
             {
                 message.Append("You are missing: ");
                 message.AppendJoin(", ", clientMissing.Select(x => x.ToString()));
                 message.AppendLine();
             }
 
-            if (hostMissing.Any())
+            if (hostMissing.Length != 0)
             {
                 message.Append("Host is missing: ");
                 message.AppendJoin(", ", hostMissing.Select(x => x.ToString()));

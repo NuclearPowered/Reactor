@@ -96,7 +96,7 @@ public abstract class UnsafeCustomRpc
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
     public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1, Action? ackCallback = null)
     {
-        if (innerNetObject == null) throw new ArgumentNullException(nameof(innerNetObject));
+        ArgumentNullException.ThrowIfNull(innerNetObject);
 
         if (Manager == null)
         {

@@ -41,7 +41,7 @@ public class AssetBundleBenchmarks
 
     private AssetBundle LoadAll(AssetBundle assetBundle)
     {
-        if (assetBundle == null) throw new ArgumentNullException(nameof(assetBundle));
+        ArgumentNullException.ThrowIfNull(assetBundle);
 
         assetBundle.LoadAllAssets();
         return assetBundle;

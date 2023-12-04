@@ -4,7 +4,7 @@ on: ["push", "pull_request"]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
       - uses: actions/checkout@v3
@@ -23,7 +23,7 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: 6.x
+          dotnet-version: 8.0.x
 
       - name: Run the Cake script
         uses: cake-build/cake-action@v1

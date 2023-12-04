@@ -1,6 +1,5 @@
 global using static Reactor.Utilities.Logger<Reactor.ReactorPlugin>;
 using System;
-using System.Linq;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
@@ -111,7 +110,7 @@ public partial class ReactorPlugin : BasePlugin
                 foreach (var pluginInfo in IL2CPPChainloader.Instance.Plugins.Values)
                 {
                     var config = ((BasePlugin) pluginInfo.Instance).Config;
-                    if (!config.Any())
+                    if (config.Count == 0)
                     {
                         continue;
                     }
