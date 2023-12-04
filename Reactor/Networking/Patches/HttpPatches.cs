@@ -5,7 +5,6 @@ using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace Reactor.Networking.Patches;
 
@@ -85,9 +84,9 @@ internal static class HttpPatches
 
                     if (__instance.GetMethod() == UnityWebRequest.UnityWebRequestMethod.Get)
                     {
-                        if (responseHeader == null)
+                        if (responseHeader == null && ModList.IsAnyModRequiredOnAllClients && !ReactorConfig.IgnoreHandshakePopup.Value)
                         {
-                            DisconnectPopup.Instance.ShowCustom("This region doesn't support modded handshake.\nThe lobbies shown may not be compatible with your current mods.\nFor more info see https://reactor.gg/handshake");
+                            HandshakePopup.Show();
                         }
                     }
 
@@ -118,16 +117,7 @@ internal static class HttpPatches
                 __instance.MakePublicButton.sprite = __instance.PrivateGameImage;
 
                 var onClick = __instance.MakePublicButton.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                onClick.AddListener((Action) (() =>
-                {
-                    var popup = Object.Instantiate(DiscordManager.Instance.discordPopup, Camera.main!.transform);
-                    var background = popup.transform.Find("Background").GetComponent<SpriteRenderer>();
-                    var size = background.size;
-                    size.x *= 2.5f;
-                    background.size = size;
-                    popup.TextAreaTMP.fontSizeMin = 2;
-                    popup.Show("You can't make public lobbies on regions that don't support modded handshake.\nFor more info see https://reactor.gg/handshake");
-                }));
+                onClick.AddListener((Action) MakePublicDisallowedPopup.Show);
 
                 if (AmongUsClient.Instance.AmHost && AmongUsClient.Instance.IsGamePublic)
                 {
