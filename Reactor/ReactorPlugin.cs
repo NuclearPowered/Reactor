@@ -1,7 +1,6 @@
 global using static Reactor.Utilities.Logger<Reactor.ReactorPlugin>;
 using System;
 using BepInEx;
-using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Attributes;
@@ -36,8 +35,6 @@ public partial class ReactorPlugin : BasePlugin
     /// </summary>
     public CustomRpcManager CustomRpcManager { get; } = new();
 
-    internal ConfigEntry<bool>? AllowVanillaServers { get; private set; }
-
     internal RegionInfoWatcher RegionInfoWatcher { get; } = new();
 
     /// <inheritdoc />
@@ -61,7 +58,7 @@ public partial class ReactorPlugin : BasePlugin
     /// <inheritdoc />
     public override void Load()
     {
-        AllowVanillaServers = Config.Bind("Features", "Allow vanilla servers", false, "Whether reactor should ignore servers not responding to modded handshake. This config is ignored if any plugin uses custom rpcs!");
+        ReactorConfig.Bind(Config);
 
         Harmony.PatchAll();
 
