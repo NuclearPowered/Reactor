@@ -24,6 +24,12 @@ internal static class HandshakePopup
             _popup.BackButton.transform.SetLocalY(-0.2f);
         }
 
-        _popup.Show(Message);
+        var message = ReactorConfig.HandshakePopupMessage.Value;
+        if (string.IsNullOrEmpty(message))
+        {
+            message = Message;
+        }
+
+        _popup.Show(message);
     }
 }

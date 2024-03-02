@@ -23,6 +23,12 @@ internal static class MakePublicDisallowedPopup
             _popup.BackButton.transform.SetLocalY(-0.1f);
         }
 
-        _popup.Show(Message);
+        var message = ReactorConfig.MakePublicDisallowedPopupMessage.Value;
+        if (string.IsNullOrEmpty(message))
+        {
+            message = Message;
+        }
+
+        _popup.Show(message);
     }
 }
