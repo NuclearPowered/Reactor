@@ -84,7 +84,7 @@ internal static class HttpPatches
 
                     if (__instance.GetMethod() == UnityWebRequest.UnityWebRequestMethod.Get)
                     {
-                        if (responseHeader == null && ModList.IsAnyModRequiredOnAllClients && !ReactorConfig.IgnoreHandshakePopup.Value)
+                        if (responseHeader == null && ModList.IsAnyModRequiredOnAllClients)
                         {
                             HandshakePopup.Show();
                         }
