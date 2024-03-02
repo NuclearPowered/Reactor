@@ -101,7 +101,7 @@ public static class ModList
             .Select(pluginInfo => GetById(pluginInfo.Metadata.GUID))
             .OrderByDescending(x => x.Id == ReactorPlugin.Id)
             .ThenBy(x => x.Id, StringComparer.Ordinal)
-            .ToHashSet();
+            .ToArray();
 
         _modByNetId.Clear();
         _netIdByMod.Clear();
