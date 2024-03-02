@@ -27,4 +27,9 @@ public enum ModFlags : ushort
     /// Requires the host of the lobby to have the mod.
     /// </summary>
     RequireOnHost = 1 << 2,
+
+    /// <summary>
+    /// Notifies the game server that the host has authority over game logic.
+    /// </summary>
+    DisableServerAuthority = 1 << 3,
 }

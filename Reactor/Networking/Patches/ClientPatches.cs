@@ -84,7 +84,7 @@ internal static class ClientPatches
 
                         if (innerNetClient.AmHost)
                         {
-                            if (reactorClientData == null && ModList.IsAnyModIsRequiredOnAllClients)
+                            if (reactorClientData == null && ModList.IsAnyModRequiredOnAllClients)
                             {
                                 Warning("Kicking " + clientData.PlayerName + " for not having Reactor installed");
 
