@@ -70,7 +70,7 @@ public partial class ReactorPlugin : BasePlugin
         FreeNamePatch.Initialize();
         DefaultBundle.Load();
 
-        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
+        SceneManager.add_activeSceneChanged((Action<Scene, Scene>) ((_, scene) =>
         {
             if (scene.name == "MainMenu")
             {

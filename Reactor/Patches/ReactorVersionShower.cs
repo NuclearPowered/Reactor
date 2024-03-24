@@ -39,7 +39,7 @@ public static class ReactorVersionShower
 
     internal static void Initialize()
     {
-        SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
+        SceneManager.add_activeSceneChanged((Action<Scene, Scene>) ((_, scene) =>
         {
             var original = UnityEngine.Object.FindObjectOfType<VersionShower>();
             if (!original)
