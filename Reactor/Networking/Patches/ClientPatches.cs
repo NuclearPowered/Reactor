@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AmongUs.Data;
 using HarmonyLib;
 using Hazel;
@@ -86,13 +87,23 @@ internal static class ClientPatches
                         {
                             if (reactorClientData == null && ModList.IsAnyModRequiredOnAllClients)
                             {
-                                Warning("Kicking " + clientData.PlayerName + " for not having Reactor installed");
+                                Warning("Kicking " + clientData.PlayerName + $" for not having 1 or more mods marked {ModFlags.RequireOnAllClients}");
 
-                                var chatText = clientData.PlayerName + " tried joining without Reactor installed";
+                                var chatText = clientData.PlayerName + " tried joining without installing mods required by all players:";
+                                var mods = ModList.Current.Where(x => x.IsRequiredOnAllClients).Select(x => x.Name).ToArray();
+                                var modsList = string.Empty;
+                                mods.Do(x => modsList += $"{x}, ");
+
                                 if (DataManager.Settings.Multiplayer.ChatMode == QuickChatModes.FreeChatOrQuickChat)
+                                {
                                     PlayerControl.LocalPlayer.RpcSendChat(chatText);
+                                    PlayerControl.LocalPlayer.RpcSendChat(modsList);
+                                }
                                 else
+                                {
                                     HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, chatText);
+                                    HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, modsList);
+                                }
 
                                 innerNetClient.KickPlayer(clientData.Id, false);
 
