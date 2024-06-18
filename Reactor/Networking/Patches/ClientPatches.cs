@@ -26,10 +26,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__39), nameof(InnerNetClient._HandleGameDataInner_d__39.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__41), nameof(InnerNetClient._HandleGameDataInner_d__41.MoveNext))]
     public static class HandleGameDataInnerPatch
     {
-        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__39 __instance, ref bool __result)
+        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__41 __instance, ref bool __result)
         {
             var innerNetClient = __instance.__4__this;
             var reader = __instance.reader;
@@ -125,10 +125,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__30), nameof(InnerNetClient._CoSendSceneChange_d__30.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__32), nameof(InnerNetClient._CoSendSceneChange_d__32.MoveNext))]
     public static class CoSendSceneChangePatch
     {
-        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__30 __instance, ref bool __result)
+        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__32 __instance, ref bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return true;
 
@@ -165,10 +165,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__40), nameof(InnerNetClient._CoHandleSpawn_d__40.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__42), nameof(InnerNetClient._CoHandleSpawn_d__42.MoveNext))]
     public static class CoHandleSpawnPatch
     {
-        public static void Postfix(InnerNetClient._CoHandleSpawn_d__40 __instance, bool __result)
+        public static void Postfix(InnerNetClient._CoHandleSpawn_d__42 __instance, bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return;
 

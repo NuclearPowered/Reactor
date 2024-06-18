@@ -96,7 +96,9 @@ internal static class HttpPatches
         }
     }
 
-    [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Start))]
+// HACK
+
+/*    [HarmonyPatch(typeof(GameStartManager), nameof(GameStartManager.Start))]
     private static class GameStartManagerPatch
     {
         public static void Postfix(GameStartManager __instance)
@@ -125,5 +127,5 @@ internal static class HttpPatches
                 }
             }
         }
-    }
+    }*/
 }
