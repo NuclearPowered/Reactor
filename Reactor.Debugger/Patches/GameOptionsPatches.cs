@@ -28,10 +28,10 @@ internal static class GameOptionsPatches
     [HarmonyPrefix]
     public static void UnlockAllOptions(GameSettingMenu __instance)
     {
-        __instance.HideForOnline = new Il2CppReferenceArray<Transform>(0);
+        __instance.GameSettingsTab.HideForOnline = new Il2CppReferenceArray<Transform>(0);
     }
 
-    [HarmonyPatch(typeof(NumberOption), nameof(NumberOption.OnEnable))]
+    [HarmonyPatch(typeof(NumberOption), nameof(NumberOption.SetUpFromData))]
     [HarmonyPostfix]
     public static void UnlockOptionRange(NumberOption __instance)
     {
