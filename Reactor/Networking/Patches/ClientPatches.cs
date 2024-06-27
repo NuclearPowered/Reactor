@@ -134,9 +134,13 @@ internal static class ClientPatches
 
             var innerNetClient = __instance.__4__this;
 
-            if (__instance.__1__state == 2)
+            // Check for the conditions when the scene change message should be sent
+            if (!innerNetClient.AmHost &&
+                innerNetClient.connection.State == ConnectionState.Connected &&
+                innerNetClient.ClientId >= 0)
             {
-                if (!innerNetClient.AmHost && innerNetClient.connection.State == ConnectionState.Connected)
+                var clientData = innerNetClient.FindClientById(innerNetClient.ClientId);
+                if (clientData != null)
                 {
                     var writer = MessageWriter.Get(SendOption.Reliable);
                     writer.StartMessage(Tags.GameData);
@@ -154,11 +158,15 @@ internal static class ClientPatches
                     writer.EndMessage();
                     innerNetClient.SendOrDisconnect(writer);
                     writer.Recycle();
-                }
 
-                __instance.__1__state = -1;
-                __result = false;
-                return false;
+                    // Create a new coroutine to let AmongUsClient handle scene changes too
+                    innerNetClient.StartCoroutine(innerNetClient.CoOnPlayerChangedScene(clientData, __instance.sceneName));
+
+                    // Cancel this coroutine
+                    __instance.__1__state = -1;
+                    __result = false;
+                    return false;
+                }
             }
 
             return true;
