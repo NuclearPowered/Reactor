@@ -1,5 +1,6 @@
 using System;
 using AmongUs.Data;
+using BepInEx.Unity.IL2CPP.Utils;
 using HarmonyLib;
 using Hazel;
 using Il2CppInterop.Runtime;
@@ -8,6 +9,7 @@ using InnerNet;
 using Reactor.Networking.Extensions;
 using Reactor.Networking.Messages;
 using UnityEngine;
+using IEnumerator = System.Collections.IEnumerator;
 
 namespace Reactor.Networking.Patches;
 
@@ -86,21 +88,38 @@ internal static class ClientPatches
                         {
                             if (reactorClientData == null && ModList.IsAnyModRequiredOnAllClients)
                             {
-                                Warning("Kicking " + clientData.PlayerName + " for not having Reactor installed");
+                                IEnumerator CoKick()
+                                {
+                                    var startTime = DateTimeOffset.UtcNow;
+                                    string? playerName;
 
-                                var chatText = clientData.PlayerName + " tried joining without Reactor installed";
-                                if (DataManager.Settings.Multiplayer.ChatMode == QuickChatModes.FreeChatOrQuickChat)
-                                    PlayerControl.LocalPlayer.RpcSendChat(chatText);
-                                else
-                                    HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, chatText);
+                                    do
+                                    {
+                                        yield return null;
 
-                                innerNetClient.KickPlayer(clientData.Id, false);
+                                        if (DateTimeOffset.UtcNow - startTime > TimeSpan.FromSeconds(2))
+                                        {
+                                            playerName = "(unknown)";
+                                            break;
+                                        }
 
-                                __result = false;
-                                return false;
+                                        playerName = GameData.Instance.GetPlayerByClient(clientData)?.PlayerName;
+                                    } while (string.IsNullOrEmpty(playerName));
+
+                                    Warning("Kicking " + playerName + " for not having Reactor installed");
+
+                                    var chatText = playerName + " tried joining without Reactor installed";
+                                    if (DataManager.Settings.Multiplayer.ChatMode == QuickChatModes.FreeChatOrQuickChat)
+                                        PlayerControl.LocalPlayer.RpcSendChat(chatText);
+                                    else
+                                        HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, chatText);
+
+                                    innerNetClient.KickPlayer(clientData.Id, false);
+                                }
+
+                                innerNetClient.StartCoroutine(CoKick());
                             }
-
-                            if (!Mod.Validate(reactorClientData?.Mods ?? Array.Empty<Mod>(), ModList.Current, out var reason))
+                            else if (!Mod.Validate(reactorClientData?.Mods ?? Array.Empty<Mod>(), ModList.Current, out var reason))
                             {
                                 innerNetClient.KickWithReason(clientData.Id, reason);
                                 __result = false;
