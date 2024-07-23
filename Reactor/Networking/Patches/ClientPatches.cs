@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using AmongUs.Data;
 using BepInEx.Unity.IL2CPP.Utils;
 using HarmonyLib;
@@ -108,11 +109,27 @@ internal static class ClientPatches
 
                                     Warning("Kicking " + playerName + " for not having Reactor installed");
 
-                                    var chatText = playerName + " tried joining without Reactor installed";
+                                    const int ChatMessageLimit = 100;
+
+                                    var chatText = $"{playerName} tried joining without the following mods:";
+                                    foreach (var mod in ModList.Current.Where(m => m.IsRequiredOnAllClients))
+                                    {
+                                        chatText += $"\n- {mod}";
+                                    }
+
+                                    HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, chatText, false);
+
                                     if (DataManager.Settings.Multiplayer.ChatMode == QuickChatModes.FreeChatOrQuickChat)
-                                        PlayerControl.LocalPlayer.RpcSendChat(chatText);
-                                    else
-                                        HudManager.Instance.Chat.AddChat(PlayerControl.LocalPlayer, chatText);
+                                    {
+                                        var truncatedChatText = chatText.Length > ChatMessageLimit
+                                            ? chatText[..(ChatMessageLimit - 3)] + "..."
+                                            : chatText;
+
+                                        // Write SendChat directly instead of using RpcSendChat so we can call AddChat ourselves
+                                        var messageWriter = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte) RpcCalls.SendChat);
+                                        messageWriter.Write(truncatedChatText);
+                                        messageWriter.EndMessage();
+                                    }
 
                                     innerNetClient.KickPlayer(clientData.Id, false);
                                 }
