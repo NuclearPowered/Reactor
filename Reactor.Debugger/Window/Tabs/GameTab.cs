@@ -69,11 +69,13 @@ internal sealed class GameTab : BaseTab
 
     private static void SpawnDummy()
     {
-        var playerControl = Object.Instantiate(TutorialManager.Instance.PlayerPrefab);
+        var playerControl = Object.Instantiate(AmongUsClient.Instance.PlayerPrefab);
         var playerId = playerControl.PlayerId = (byte) GameData.Instance.GetAvailableId();
 
-        GameData.Instance.AddPlayer(playerControl);
+        var data = GameData.Instance.AddDummy(playerControl);
+        AmongUsClient.Instance.Spawn(data);
         AmongUsClient.Instance.Spawn(playerControl);
+        playerControl.isDummy = true;
 
         playerControl.transform.position = PlayerControl.LocalPlayer.transform.position;
         playerControl.GetComponent<DummyBehaviour>().enabled = true;
@@ -88,8 +90,8 @@ internal sealed class GameTab : BaseTab
         playerControl.SetSkin(HatManager.Instance.allSkins[playerId % HatManager.Instance.allSkins.Count].ProdId, color);
         playerControl.SetVisor(HatManager.Instance.allVisors[playerId % HatManager.Instance.allVisors.Count].ProdId, color);
         playerControl.SetNamePlate(HatManager.Instance.allNamePlates[playerId % HatManager.Instance.allNamePlates.Count].ProdId);
-        playerControl.Data.PlayerLevel = playerId;
+        data.PlayerLevel = playerId;
 
-        GameData.Instance.RpcSetTasks(playerControl.PlayerId, new Il2CppStructArray<byte>(0));
+        data.RpcSetTasks(new Il2CppStructArray<byte>(0));
     }
 }

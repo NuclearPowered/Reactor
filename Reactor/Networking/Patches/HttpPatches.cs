@@ -106,17 +106,10 @@ internal static class HttpPatches
             {
                 Warning("Vanilla region, locking public toggle");
 
-                __instance.MakePublicButtonBehaviour.enabled = false;
-                var actionMapGlyphDisplay = __instance.MakePublicButton.GetComponentInChildren<ActionMapGlyphDisplay>(includeInactive: true);
-                if (actionMapGlyphDisplay)
-                {
-                    actionMapGlyphDisplay.gameObject.SetActive(value: false);
-                }
+                __instance.HostPublicButton.enabled = false;
+                __instance.HostPrivateButton.transform.FindChild("Inactive").GetComponent<SpriteRenderer>().color = new Color(1, 1, 1, 0.5f);
 
-                __instance.MakePublicButton.color = new Color(1, 1, 1, 0.5f);
-                __instance.MakePublicButton.sprite = __instance.PrivateGameImage;
-
-                var onClick = __instance.MakePublicButton.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
+                var onClick = __instance.HostPrivateButton.OnClick = new Button.ButtonClickedEvent();
                 onClick.AddListener((Action) MakePublicDisallowedPopup.Show);
 
                 if (AmongUsClient.Instance.AmHost && AmongUsClient.Instance.IsGamePublic)
