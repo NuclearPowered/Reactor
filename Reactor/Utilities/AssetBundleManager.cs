@@ -3,8 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using MonoMod.Utils;
 using Reactor.Utilities.Extensions;
 using UnityEngine;
 
@@ -23,38 +23,48 @@ public static class AssetBundleManager
     /// <summary>
     /// Gets the target name of the current system.
     /// </summary>
-    public static string TargetName { get; }
+    [Obsolete("Use AssetBundleManager#GetTargetName instead")]
+    public static string TargetName { get; } = GetTargetName(true);
 
-    static AssetBundleManager()
+    /// <summary>
+    /// Gets the target name of the current system.
+    /// </summary>
+    /// <param name="includeArchitecture">A value indicating whether to include the process architecture.</param>
+    /// <returns>Target name of the current system.</returns>
+    public static string GetTargetName(bool includeArchitecture)
     {
-        if (PlatformHelper.Is(Platform.Android))
+        string operatingSystem;
+
+        if (OperatingSystem.IsWindows())
         {
-            TargetName = "android";
+            operatingSystem = "win";
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            operatingSystem = "linux";
+        }
+        else if (OperatingSystem.IsAndroid())
+        {
+            operatingSystem = "android";
         }
         else
         {
-            if (PlatformHelper.Is(Platform.Windows))
-            {
-                TargetName = "win";
-            }
-            else if (PlatformHelper.Is(Platform.Linux))
-            {
-                TargetName = "linux";
-            }
-            else
-            {
-                throw new PlatformNotSupportedException();
-            }
-
-            if (PlatformHelper.Is(Platform.ARM))
-            {
-                TargetName += Environment.Is64BitProcess ? "-arm64" : "-arm";
-            }
-            else
-            {
-                TargetName += Environment.Is64BitProcess ? "-x64" : "-x86";
-            }
+            throw new PlatformNotSupportedException();
         }
+
+        if (!includeArchitecture)
+        {
+            return operatingSystem;
+        }
+
+        return $"{operatingSystem}-{RuntimeInformation.ProcessArchitecture switch
+        {
+            Architecture.X86 => "x86",
+            Architecture.X64 => "x64",
+            Architecture.Arm => "arm",
+            Architecture.Arm64 => "arm64",
+            _ => throw new PlatformNotSupportedException(),
+        }}";
     }
 
     /// <summary>
@@ -62,7 +72,16 @@ public static class AssetBundleManager
     /// </summary>
     /// <param name="assetBundleName">The name of the asset bundle.</param>
     /// <returns>File name of the asset bundle.</returns>
-    public static string GetFileName(string assetBundleName) => $"{assetBundleName}-{TargetName}{BundleExtension}";
+    [Obsolete("Use the overload with includeArchitecture instead")]
+    public static string GetFileName(string assetBundleName) => GetFileName(assetBundleName, true);
+
+    /// <summary>
+    /// Gets the file name for an asset bundle named <paramref name="assetBundleName"/>.
+    /// </summary>
+    /// <param name="assetBundleName">The name of the asset bundle.</param>
+    /// <param name="includeArchitecture">A value indicating whether to include the process architecture.</param>
+    /// <returns>File name of the asset bundle.</returns>
+    public static string GetFileName(string assetBundleName, bool includeArchitecture) => $"{assetBundleName}-{GetTargetName(includeArchitecture)}{BundleExtension}";
 
     private static bool TryFindFile(Assembly assembly, string fileName, [NotNullWhen(true)] out string? path)
     {
@@ -72,6 +91,7 @@ public static class AssetBundleManager
             var filePath = Path.Combine(pluginDirectoryPath, fileName);
             if (File.Exists(filePath))
             {
+                Debug($"Loading an asset bundle from {filePath}");
                 path = filePath;
                 return true;
             }
@@ -86,6 +106,8 @@ public static class AssetBundleManager
         var resourceName = assembly.GetManifestResourceNames().SingleOrDefault(n => n.EndsWith(fileName, StringComparison.Ordinal));
         if (resourceName != null)
         {
+            Debug($"Loading an asset bundle from {resourceName}");
+
             using var stream = assembly.GetManifestResourceStream(resourceName) ?? throw new InvalidOperationException("Resource stream was null");
 
             var length = (int) stream.Length;
@@ -119,8 +141,13 @@ public static class AssetBundleManager
     /// <exception cref="AssetBundleNotFoundException">Couldn't find an assetbundle named <paramref name="name"/>.</exception>
     public static AssetBundle Load(Assembly assembly, string name)
     {
-        var fileName = GetFileName(name);
+        return TryLoad(assembly, GetFileName(name, includeArchitecture: true))
+               ?? TryLoad(assembly, GetFileName(name, includeArchitecture: false))
+               ?? throw new AssetBundleNotFoundException(name);
+    }
 
+    private static AssetBundle? TryLoad(Assembly assembly, string fileName)
+    {
         if (TryFindFile(assembly, fileName, out var filePath))
         {
             return AssetBundle.LoadFromFile(filePath);
@@ -131,7 +158,7 @@ public static class AssetBundleManager
             return AssetBundle.LoadFromMemory(data);
         }
 
-        throw new AssetBundleNotFoundException(name);
+        return null;
     }
 
     /// <summary>
@@ -154,8 +181,13 @@ public static class AssetBundleManager
     /// <exception cref="AssetBundleNotFoundException">Couldn't find an assetbundle named <paramref name="name"/>.</exception>
     public static AssetBundleCreateRequest LoadAsync(Assembly assembly, string name)
     {
-        var fileName = GetFileName(name);
+        return TryLoadAsync(assembly, GetFileName(name, includeArchitecture: true))
+               ?? TryLoadAsync(assembly, GetFileName(name, includeArchitecture: false))
+               ?? throw new AssetBundleNotFoundException(name);
+    }
 
+    private static AssetBundleCreateRequest? TryLoadAsync(Assembly assembly, string fileName)
+    {
         if (TryFindFile(assembly, fileName, out var filePath))
         {
             return AssetBundle.LoadFromFileAsync(filePath);
@@ -166,7 +198,7 @@ public static class AssetBundleManager
             return AssetBundle.LoadFromMemoryAsync(data);
         }
 
-        throw new AssetBundleNotFoundException(name);
+        return null;
     }
 }
 

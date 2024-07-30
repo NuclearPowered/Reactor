@@ -69,14 +69,14 @@ internal static class Build
         }
     }
 
-    private static string GetTargetName(BuildTarget target)
+    private static string GetTargetName(BuildTarget target, bool includeArchitecture = false)
     {
         return target switch
         {
-            BuildTarget.StandaloneWindows => "win-x86",
-            BuildTarget.StandaloneWindows64 => "win-x64",
+            BuildTarget.StandaloneWindows => includeArchitecture ? "win-x86" : "win",
+            BuildTarget.StandaloneWindows64 => includeArchitecture ? "win-x64" : "win",
             BuildTarget.Android => "android",
-            BuildTarget.StandaloneLinux64 => "linux-x64",
+            BuildTarget.StandaloneLinux64 => includeArchitecture ? "linux-x64" : "linux",
             _ => throw new ArgumentOutOfRangeException(nameof(target), target, null),
         };
     }
