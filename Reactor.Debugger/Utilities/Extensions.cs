@@ -7,17 +7,30 @@ namespace Reactor.Debugger.Utilities;
 
 internal static class Extensions
 {
-    public static IEnumerator CoCreateLocalGame(this AmongUsClient client)
+    public static IEnumerator CoCreateLocalGame(this AmongUsClient client, bool isFreePlay = false)
     {
         try
         {
-            client.NetworkMode = NetworkModes.LocalGame;
+            if (isFreePlay)
+            {
+                client.NetworkMode = NetworkModes.FreePlay;
 
-            InnerNetServer.Instance.StartAsServer();
+                InnerNetServer.Instance.StartAsLocalServer();
+
+                client.MainMenuScene = "MainMenu";
+                client.OnlineScene = "Tutorial";
+            }
+            else
+            {
+                client.NetworkMode = NetworkModes.LocalGame;
+
+                InnerNetServer.Instance.StartAsServer();
+
+                client.MainMenuScene = "MatchMaking";
+                client.OnlineScene = "OnlineGame";
+            }
 
             client.SetEndpoint(Constants.LocalNetAddress, Constants.GamePlayPort, false);
-            client.MainMenuScene = "MatchMaking";
-            client.OnlineScene = "OnlineGame";
         }
         catch (Il2CppException e)
         {
