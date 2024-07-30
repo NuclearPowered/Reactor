@@ -9,14 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             ~/Unity/Hub/Editor
             ~/.config/unityhub
-          key: unity-2020.3.22f1
+            ~/.local/share/unity3d/Unity/Unity_lic.ulf
+          key: unity-${{ hashFiles('./Reactor.Assets/ProjectSettings/ProjectVersion.txt') }}
 
       - name: Setup Unity
         uses: js6pak/setup-unity@master
@@ -25,17 +26,17 @@ jobs:
           unity-modules: windows-mono android
 
       - name: Activate Unity
-        uses: js6pak/activate-unity@master
-        with:
-          unity-username: ${{ secrets.UNITY_USERNAME }}
-          unity-password: ${{ secrets.UNITY_PASSWORD }}
-          unity-authenticator-key: ${{ secrets.UNITY_AUTHENTICATOR_KEY }}
+        env:
+          UNITY_USERNAME: ${{ secrets.UNITY_USERNAME }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        run: |
+          /opt/unityhub/UnityLicensingClient_V1/Unity.Licensing.Client --activate-ulf --username "$UNITY_USERNAME" --password "$UNITY_PASSWORD"
 
       - name: Build
         working-directory: ./Reactor.Assets
         run: bash ./build.sh
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: bundles
           path: ./Reactor/Assets/*.bundle
