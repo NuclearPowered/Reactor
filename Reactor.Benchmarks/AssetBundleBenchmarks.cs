@@ -29,7 +29,7 @@ public class AssetBundleBenchmarks
 
     public static IEnumerable<string> ValuesForAssetBundleName()
     {
-        yield return $"default-{AssetBundleManager.TargetName}{AssetBundleManager.BundleExtension}";
+        yield return $"{AssetBundleManager.GetFileName("default", false)}";
         // yield return "submerged";
     }
 
