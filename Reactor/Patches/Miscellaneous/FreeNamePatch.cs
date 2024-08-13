@@ -35,15 +35,12 @@ internal static class FreeNamePatch
             var textBox = nameText.GetComponent<TextBoxTMP>();
             textBox.outputText.alignment = TextAlignmentOptions.CenterGeoAligned;
             textBox.outputText.transform.position = nameText.transform.position;
-            textBox.outputText.fontSize = 4f;
 
             textBox.OnChange.AddListener((Action) (() =>
             {
                 DataManager.Player.Customization.Name = textBox.text;
             }));
             textBox.OnEnter = textBox.OnFocusLost = textBox.OnChange;
-
-            textBox.Pipe.GetComponent<TextMeshPro>().fontSize = 4f;
         }));
     }
 
