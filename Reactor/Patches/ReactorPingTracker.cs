@@ -9,10 +9,10 @@ namespace Reactor.Patches;
 /// </summary>
 public static class ReactorPingTracker
 {
-    private readonly struct ModIdentifier(string modName, string version, bool isDevBuild, Func<bool>? shouldShow)
+    private readonly struct ModIdentifier(string modName, string version, Func<bool>? shouldShow, bool isDevBuild)
     {
         private static string NormalColor => !AmongUsClient.Instance.IsGameStarted ? "#fff" : "#fff7";
-        private static string DevColor => !AmongUsClient.Instance.IsGameStarted ? "#f00" : "#f007";
+        private static string DevColor => !AmongUsClient.Instance.IsGameStarted ? "#f00" : "#f447";
 
         public string ModName => modName;
         public string Text => $"</noparse><color={(isDevBuild ? DevColor : NormalColor)}><noparse>{ModName} {version}</noparse></color><noparse>";
@@ -27,9 +27,9 @@ public static class ReactorPingTracker
     /// </summary>
     /// <param name="modName">The user-friendly name of the mod. Can contain spaces or special characters.</param>
     /// <param name="version">The version of the mod.</param>
-    /// <param name="isDevOrBetaBuild">If this version is a development or beta version. If true, it will display the mod in red in the PingTracker.</param>
     /// <param name="shouldShow">This function will be called every frame to determine if the mod should be displayed or not. This function should return false if your mod is currently disabled or has no effect on gameplay at the time. If you want the mod to be displayed at all times, you can set this parameter to null to avoid delegate calls.</param>
-    public static void RegisterMod(string modName, string version, bool isDevOrBetaBuild, Func<bool>? shouldShow)
+    /// <param name="isDevOrBetaBuild">If this version is a development or beta version. If true, it will display the mod in red in the PingTracker.</param>
+    public static void RegisterMod(string modName, string version, Func<bool>? shouldShow, bool isDevOrBetaBuild = false)
     {
         if (modName.Length + version.Length > 60)
         {
@@ -49,7 +49,7 @@ public static class ReactorPingTracker
             return;
         }
 
-        _modIdentifiers.Add(new ModIdentifier(modName, version, isDevOrBetaBuild, shouldShow));
+        _modIdentifiers.Add(new ModIdentifier(modName, version, shouldShow, isDevOrBetaBuild));
 
         _modIdentifiers.Sort((a, b) => string.Compare(a.ModName, b.ModName, StringComparison.Ordinal));
 
