@@ -11,8 +11,8 @@ public static class ReactorPingTracker
 {
     private readonly struct ModIdentifier(string modName, string version, bool isDevBuild, Func<bool>? shouldShow)
     {
-        private static string NormalColor => !AmongUsClient.Instance.IsGameStarted ? "#fff" : "#fff8";
-        private static string DevColor => !AmongUsClient.Instance.IsGameStarted ? "#f00" : "#f008";
+        private static string NormalColor => !AmongUsClient.Instance.IsGameStarted ? "#fff" : "#fff7";
+        private static string DevColor => !AmongUsClient.Instance.IsGameStarted ? "#f00" : "#f007";
 
         public string ModName => modName;
         public string Text => $"</noparse><color={(isDevBuild ? DevColor : NormalColor)}><noparse>{ModName} {version}</noparse></color><noparse>";
