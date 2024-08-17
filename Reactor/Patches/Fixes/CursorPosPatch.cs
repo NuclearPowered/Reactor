@@ -23,6 +23,7 @@ internal static class CursorPosPatch
         if (self.textInfo == null || self.textInfo.lineCount == 0 || self.textInfo.lineInfo[0].characterCount <= 0)
         {
             __result = self.GetTextInfo(" ").lineInfo.First().lineExtents.max;
+            self.text = string.Empty;
             return false;
         }
 
