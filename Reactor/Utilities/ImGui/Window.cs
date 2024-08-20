@@ -9,7 +9,7 @@ namespace Reactor.Utilities.ImGui;
 /// </summary>
 public class Window
 {
-    private static int _lastWindowId;
+    private static int _lastWindowId = 2135184938;
 
     /// <summary>
     /// Gets the next window id.
