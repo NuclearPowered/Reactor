@@ -8,7 +8,7 @@ namespace Reactor.Patches.Miscellaneous;
 internal static class PingTrackerPatch
 {
     [HarmonyPostfix]
-    [HarmonyPriority(-1000)]
+    [HarmonyPriority(Priority.Last)]
     public static void Postfix(PingTracker __instance)
     {
         if (!__instance.text.text.EndsWith("\n", StringComparison.InvariantCulture)) __instance.text.text += "\n";
