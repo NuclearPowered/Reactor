@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Reactor.Patches;
+namespace Reactor.Utilities;
 
 /// <summary>
 /// Controls the PingTracker.
