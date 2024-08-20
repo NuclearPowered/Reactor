@@ -82,7 +82,7 @@ public static class ReactorPingTracker
 
         var metadata = pluginInfo.Metadata;
 
-        Register(metadata.Name, metadata.Version.ToString(), metadata.Version.IsPreRelease, shouldShow);
+        Register(metadata.Name, metadata.Version.WithoutBuild().Clean(), metadata.Version.IsPreRelease, shouldShow);
     }
 
     internal static string? GetText()
