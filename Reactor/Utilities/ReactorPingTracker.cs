@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Unity.IL2CPP;
+using Reactor.Utilities.Extensions;
 
 namespace Reactor.Utilities;
 
@@ -12,13 +13,13 @@ public static class ReactorPingTracker
 {
     private readonly struct ModIdentifier(string name, string version, Func<bool>? shouldShow, bool isPreRelease)
     {
-        private static string NormalColor => !AmongUsClient.Instance.IsGameStarted ? "#fff" : "#fff7";
-        private static string DevColor => !AmongUsClient.Instance.IsGameStarted ? "#f00" : "#f447";
+        private const string NormalColor = "#fff";
+        private const string PreReleaseColor = "#f00";
 
         public string Name => name;
 
         public bool ShouldShow => shouldShow == AlwaysShow || shouldShow();
-        public string Text => $"</noparse><color={(isPreRelease ? DevColor : NormalColor)}><noparse>{Name} {version}</noparse></color><noparse>";
+        public string Text { get; } = $"{name} {version}".EscapeRichText().Color(isPreRelease ? PreReleaseColor : NormalColor);
     }
 
     private static readonly List<ModIdentifier> _modIdentifiers = [];
@@ -33,25 +34,19 @@ public static class ReactorPingTracker
     /// </summary>
     /// <param name="name">The user-friendly name of the mod. Can contain spaces or special characters.</param>
     /// <param name="version">The version of the mod.</param>
+    /// <param name="isPreRelease">If this version is a development or beta version. If true, it will display the mod in red in the PingTracker.</param>
     /// <param name="shouldShow">
     /// This function will be called every frame to determine if the mod should be displayed or not.
     /// This function should return false if your mod is currently disabled or has no effect on gameplay at the time.
     /// If you want the mod to be displayed at all times, you can set this parameter to <see cref="ReactorPingTracker.AlwaysShow"/>.
     /// </param>
-    /// <param name="isPreRelease">If this version is a development or beta version. If true, it will display the mod in red in the PingTracker.</param>
-    public static void Register(string name, string version, Func<bool>? shouldShow, bool isPreRelease = false)
+    public static void Register(string name, string version, bool isPreRelease, Func<bool>? shouldShow)
     {
         const int MaxLength = 60;
 
         if (name.Length + version.Length > MaxLength)
         {
             Error($"Not registering mod \"{name}\" with version \"{version}\" in {nameof(ReactorPingTracker)} because the combined length of the mod name and version is greater than {MaxLength} characters.");
-            return;
-        }
-
-        if (name.Contains("</noparse>", StringComparison.OrdinalIgnoreCase) || version.Contains("</noparse>", StringComparison.OrdinalIgnoreCase))
-        {
-            Error($"Not registering mod \"{name}\" with version \"{version}\" in {nameof(ReactorPingTracker)} because it contains the string \"</noparse>\" which is disallowed.");
             return;
         }
 
@@ -87,11 +82,17 @@ public static class ReactorPingTracker
 
         var metadata = pluginInfo.Metadata;
 
-        Register(metadata.Name, metadata.Version.ToString(), shouldShow, metadata.Version.IsPreRelease);
+        Register(metadata.Name, metadata.Version.ToString(), metadata.Version.IsPreRelease, shouldShow);
     }
 
-    internal static string GetPingTrackerText()
+    internal static string? GetText()
     {
-        return "<align=center><size=50%><space=3em><noparse>" + string.Join(", ", _modIdentifiers.Where(m => m.ShouldShow).Select(m => m.Text)) + "</noparse></size></align>";
+        var mods = _modIdentifiers.Where(m => m.ShouldShow).Select(m => m.Text).ToArray();
+        if (mods.Length == 0)
+        {
+            return null;
+        }
+
+        return ("<space=3em>" + string.Join(", ", mods)).Size("50%").Align("center");
     }
 }

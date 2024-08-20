@@ -11,7 +11,11 @@ internal static class PingTrackerPatch
     [HarmonyPriority(Priority.Last)]
     public static void Postfix(PingTracker __instance)
     {
-        if (!__instance.text.text.EndsWith("\n", StringComparison.InvariantCulture)) __instance.text.text += "\n";
-        __instance.text.text += ReactorPingTracker.GetPingTrackerText();
+        var extraText = ReactorPingTracker.GetText();
+        if (extraText != null)
+        {
+            if (!__instance.text.text.EndsWith("\n", StringComparison.InvariantCulture)) __instance.text.text += "\n";
+            __instance.text.text += extraText;
+        }
     }
 }
