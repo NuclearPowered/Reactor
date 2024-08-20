@@ -25,6 +25,8 @@ public partial class ExamplePlugin : BasePlugin
 
     public override void Load()
     {
+        ReactorPingTracker.Register<ExamplePlugin>(ReactorPingTracker.AlwaysShow);
+
         this.AddComponent<ExampleComponent>();
 
         _helloStringName = CustomStringName.CreateAndRegister("Hello!");
