@@ -25,7 +25,7 @@ public partial class ExamplePlugin : BasePlugin
 
     public override void Load()
     {
-        ReactorPingTracker.Register<ExamplePlugin>(ReactorPingTracker.AlwaysShow);
+        ReactorCredits.Register<ExamplePlugin>(ReactorCredits.AlwaysShow);
 
         this.AddComponent<ExampleComponent>();
 
