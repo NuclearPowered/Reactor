@@ -2,6 +2,7 @@ using System;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
+using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using TMPro;
 using UnityEngine;
@@ -89,20 +90,22 @@ public static class ReactorVersionShower
         }));
     }
 
-    private static string ToStringWithoutBuild(Version version)
-    {
-        return $"{version.Major}.{version.Minor}.{version.Patch}{(version.PreRelease == null ? string.Empty : $"-{version.PreRelease}")}";
-    }
-
     /// <summary>
     /// Updates <see cref="Text"/> with reactor version and fires <see cref="TextUpdated"/>.
     /// </summary>
     public static void UpdateText()
     {
         if (Text == null) return;
-        Text.text = "Reactor " + ReactorPlugin.Version;
-        Text.text += "\nBepInEx " + ToStringWithoutBuild(Paths.BepInExVersion);
+        Text.text = "Reactor " + Version.Parse(ReactorPlugin.Version).WithoutBuild();
+        Text.text += "\nBepInEx " + Paths.BepInExVersion.WithoutBuild();
         Text.text += "\nMods: " + IL2CPPChainloader.Instance.Plugins.Count;
+
+        var creditsText = ReactorCredits.GetText(ReactorCredits.Location.MainMenu);
+        if (creditsText != null)
+        {
+            Text.text += "\n" + creditsText;
+        }
+
         TextUpdated?.Invoke(Text);
     }
 

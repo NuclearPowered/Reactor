@@ -25,6 +25,8 @@ public partial class ExamplePlugin : BasePlugin
 
     public override void Load()
     {
+        ReactorCredits.Register<ExamplePlugin>(ReactorCredits.AlwaysShow);
+
         this.AddComponent<ExampleComponent>();
 
         _helloStringName = CustomStringName.CreateAndRegister("Hello!");
