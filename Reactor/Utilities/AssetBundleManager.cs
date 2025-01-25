@@ -33,24 +33,13 @@ public static class AssetBundleManager
     /// <returns>Target name of the current system.</returns>
     public static string GetTargetName(bool includeArchitecture)
     {
-        string operatingSystem;
-
-        if (OperatingSystem.IsWindows())
+        var operatingSystem = Application.platform switch
         {
-            operatingSystem = "win";
-        }
-        else if (OperatingSystem.IsLinux())
-        {
-            operatingSystem = "linux";
-        }
-        else if (OperatingSystem.IsAndroid())
-        {
-            operatingSystem = "android";
-        }
-        else
-        {
-            throw new PlatformNotSupportedException();
-        }
+            RuntimePlatform.WindowsPlayer => "win",
+            RuntimePlatform.LinuxPlayer or RuntimePlatform.OSXPlayer => "linux",
+            RuntimePlatform.Android => "android",
+            _ => throw new PlatformNotSupportedException(),
+        };
 
         if (!includeArchitecture)
         {
