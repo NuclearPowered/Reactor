@@ -35,7 +35,7 @@ public static class AssetBundleManager
     {
         var operatingSystem = Application.platform switch
         {
-            RuntimePlatform.WindowsPlayer => "win",
+            RuntimePlatform.WindowsPlayer or RuntimePlatform.WSAPlayerX86 => "win",
             RuntimePlatform.LinuxPlayer or RuntimePlatform.OSXPlayer => "linux",
             RuntimePlatform.Android => "android",
             _ => throw new PlatformNotSupportedException(),
