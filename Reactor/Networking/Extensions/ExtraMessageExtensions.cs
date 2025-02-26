@@ -1,3 +1,5 @@
+#pragma warning disable CA1305 // Specify IFormatProvider
+
 using System;
 using Hazel;
 using Hazel.Udp;
@@ -37,27 +39,27 @@ public static class ExtraMessageExtensions
     /// </summary>
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="value">The <see cref="Enum"/> to write.</param>
-    public static void Write(this MessageWriter, Enum value)
+    public static void Write(this MessageWriter writer, Enum value)
     {
         var enumType = value.GetType();
         var underlyingType = enumType.GetEnumUnderlyingType();
 
         if (underlyingType == typeof(byte))
-            writer.Write(Convert.ToByte(enumVal));
+            writer.Write(Convert.ToByte(value));
         else if (underlyingType == typeof(sbyte))
-            writer.Write(Convert.ToSByte(enumVal));
+            writer.Write(Convert.ToSByte(value));
         else if (underlyingType == typeof(short))
-            writer.Write(Convert.ToInt16(enumVal));
+            writer.Write(Convert.ToInt16(value));
         else if (underlyingType == typeof(ushort))
-            writer.Write(Convert.ToUInt16(enumVal));
+            writer.Write(Convert.ToUInt16(value));
         else if (underlyingType == typeof(long))
-            writer.Write(Convert.ToInt64(enumVal));
+            writer.Write(Convert.ToInt64(value));
         else if (underlyingType == typeof(ulong))
-            writer.Write(Convert.ToUInt64(enumVal));
+            writer.Write(Convert.ToUInt64(value));
         else if (underlyingType == typeof(uint))
-            writer.WritePacked(Convert.ToUInt32(enumVal));
+            writer.WritePacked(Convert.ToUInt32(value));
         else if (underlyingType == typeof(int))
-            writer.WritePacked(Convert.ToInt32(enumVal));
+            writer.WritePacked(Convert.ToInt32(value));
         else
             throw new ArgumentException("Unknown underlying type for " + enumType.Name);
     }
@@ -68,7 +70,7 @@ public static class ExtraMessageExtensions
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="value">The <see cref="Enum"/> to write.</param>
     /// <typeparam name="T">Enum type to write.</typeparam>
-    public static void Write<T>(this MessageWriter writer, T value) where T : struct, Enum => writer.Write((Enum)value);
+    public static void Write<T>(this MessageWriter writer, T value) where T : struct, Enum => writer.Write((Enum) value);
 
     /// <summary>
     /// Reads a <see cref="Vector2"/> from the <paramref name="reader"/>.
@@ -95,28 +97,28 @@ public static class ExtraMessageExtensions
         var underlyingType = enumType.GetEnumUnderlyingType();
 
         if (underlyingType == typeof(byte))
-            return (T)(object)reader.ReadByte();
+            return (T) (object) reader.ReadByte();
 
         if (underlyingType == typeof(sbyte))
-            return (T)(object)reader.ReadSByte();
+            return (T) (object) reader.ReadSByte();
 
         if (underlyingType == typeof(short))
-            return (T)(object)reader.ReadInt16();
+            return (T) (object) reader.ReadInt16();
 
         if (underlyingType == typeof(ushort))
-            return (T)(object)reader.ReadUInt16();
-
-        if (underlyingType == typeof(long))
-            return (T)(object)reader.ReadInt64();
+            return (T) (object) reader.ReadUInt16();
 
         if (underlyingType == typeof(ulong))
-            return (T)(object)reader.ReadUInt64();
+            return (T) (object) reader.ReadUInt64();
 
         if (underlyingType == typeof(uint))
-            return (T)(object)reader.ReadPackedUInt32();
+            return (T) (object) reader.ReadPackedUInt32();
 
         if (underlyingType == typeof(int))
-            return (T)(object)reader.ReadPackedInt32();
+            return (T) (object) reader.ReadPackedInt32();
+
+        if (underlyingType == typeof(long))
+            throw new NotSupportedException("long enum types are not supported at the moment.");
 
         throw new ArgumentException("Unknown underlying type for " + enumType.Name);
     }
@@ -125,34 +127,35 @@ public static class ExtraMessageExtensions
     /// Reads an enum value from a network message.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
+    /// <param name="enumType">The type of the enum.</param>
     /// <returns>The resulting enum value from the <paramref name="reader"/>.</returns>
     public static object ReadEnum(this MessageReader reader, Type enumType)
     {
         var underlyingType = enumType.GetEnumUnderlyingType();
 
         if (underlyingType == typeof(byte))
-            return Enum.Parse(enumType, reader.ReadByte().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadByte()}");
 
         if (underlyingType == typeof(sbyte))
-            return Enum.Parse(enumType, reader.ReadSByte().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadSByte()}");
 
         if (underlyingType == typeof(short))
-            return Enum.Parse(enumType, reader.ReadInt16().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadInt16()}");
 
         if (underlyingType == typeof(ushort))
-            return Enum.Parse(enumType, reader.ReadUInt16().ToString());
-
-        if (underlyingType == typeof(long))
-            return Enum.Parse(enumType, reader.ReadInt64().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadUInt16()}");
 
         if (underlyingType == typeof(ulong))
-            return Enum.Parse(enumType, reader.ReadUInt64().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadUInt64()}");
 
         if (underlyingType == typeof(uint))
-            return Enum.Parse(enumType, reader.ReadPackedUInt32().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadPackedUInt32()}");
 
         if (underlyingType == typeof(int))
-            return Enum.Parse(enumType, reader.ReadPackedInt32().ToString());
+            return Enum.Parse(enumType, $"{reader.ReadPackedInt32()}");
+
+        if (underlyingType == typeof(long))
+            throw new NotSupportedException("long enum types are not supported at the moment.");
 
         throw new ArgumentException("Unknown underlying type for " + enumType.Name);
     }

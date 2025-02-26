@@ -87,6 +87,9 @@ public static class MessageSerializer
             case bool i:
                 writer.Write(i);
                 break;
+            case ulong i:
+                writer.Write(i);
+                break;
             case Vector2 i:
                 writer.Write(i);
                 break;
@@ -159,6 +162,11 @@ public static class MessageSerializer
         if (objectType == typeof(string))
         {
             return reader.ReadString();
+        }
+
+        if (objectType == typeof(ulong))
+        {
+            return reader.ReadUInt64();
         }
 
         if (typeof(Enum).IsAssignableFrom(objectType))
