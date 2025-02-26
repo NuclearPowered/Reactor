@@ -67,7 +67,7 @@ public static class ExtraMessageExtensions
     /// </summary>
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="value">The <see cref="Enum"/> to write.</param>
-    /// <typeparam name="T">Enum type to write</typeparam>
+    /// <typeparam name="T">Enum type to write.</typeparam>
     public static void Write<T>(this MessageWriter writer, T value) where T : struct, Enum => writer.Write((Enum)value);
 
     /// <summary>
@@ -87,9 +87,8 @@ public static class ExtraMessageExtensions
     /// Reads and converts an enum value from a network message.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
-    /// <typeparam name="T">Enum type to convert to</typeparam>
-    /// <returns>An <see cref="Vector2"/> from the <paramref name="reader"/>.</returns>
-    /// <returns>Read value as a specified enum type</returns>
+    /// <typeparam name="T">The <see cref="Enum"/> type to convert to.</typeparam>
+    /// <returns>An <see cref="Enum"/> value from the <paramref name="reader"/>.</returns>
     public static T ReadEnum<T>(this MessageReader reader) where T : struct, Enum
     {
         var enumType = typeof(T);
@@ -126,7 +125,7 @@ public static class ExtraMessageExtensions
     /// Reads an enum value from a network message.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
-    /// <returns>The resulting enum value</returns>
+    /// <returns>The resulting enum value from the <paramref name="reader"/>.</returns>
     public static object ReadEnum(this MessageReader reader, Type enumType)
     {
         var underlyingType = enumType.GetEnumUnderlyingType();
