@@ -93,6 +93,9 @@ public static class MessageSerializer
             case string i:
                 writer.Write(i);
                 break;
+            case Enum i:
+                writer.Write(i);
+                break;
             default:
                 var converter = FindConverter(@object.GetType());
                 if (converter != null)
@@ -156,6 +159,11 @@ public static class MessageSerializer
         if (objectType == typeof(string))
         {
             return reader.ReadString();
+        }
+
+        if (typeof(Enum).IsAssignableFrom(objectType))
+        {
+            return reader.ReadEnum(objectType);
         }
 
         var converter = FindConverter(objectType);
