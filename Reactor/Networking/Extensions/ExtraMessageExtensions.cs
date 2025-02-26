@@ -52,14 +52,14 @@ public static class ExtraMessageExtensions
             writer.Write(Convert.ToInt16(value));
         else if (underlyingType == typeof(ushort))
             writer.Write(Convert.ToUInt16(value));
-        else if (underlyingType == typeof(long))
-            writer.Write(Convert.ToInt64(value));
         else if (underlyingType == typeof(ulong))
             writer.Write(Convert.ToUInt64(value));
         else if (underlyingType == typeof(uint))
             writer.WritePacked(Convert.ToUInt32(value));
         else if (underlyingType == typeof(int))
             writer.WritePacked(Convert.ToInt32(value));
+        else if (underlyingType == typeof(long))
+            throw new NotSupportedException("long enum types are not supported at the moment.");
         else
             throw new ArgumentException("Unknown underlying type for " + enumType.Name);
     }
