@@ -69,7 +69,6 @@ public partial class ReactorPlugin : BasePlugin
         ReactorVersionShower.Initialize();
         FreeNamePatch.Initialize();
         DefaultBundle.Load();
-        InnerNetObjectAttribute.Initialize();
 
         SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
         {
@@ -78,6 +77,12 @@ public partial class ReactorPlugin : BasePlugin
                 ModManager.Instance.ShowModStamp();
             }
         }));
+    }
+
+    /// <inheritdoc />
+    public void LateLoad()
+    {
+        InnerNetObjectAttribute.Initialize();
     }
 
     /// <inheritdoc />
