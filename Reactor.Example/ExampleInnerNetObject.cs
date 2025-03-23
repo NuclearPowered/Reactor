@@ -14,6 +14,7 @@ public class ExampleInnerNetObject : InnerNetObject
     // The `InnerNetObjectPrefab` attribute is used to define how the prefab for this
     // custom InnerNetObject is retrieved. The prefab is a template object that is used
     // when spawning instances of this object in the game.
+    // The return type can either be a InnerNetObject, or GameObject but must have a InnerNetObject component attached.
     // There are three examples provided for retrieving the prefab:
 
     // Example 1: Directly assign a prefab
