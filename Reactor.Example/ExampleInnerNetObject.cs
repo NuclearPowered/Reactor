@@ -25,15 +25,18 @@ public class ExampleInnerNetObject : InnerNetObject
         throw new NotImplementedException($"GetPrefab prefab retrieval not implemented!");
     }
 
+    // Must be defined; in InnerNetObject, the method is abstract, so if not, an error will be thrown.
     public override void HandleRpc(byte callId, MessageReader reader)
     {
     }
 
+    // Must be defined; in InnerNetObject, the method is abstract, so if not, an error will be thrown.
     public override bool Serialize(MessageWriter writer, bool initialState)
     {
         return false;
     }
 
+    // Must be defined; in InnerNetObject, the method is abstract, so if not, an error will be thrown.
     public override void Deserialize(MessageReader reader, bool initialState)
     {
     }
