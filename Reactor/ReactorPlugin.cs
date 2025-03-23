@@ -51,7 +51,7 @@ public partial class ReactorPlugin : BasePlugin
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
         MethodRpcAttribute.Initialize();
-        InnerNetObjectAttribute.Initialize();
+        IgnoreInnerNetObjectAttribute.Initialize();
 
         LocalizationManager.Register(new HardCodedLocalizationProvider());
     }
@@ -83,7 +83,7 @@ public partial class ReactorPlugin : BasePlugin
     /// <inheritdoc />
     public void LateLoad()
     {
-        InnerNetObjectAttribute.LoadRegistered();
+        _ = IgnoreInnerNetObjectAttribute.LoadRegisteredAsync();
     }
 
     /// <inheritdoc />
