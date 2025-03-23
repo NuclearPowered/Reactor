@@ -91,11 +91,12 @@ public static class MessageSerializer
             case Vector2 i:
                 writer.Write(i);
                 break;
-            case Enum i:
-                writer.WritePacked(Convert.ToInt32(i, CultureInfo.InvariantCulture));
-                break;
             case string i:
                 writer.Write(i);
+                break;
+            case Enum i:
+                var underlyingValue = Convert.ChangeType(i, Enum.GetUnderlyingType(i.GetType()), CultureInfo.InvariantCulture);
+                Serialize(writer, underlyingValue);
                 break;
             default:
                 var converter = FindConverter(@object.GetType());
@@ -157,14 +158,16 @@ public static class MessageSerializer
             return reader.ReadVector2();
         }
 
-        if (objectType.IsEnum)
-        {
-            return Enum.ToObject(objectType, reader.ReadPackedInt32());
-        }
-
         if (objectType == typeof(string))
         {
             return reader.ReadString();
+        }
+
+        if (objectType.IsEnum)
+        {
+            var underlyingType = Enum.GetUnderlyingType(objectType);
+            var underlyingValue = Deserialize(reader, underlyingType);
+            return Enum.ToObject(objectType, underlyingValue);
         }
 
         var converter = FindConverter(objectType);
