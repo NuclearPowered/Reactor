@@ -115,6 +115,14 @@ public static class MessageSerializer
     }
 
     /// <summary>
+    /// Deserializes a generic <typeparamref name="T"/> value from the <paramref name="reader"/>.
+    /// </summary>
+    /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
+    /// <typeparam name="T">The type to be read.</typeparam>
+    /// <returns>A generic <typeparamref name="T"/> value from the <paramref name="reader"/>.</returns>
+    public static T Deserialize<T>(this MessageReader reader) => (T) reader.Deserialize(typeof(T));
+
+    /// <summary>
     /// Deserializes an <see cref="object"/> of <paramref name="objectType"/> from the <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
