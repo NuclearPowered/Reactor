@@ -30,7 +30,7 @@ public static class MessageSerializer
     /// Finds a MessageConverter for the specified <paramref name="type"/>.
     /// </summary>
     /// <param name="type">The type of an object.</param>
-    /// <returns>A MessageConverted that can convert the specified <see cref="Type"/>.</returns>
+    /// <returns>A MessageConverter that can convert the specified <see cref="Type"/>.</returns>
     public static UnsafeMessageConverter? FindConverter(Type type)
     {
         if (MessageConverterMap.TryGetValue(type, out var value))
@@ -169,7 +169,7 @@ public static class MessageSerializer
             return reader.ReadUInt64();
         }
 
-        if (typeof(Enum).IsAssignableFrom(objectType))
+        if (objectType.IsEnum)
         {
             return reader.ReadEnum(objectType);
         }

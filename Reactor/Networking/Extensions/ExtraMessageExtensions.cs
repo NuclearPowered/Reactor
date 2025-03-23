@@ -1,6 +1,5 @@
-#pragma warning disable CA1305 // Specify IFormatProvider
-
 using System;
+using System.Globalization;
 using Hazel;
 using Hazel.Udp;
 using UnityEngine;
@@ -45,19 +44,19 @@ public static class ExtraMessageExtensions
         var underlyingType = enumType.GetEnumUnderlyingType();
 
         if (underlyingType == typeof(byte))
-            writer.Write(Convert.ToByte(value));
+            writer.Write(Convert.ToByte(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(sbyte))
-            writer.Write(Convert.ToSByte(value));
+            writer.Write(Convert.ToSByte(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(short))
-            writer.Write(Convert.ToInt16(value));
+            writer.Write(Convert.ToInt16(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(ushort))
-            writer.Write(Convert.ToUInt16(value));
+            writer.Write(Convert.ToUInt16(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(ulong))
-            writer.Write(Convert.ToUInt64(value));
+            writer.Write(Convert.ToUInt64(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(uint))
-            writer.WritePacked(Convert.ToUInt32(value));
+            writer.WritePacked(Convert.ToUInt32(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(int))
-            writer.WritePacked(Convert.ToInt32(value));
+            writer.WritePacked(Convert.ToInt32(value, NumberFormatInfo.InvariantInfo));
         else if (underlyingType == typeof(long))
             throw new NotSupportedException("long enum types are not supported at the moment.");
         else
