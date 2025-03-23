@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using Hazel;
 using Reactor.Networking.Extensions;
@@ -94,10 +93,6 @@ public static class MessageSerializer
             case string i:
                 writer.Write(i);
                 break;
-            case Enum i:
-                var underlyingValue = Convert.ChangeType(i, Enum.GetUnderlyingType(i.GetType()), CultureInfo.InvariantCulture);
-                Serialize(writer, underlyingValue);
-                break;
             default:
                 var converter = FindConverter(@object.GetType());
                 if (converter != null)
@@ -161,13 +156,6 @@ public static class MessageSerializer
         if (objectType == typeof(string))
         {
             return reader.ReadString();
-        }
-
-        if (objectType.IsEnum)
-        {
-            var underlyingType = Enum.GetUnderlyingType(objectType);
-            var underlyingValue = Deserialize(reader, underlyingType);
-            return Enum.ToObject(objectType, underlyingValue);
         }
 
         var converter = FindConverter(objectType);
