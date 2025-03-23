@@ -69,6 +69,7 @@ public partial class ReactorPlugin : BasePlugin
         ReactorVersionShower.Initialize();
         FreeNamePatch.Initialize();
         DefaultBundle.Load();
+        InnerNetObjectAttribute.Initialize();
 
         SceneManager.add_sceneLoaded((Action<Scene, LoadSceneMode>) ((scene, _) =>
         {
