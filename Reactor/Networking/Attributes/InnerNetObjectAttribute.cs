@@ -16,6 +16,7 @@ namespace Reactor.Networking.Attributes;
 public sealed class InnerNetObjectAttribute : Attribute
 {
     private static readonly HashSet<Assembly> _registeredAssemblies = new();
+    private static readonly HashSet<MethodInfo> _registeredMethods = new();
 
     /// <summary>
     /// Registers all <see cref="InnerNetObject"/>s annotated with <see cref="InnerNetObjectAttribute"/> in the specified <paramref name="assembly"/>.
@@ -49,20 +50,7 @@ public sealed class InnerNetObjectAttribute : Attribute
 
                     if (prefabMethod != null)
                     {
-                        var prefab = prefabMethod.Invoke(null, null);
-
-                        if (prefab == null)
-                        {
-                            Warning($"Failed to register InnerNetObject, prefab return null.");
-                        }
-                        else if (prefab is InnerNetObject netObj)
-                        {
-                            AddInnerNetObject(netObj);
-                        }
-                        else if (prefab is GameObject gameObj)
-                        {
-                            AddInnerNetObject(gameObj);
-                        }
+                        _registeredMethods.Add(prefabMethod);
                     }
                     else
                     {
@@ -73,6 +61,35 @@ public sealed class InnerNetObjectAttribute : Attribute
                 {
                     Warning($"Failed to register {type.FullDescription()}: {ex}");
                 }
+            }
+        }
+    }
+
+    internal static void LoadRegistered()
+    {
+        if (_registeredMethods.Count > 0) // Increase array length by one because of beginning if check in InnerNetClient.CoHandleSpawn()
+        {
+            var innerNetClient = AmongUsClient.Instance;
+            var list2 = innerNetClient.SpawnableObjects.ToList();
+            list2.Add(new());
+            innerNetClient.SpawnableObjects = list2.ToArray();
+        }
+
+        foreach (var prefabMethod in _registeredMethods)
+        {
+            var prefab = prefabMethod.Invoke(null, null);
+
+            if (prefab == null)
+            {
+                Warning($"Failed to register InnerNetObject, prefab return null.");
+            }
+            else if (prefab is InnerNetObject netObj)
+            {
+                AddInnerNetObject(netObj);
+            }
+            else if (prefab is GameObject gameObj)
+            {
+                AddInnerNetObject(gameObj);
             }
         }
     }
@@ -110,12 +127,6 @@ public sealed class InnerNetObjectAttribute : Attribute
 
     internal static void Initialize()
     {
-        // Increase array length by one because of beginning if check in InnerNetClient.CoHandleSpawn()
-        var innerNetClient = AmongUsClient.Instance;
-        var list2 = innerNetClient.SpawnableObjects.ToList();
-        list2.Add(new());
-        innerNetClient.SpawnableObjects = list2.ToArray();
-
         IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
     }
 }
