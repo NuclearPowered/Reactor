@@ -34,6 +34,12 @@ public static class InnerNetObjectManager
     /// <returns>The newly spawned <see cref="InnerNetObject"/>, if prefab is null then it will return null.</returns>
     public static InnerNetObject? SpawnNewNetObject<T>(int ownerId = -2, SpawnFlags spawnFlags = SpawnFlags.None) where T : InnerNetObject
     {
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            Warning("You can only spawn a InnerNetObject as Host.");
+            return null;
+        }
+
         var netObj = GetNetObjPrefab<T>();
 
         if (netObj == null)
@@ -54,6 +60,12 @@ public static class InnerNetObjectManager
     /// <param name="spawnFlags">The spawn flags to use when spawning the object. Defaults to <see cref="SpawnFlags.None"/>.</param>
     public static void SpawnNetObject(this InnerNetObject netObj, int ownerId = -2, SpawnFlags spawnFlags = SpawnFlags.None)
     {
+        if (!AmongUsClient.Instance.AmHost)
+        {
+            Warning("You can only spawn a InnerNetObject as Host.");
+            return;
+        }
+
         AmongUsClient.Instance.Spawn(netObj, ownerId, spawnFlags);
     }
 }
