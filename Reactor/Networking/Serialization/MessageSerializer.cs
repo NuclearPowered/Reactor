@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Hazel;
 using Reactor.Networking.Extensions;
@@ -90,6 +91,9 @@ public static class MessageSerializer
             case Vector2 i:
                 writer.Write(i);
                 break;
+            case Enum i:
+                writer.WritePacked(Convert.ToInt32(i, CultureInfo.InvariantCulture));
+                break;
             case string i:
                 writer.Write(i);
                 break;
@@ -151,6 +155,11 @@ public static class MessageSerializer
         if (objectType == typeof(Vector2))
         {
             return reader.ReadVector2();
+        }
+
+        if (objectType.IsEnum)
+        {
+            return Enum.ToObject(objectType, reader.ReadPackedInt32());
         }
 
         if (objectType == typeof(string))
