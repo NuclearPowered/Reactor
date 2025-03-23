@@ -90,6 +90,9 @@ public static class MessageSerializer
             case ulong i:
                 writer.Write(i);
                 break;
+            case long i:
+                ExtraMessageExtensions.Write(writer, i); // For some reason this insists on referring the to float write method, so this is me taking precautions
+                break;
             case Vector2 i:
                 writer.Write(i);
                 break;
@@ -167,6 +170,11 @@ public static class MessageSerializer
         if (objectType == typeof(ulong))
         {
             return reader.ReadUInt64();
+        }
+
+        if (objectType == typeof(long))
+        {
+            return reader.ReadInt64();
         }
 
         if (objectType.IsEnum)
