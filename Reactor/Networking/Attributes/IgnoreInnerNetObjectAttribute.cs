@@ -86,7 +86,7 @@ public sealed class IgnoreInnerNetObjectAttribute : Attribute
             innerNetClient.SpawnableObjects = list2.ToArray();
         }
 
-        foreach (var prefabMember in _registeredMembers)
+        foreach (var prefabMember in _registeredMembers.OrderBy(member => member.DeclaringType?.FullName))
         {
             object? prefab = null;
 

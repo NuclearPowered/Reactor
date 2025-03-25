@@ -26,6 +26,26 @@ public static class InnerNetObjectManager
     }
 
     /// <summary>
+    /// Retrieves the spwan id from the <see cref="InnerNetObject"/> prefab of the specified type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the <see cref="InnerNetObject"/> prefab to retrieve. Must inherit from <see cref="InnerNetObject"/>.</typeparam>
+    /// <returns>The spawn id of type <typeparamref name="T"/>, if prefab not found then 0.</returns>
+    /// <remarks>
+    /// This method searches through the AmongUsClient.Instance.NonAddressableSpawnableObjects array
+    /// to find the spwan id of a <see cref="InnerNetObject"/> prefab.
+    /// </remarks>
+    public static uint GetSpawnId<T>() where T : InnerNetObject
+    {
+        var prefab = GetNetObjPrefab<T>();
+        if (prefab != null)
+        {
+            return prefab.SpawnId;
+        }
+
+        return 0;
+    }
+
+    /// <summary>
     /// Spawns a new <see cref="InnerNetObject"/> locally and on the network of type <typeparamref name="T"/>.
     /// </summary>
     /// <typeparam name="T">The type of the <see cref="InnerNetObject"/> to spawn. Must inherit from <see cref="InnerNetObject"/>.</typeparam>
