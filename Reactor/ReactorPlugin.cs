@@ -81,12 +81,6 @@ public partial class ReactorPlugin : BasePlugin
     }
 
     /// <inheritdoc />
-    public void LateLoad()
-    {
-        _ = IgnoreInnerNetObjectAttribute.LoadRegisteredAsync();
-    }
-
-    /// <inheritdoc />
     public override bool Unload()
     {
         Harmony.UnpatchSelf();
