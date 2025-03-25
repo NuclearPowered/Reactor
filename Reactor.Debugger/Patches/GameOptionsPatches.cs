@@ -14,14 +14,12 @@ internal static class GameOptionsPatches
     public static void Initialize()
     {
         var maxImpostors = (Il2CppStructArray<int>) Enumerable.Repeat((int) byte.MaxValue, byte.MaxValue).ToArray();
-        GameOptionsData.MaxImpostors = maxImpostors;
-        NormalGameOptionsV07.MaxImpostors = maxImpostors;
-        HideNSeekGameOptionsV07.MaxImpostors = maxImpostors;
+        NormalGameOptionsV09.MaxImpostors = maxImpostors;
+        NormalGameOptionsV09.MaxImpostors = maxImpostors;
 
         var minPlayers = (Il2CppStructArray<int>) Enumerable.Repeat(1, byte.MaxValue).ToArray();
-        GameOptionsData.MinPlayers = minPlayers;
-        NormalGameOptionsV07.MinPlayers = minPlayers;
-        HideNSeekGameOptionsV07.MinPlayers = minPlayers;
+        NormalGameOptionsV09.MinPlayers = minPlayers;
+        NormalGameOptionsV09.MinPlayers = minPlayers;
     }
 
     [HarmonyPatch(typeof(GameSettingMenu), nameof(GameSettingMenu.Start))]
