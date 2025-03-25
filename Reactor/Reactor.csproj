@@ -16,9 +16,5 @@
         <EmbeddedResource Include="Assets\**\*" Exclude="Assets\icon.png" />
     </ItemGroup>
 
-    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-        <Exec Command="copy &quot;$(TargetDir)Reactor.dll&quot; &quot;C:\Program Files (x86)\Steam\steamapps\common\Among Us\Among Us - Mods\Among Us - TheBetterRoles\BepInEx\plugins&quot;" />
-    </Target>
-
     <Import Project="../AmongUs.props" />
 </Project>
