@@ -1,7 +1,6 @@
 using System;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
-using HarmonyLib;
 using Reactor.Utilities;
 using Reactor.Utilities.Extensions;
 using TMPro;
@@ -107,15 +106,5 @@ public static class ReactorVersionShower
         }
 
         TextUpdated?.Invoke(Text);
-    }
-
-    [HarmonyPatch(typeof(FreeWeekendShower), nameof(FreeWeekendShower.Start))]
-    private static class FreeWeekendShowerPatch
-    {
-        public static bool Prefix(FreeWeekendShower __instance)
-        {
-            __instance.Output.Destroy();
-            return false;
-        }
     }
 }
