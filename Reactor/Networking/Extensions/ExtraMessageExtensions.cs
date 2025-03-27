@@ -42,19 +42,11 @@ public static class ExtraMessageExtensions
     public static void Write(this MessageWriter writer, Enum value) => writer.Serialize(Convert.ChangeType(value, Enum.GetUnderlyingType(value.GetType()), CultureInfo.InvariantCulture));
 
     /// <summary>
-    /// Writes a generic Enum value to the <paramref name="writer"/>.
-    /// </summary>
-    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
-    /// <param name="value">The <see cref="Enum"/> to write.</param>
-    /// <typeparam name="T">Enum type to write.</typeparam>
-    public static void Write<T>(this MessageWriter writer, T value) where T : struct, Enum => writer.Write((Enum) value);
-
-    /// <summary>
     /// Writes a long value to the <paramref name="writer"/>.
     /// </summary>
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="value">The <see cref="long"/> to write.</param>
-    public static void Write(this MessageWriter writer, long value) => writer.Write(unchecked(value + long.MaxValue));
+    public static void Write(this MessageWriter writer, long value) => writer.Write((ulong) unchecked(value + long.MaxValue));
     // Someone please give me a better way to do this that does not involve shifting values please
 
     /// <summary>
