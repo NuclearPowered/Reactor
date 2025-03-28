@@ -12,18 +12,41 @@ namespace Reactor.Networking.Serialization;
 /// </summary>
 public static class MessageSerializer
 {
+    internal record class GenericTypeHolder(Type Type, Type Arg);
+
     private static List<UnsafeMessageConverter> MessageConverters { get; } = new();
 
     private static Dictionary<Type, UnsafeMessageConverter?> MessageConverterMap { get; } = new();
+    private static Dictionary<Type, Type> GenericConvertersMap { get; } = new();
+
+    internal static void ClearMaps()
+    {
+        MessageConverterMap.Clear();
+    }
 
     /// <summary>
     /// Registers a MessageConverter.
     /// </summary>
-    /// <param name="messageConverter">The MessageConverter to be registered.</param>
-    public static void Register(UnsafeMessageConverter messageConverter)
+    /// <param name="type">The Type of the MessageConverter to be registered.</param>
+    public static void Register(Type type)
     {
-        MessageConverters.Add(messageConverter);
-        MessageConverterMap.Clear();
+        if (type.IsGenericTypeDefinition)
+        {
+            var baseType = type.BaseType!;
+
+            if (!baseType.Name.Contains("MessageConverter"))
+                throw new InvalidOperationException($"{type.Name} should directly inherit from MessageConverter<T>");
+
+            var generics = baseType.GetGenericArguments();
+            var param = generics[0];
+
+            GenericConvertersMap.Add(param.GetGenericTypeDefinition(), type);
+        }
+        else
+        {
+            var messageConverter = (UnsafeMessageConverter) Activator.CreateInstance(type)!;
+            MessageConverters.Add(messageConverter);
+        }
     }
 
     /// <summary>
@@ -33,15 +56,44 @@ public static class MessageSerializer
     /// <returns>A MessageConverter that can convert the specified <see cref="Type"/>.</returns>
     public static UnsafeMessageConverter? FindConverter(Type type)
     {
-        if (MessageConverterMap.TryGetValue(type, out var value))
+        if (!MessageConverterMap.TryGetValue(type, out var value))
         {
-            return value;
+            value = MessageConverters.SingleOrDefault(x => x.CanConvert(type));
+
+            if (value == null)
+                return null;
+
+            MessageConverterMap.Add(type, value);
         }
 
-        var converter = MessageConverters.SingleOrDefault(x => x.CanConvert(type));
-        MessageConverterMap.Add(type, converter);
+        return value;
+    }
 
-        return converter;
+    /// <summary>
+    /// Finds and builds a MessageConverter for the specified <paramref name="type"/> using a registered generic converter.
+    /// </summary>
+    /// <param name="type">The type of an object.</param>
+    /// <returns>A MessageConverter that can convert the specified <see cref="Type"/>.</returns>
+    public static UnsafeMessageConverter? FindGenericConverter(Type type)
+    {
+        if (MessageConverterMap.TryGetValue(type, out var value))
+            return value;
+
+        if (!type.IsGenericType)
+            return null;
+
+        var typeDef = type.GetGenericTypeDefinition();
+
+        if (!GenericConvertersMap.TryGetValue(typeDef, out var builder))
+            return null;
+
+        var generic = builder.MakeGenericType(type.GetGenericArguments());
+        value = (UnsafeMessageConverter) Activator.CreateInstance(generic)!;
+
+        MessageConverters.Add(value);
+        MessageConverterMap.Add(type, value);
+
+        return value;
     }
 
     /// <summary>
@@ -49,7 +101,7 @@ public static class MessageSerializer
     /// </summary>
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="args">The args to be written.</param>
-    public static void Serialize(MessageWriter writer, object[] args)
+    public static void Serialize(this MessageWriter writer, params object[] args)
     {
         foreach (var arg in args)
         {
@@ -103,14 +155,15 @@ public static class MessageSerializer
                 writer.Write(i);
                 break;
             default:
-                var converter = FindConverter(@object.GetType());
-                if (converter != null)
-                {
-                    converter.UnsafeWrite(writer, @object);
-                    break;
-                }
+                var type = @object.GetType();
+                var converter = FindGenericConverter(type) ?? FindConverter(type);
 
-                throw new NotSupportedException("Couldn't serialize " + @object.GetType());
+                if (converter != null)
+                    converter.UnsafeWrite(writer, @object);
+                else
+                    throw new NotSupportedException("Couldn't serialize " + type.Name);
+
+                break;
         }
     }
 
@@ -190,7 +243,8 @@ public static class MessageSerializer
             return reader.ReadEnum(objectType);
         }
 
-        var converter = FindConverter(objectType);
+        var converter = FindGenericConverter(objectType) ?? FindConverter(objectType);
+
         if (converter != null)
         {
             return converter.UnsafeRead(reader, objectType);

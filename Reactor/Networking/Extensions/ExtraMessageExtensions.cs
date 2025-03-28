@@ -76,7 +76,7 @@ public static class ExtraMessageExtensions
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
     /// <param name="enumType">The type of the enum.</param>
     /// <returns>The resulting enum value from the <paramref name="reader"/>.</returns>
-    public static object ReadEnum(this MessageReader reader, Type enumType) => reader.Deserialize(Enum.GetUnderlyingType(enumType));
+    public static object ReadEnum(this MessageReader reader, Type enumType) => Enum.ToObject(enumType, reader.Deserialize(Enum.GetUnderlyingType(enumType)));
 
     /// <summary>
     /// Reads a long value from a network message.
