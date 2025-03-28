@@ -12,8 +12,6 @@ namespace Reactor.Networking.Serialization;
 /// </summary>
 public static class MessageSerializer
 {
-    internal record class GenericTypeHolder(Type Type, Type Arg);
-
     private static List<UnsafeMessageConverter> MessageConverters { get; } = new();
 
     private static Dictionary<Type, UnsafeMessageConverter?> MessageConverterMap { get; } = new();
