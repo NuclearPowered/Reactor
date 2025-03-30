@@ -4,14 +4,14 @@ on: ["push", "pull_request"]
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.nuget/packages
@@ -21,36 +21,36 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v2
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
 
       - name: Run the Cake script
-        uses: cake-build/cake-action@v1
+        uses: cake-build/cake-action@v3
         with:
           verbosity: Diagnostic
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Reactor.dll
           path: Reactor/bin/Release/net6.0/Reactor.dll
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Reactor.nupkg
           path: Reactor/bin/Release/Reactor.*.nupkg
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Reactor.Networking.Shared.nupkg
           path: Reactor.Networking.Shared/bin/Release/*.nupkg
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: Reactor.Debugger.dll
           path: Reactor.Debugger/bin/Release/net6.0/Reactor.Debugger.dll
 
-      - uses: softprops/action-gh-release@v1
+      - uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
         with:
           draft: true
