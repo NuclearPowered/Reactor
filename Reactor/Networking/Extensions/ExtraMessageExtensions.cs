@@ -46,8 +46,12 @@ public static class ExtraMessageExtensions
     /// </summary>
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="value">The <see cref="long"/> to write.</param>
-    public static void Write(this MessageWriter writer, long value) => writer.Write((ulong) unchecked(value + long.MaxValue));
-    // Someone please give me a better way to do this that does not involve shifting values please
+    public static void Write(this MessageWriter writer, long value)
+    {
+        var array = BitConverter.GetBytes(value);
+        foreach (var i in array)
+            writer.Write(i);
+    }
 
     /// <summary>
     /// Reads a <see cref="Vector2"/> from the <paramref name="reader"/>.
@@ -83,7 +87,7 @@ public static class ExtraMessageExtensions
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
     /// <returns>The resulting long value from the <paramref name="reader"/>.</returns>
-    public static long ReadInt64(this MessageReader reader) => (long) unchecked(reader.ReadUInt64() - long.MaxValue);
+    public static long ReadInt64(this MessageReader reader) => BitConverter.ToInt64(reader.ReadBytes(8), 0);
 
     /// <summary>
     /// Sends a message on the <paramref name="connection"/> with an <paramref name="ackCallback"/>.
