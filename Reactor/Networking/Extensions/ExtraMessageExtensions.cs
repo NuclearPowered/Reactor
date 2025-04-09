@@ -46,12 +46,7 @@ public static class ExtraMessageExtensions
     /// </summary>
     /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
     /// <param name="value">The <see cref="long"/> to write.</param>
-    public static void Write(this MessageWriter writer, long value)
-    {
-        var array = BitConverter.GetBytes(value);
-        foreach (var i in array)
-            writer.Write(i);
-    }
+    public static void Write(this MessageWriter writer, long value) => writer.Write(BitConverter.GetBytes(value));
 
     /// <summary>
     /// Reads a <see cref="Vector2"/> from the <paramref name="reader"/>.
