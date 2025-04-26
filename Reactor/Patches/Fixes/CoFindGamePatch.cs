@@ -5,7 +5,7 @@ namespace Reactor.Patches.Fixes;
 /// <summary>
 /// Fixes Game Lists not working on servers using legacy matchmaking.
 /// </summary>
-[HarmonyPatch(typeof(AmongUsClient._CoFindGame_d__3), nameof(AmongUsClient._CoFindGame_d__3.MoveNext))]
+[HarmonyPatch(typeof(AmongUsClient_CoFindGame), nameof(AmongUsClient_CoFindGame.MoveNext))]
 internal static class CoFindGamePatch
 {
     public static void Prefix()
