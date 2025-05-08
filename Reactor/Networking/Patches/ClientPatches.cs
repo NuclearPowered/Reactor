@@ -338,7 +338,8 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
+    // TODO: FIX THIS!!!!
+    //[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
     public static class HandshakePatch
     {
         public static void Prefix(ref bool useDtlsLayout)
