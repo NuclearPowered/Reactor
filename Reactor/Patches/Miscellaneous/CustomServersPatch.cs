@@ -30,15 +30,15 @@ internal static class CustomServersPatch
         return false;
     }
 
-    [HarmonyPatch(typeof(AmongUsClient._CoJoinOnlinePublicGame_d__1), nameof(AmongUsClient._CoJoinOnlinePublicGame_d__1.MoveNext))]
+    [HarmonyPatch(typeof(AmongUsClient._CoJoinOnlinePublicGame_d__50), nameof(AmongUsClient._CoJoinOnlinePublicGame_d__50.MoveNext))]
     [HarmonyPrefix]
-    public static void EnableUdpMatchmaking(AmongUsClient._CoJoinOnlinePublicGame_d__1 __instance)
+    public static void EnableUdpMatchmaking(AmongUsClient._CoJoinOnlinePublicGame_d__50 __instance)
     {
         // Skip to state 1 which just calls CoJoinOnlineGameDirect
         if (__instance.__1__state == 0 && !ServerManager.Instance.IsHttp)
         {
             __instance.__1__state = 1;
-            __instance.__8__1 = new AmongUsClient.__c__DisplayClass1_0
+            __instance.__8__1 = new AmongUsClient.__c__DisplayClass50_0
             {
                 matchmakerToken = string.Empty,
             };

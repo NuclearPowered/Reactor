@@ -54,18 +54,16 @@ internal static class HttpPatches
 
         public static void Prefix(UnityWebRequest __instance)
         {
-            var path = __instance.uri.AbsolutePath;
-            if (path == "/api/games")
+            if (__instance.url.Contains("/api/games"))
             {
-                Debug($"{__instance.method} {path}");
+                Debug($"{__instance.method} {__instance.url}");
                 __instance.SetRequestHeader("Client-Mods", BuildHeader());
             }
         }
 
         public static void Postfix(UnityWebRequest __instance, UnityWebRequestAsyncOperation __result)
         {
-            var path = __instance.uri.AbsolutePath;
-            if (path == "/api/games")
+            if (__instance.url.Contains("/api/games"))
             {
                 __result.add_completed((Action<AsyncOperation>) (_ =>
                 {
