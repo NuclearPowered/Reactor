@@ -55,7 +55,9 @@ internal static class HttpPatches
         public static void Prefix(UnityWebRequest __instance)
         {
             var path = __instance.uri.AbsolutePath;
-            if (path == "/api/games")
+            // Innersloth changed /api/games to /api/games/filtered
+            // We may want to keep support for /api/games though.
+            if (path.Contains("/api/games"))
             {
                 Debug($"{__instance.method} {path}");
                 __instance.SetRequestHeader("Client-Mods", BuildHeader());
@@ -65,7 +67,9 @@ internal static class HttpPatches
         public static void Postfix(UnityWebRequest __instance, UnityWebRequestAsyncOperation __result)
         {
             var path = __instance.uri.AbsolutePath;
-            if (path == "/api/games")
+            // Innersloth changed /api/games to /api/games/filtered
+            // We may want to keep support for /api/games though.
+            if (path.Contains("/api/games"))
             {
                 __result.add_completed((Action<AsyncOperation>) (_ =>
                 {
