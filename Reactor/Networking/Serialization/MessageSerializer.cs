@@ -149,6 +149,12 @@ public static class MessageSerializer
             case string i:
                 writer.Write(i);
                 break;
+            case Color i:
+                writer.Write(i);
+                break;
+            case Color32 i:
+                writer.Write(i);
+                break;
             case Enum i:
                 writer.Write(i);
                 break;
@@ -234,6 +240,16 @@ public static class MessageSerializer
         if (objectType == typeof(long))
         {
             return reader.ReadInt64();
+        }
+
+        if (objectType == typeof(Color))
+        {
+            return reader.ReadColor();
+        }
+
+        if (objectType == typeof(Color32))
+        {
+            return reader.ReadColor32();
         }
 
         if (objectType.IsEnum)

@@ -14,10 +14,11 @@ public static class ExtraMessageExtensions
 {
     private const float MIN = -50f;
     private const float MAX = 50f;
+    private const float DIFF = MAX - MIN;
 
     private static float ReverseLerp(float t)
     {
-        return Mathf.Clamp((t - MIN) / (MAX - MIN), 0f, 1f);
+        return Mathf.Clamp01((t - MIN) / DIFF);
     }
 
     /// <summary>
@@ -49,6 +50,32 @@ public static class ExtraMessageExtensions
     public static void Write(this MessageWriter writer, long value) => writer.Write(BitConverter.GetBytes(value));
 
     /// <summary>
+    /// Writes a color value to the <paramref name="writer"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
+    /// <param name="value">The <see cref="Color32"/> to write.</param>
+    public static void Write(this MessageWriter writer, Color32 value)
+    {
+        writer.Write(value.r);
+        writer.Write(value.g);
+        writer.Write(value.b);
+        writer.Write(value.a);
+    }
+
+    /// <summary>
+    /// Writes a color value to the <paramref name="writer"/>.
+    /// </summary>
+    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
+    /// <param name="value">The <see cref="Color"/> to write.</param>
+    public static void Write(this MessageWriter writer, Color value)
+    {
+        writer.Write(value.r);
+        writer.Write(value.g);
+        writer.Write(value.b);
+        writer.Write(value.a);
+    }
+
+    /// <summary>
     /// Reads a <see cref="Vector2"/> from the <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
@@ -62,7 +89,7 @@ public static class ExtraMessageExtensions
     }
 
     /// <summary>
-    /// Reads and converts an enum value from a network message.
+    /// Reads an enum value and casts it to the specified type from a network message.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
     /// <typeparam name="T">The <see cref="Enum"/> type to convert to.</typeparam>
@@ -83,6 +110,20 @@ public static class ExtraMessageExtensions
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
     /// <returns>The resulting long value from the <paramref name="reader"/>.</returns>
     public static long ReadInt64(this MessageReader reader) => BitConverter.ToInt64(reader.ReadBytes(8), 0);
+
+    /// <summary>
+    /// Reads a color value from a network message.
+    /// </summary>
+    /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
+    /// <returns>The resulting Color32 value from the <paramref name="reader"/>.</returns>
+    public static Color32 ReadColor32(this MessageReader reader) => new(reader.ReadByte(), reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
+
+    /// <summary>
+    /// Reads a color value from a network message.
+    /// </summary>
+    /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
+    /// <returns>The resulting Color value from the <paramref name="reader"/>.</returns>
+    public static Color ReadColor(this MessageReader reader) => new(reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle(), reader.ReadSingle());
 
     /// <summary>
     /// Sends a message on the <paramref name="connection"/> with an <paramref name="ackCallback"/>.
