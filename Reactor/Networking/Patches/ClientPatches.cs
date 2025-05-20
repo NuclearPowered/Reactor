@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AmongUs.Data;
+using AmongUs.InnerNet.GameDataMessages;
 using BepInEx.Unity.IL2CPP.Utils;
 using HarmonyLib;
 using Hazel;
@@ -29,10 +30,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__167), nameof(InnerNetClient._HandleGameDataInner_d__167.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__165), nameof(InnerNetClient._HandleGameDataInner_d__165.MoveNext))]
     public static class HandleGameDataInnerPatch
     {
-        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__167 __instance, ref bool __result)
+        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__165 __instance, ref bool __result)
         {
             var innerNetClient = __instance.__4__this;
             var reader = __instance.reader;
@@ -63,7 +64,7 @@ internal static class ClientPatches
                 return false;
             }
 
-            if (reader.Tag == InnerNetClient.SceneChangeFlag && ReactorConnection.Instance?.Syncer == Syncer.Host)
+            if (reader.Tag == (byte) GameDataTypes.SceneChangeFlag && ReactorConnection.Instance?.Syncer == Syncer.Host)
             {
                 var clientId = reader.ReadPackedInt32();
                 var clientData = innerNetClient.FindClientById(clientId);
@@ -126,7 +127,7 @@ internal static class ClientPatches
                                             : chatText;
 
                                         // Write SendChat directly instead of using RpcSendChat so we can call AddChat ourselves
-                                        var messageWriter = AmongUsClient.Instance.StartRpc(PlayerControl.LocalPlayer.NetId, (byte) RpcCalls.SendChat);
+                                        var messageWriter = AmongUsClient.Instance.StartRpcImmediately(PlayerControl.LocalPlayer.NetId, (byte) RpcCalls.SendChat, SendOption.Reliable);
                                         messageWriter.Write(truncatedChatText);
                                         messageWriter.EndMessage();
                                     }
@@ -161,10 +162,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__158), nameof(InnerNetClient._CoSendSceneChange_d__158.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__156), nameof(InnerNetClient._CoSendSceneChange_d__156.MoveNext))]
     public static class CoSendSceneChangePatch
     {
-        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__158 __instance, ref bool __result)
+        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__156 __instance, ref bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return true;
 
@@ -181,7 +182,7 @@ internal static class ClientPatches
                     var writer = MessageWriter.Get(SendOption.Reliable);
                     writer.StartMessage(Tags.GameData);
                     writer.Write(innerNetClient.GameId);
-                    writer.StartMessage(InnerNetClient.SceneChangeFlag);
+                    writer.StartMessage((byte) GameDataTypes.SceneChangeFlag);
                     writer.WritePacked(innerNetClient.ClientId);
                     writer.Write(__instance.sceneName);
 
@@ -209,10 +210,10 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__168), nameof(InnerNetClient._CoHandleSpawn_d__168.MoveNext))]
+    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__166), nameof(InnerNetClient._CoHandleSpawn_d__166.MoveNext))]
     public static class CoHandleSpawnPatch
     {
-        public static void Postfix(InnerNetClient._CoHandleSpawn_d__168 __instance, bool __result)
+        public static void Postfix(InnerNetClient._CoHandleSpawn_d__166 __instance, bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return;
 
@@ -236,38 +237,18 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.WriteSpawnMessage))]
+    [HarmonyPatch(typeof(SpawnGameDataMessage), nameof(SpawnGameDataMessage.SerializeValues))]
     public static class WriteSpawnMessagePatch
     {
-        public static bool Prefix(InnerNetClient __instance, InnerNetObject netObjParent, int ownerId, SpawnFlags flags, MessageWriter msg)
+        public static bool Prefix(SpawnGameDataMessage __instance, MessageWriter msg)
         {
-            if (ReactorConnection.Instance!.Syncer != Syncer.Host) return true;
-
-            msg.StartMessage(4);
-            msg.WritePacked(netObjParent.SpawnId);
-            msg.WritePacked(ownerId);
-            msg.Write((byte) flags);
-            InnerNetObject[] componentsInChildren = netObjParent.GetComponentsInChildren<InnerNetObject>();
-            msg.WritePacked(componentsInChildren.Length);
-            foreach (var innerNetObject in componentsInChildren)
+            if (ReactorConnection.Instance!.Syncer != Syncer.Host)
             {
-                innerNetObject.OwnerId = ownerId;
-                innerNetObject.SpawnFlags = flags;
-                if (innerNetObject.NetId == 0)
-                {
-                    innerNetObject.NetId = __instance.NetIdCnt++;
-                    __instance.allObjects.Add(innerNetObject);
-                    __instance.allObjectsFast.Add(innerNetObject.NetId, innerNetObject);
-                }
-
-                msg.WritePacked(innerNetObject.NetId);
-                msg.StartMessage(1);
-                innerNetObject.Serialize(msg, initialState: true);
-                msg.EndMessage();
+                return true;
             }
 
             // PATCH - Inject ReactorHandshakeS2C
-            if (__instance.ClientId != ownerId && IL2CPP.il2cpp_object_get_class(netObjParent.Pointer) == Il2CppClassPointerStore<PlayerControl>.NativeClassPtr)
+            if (AmongUsClient.Instance.ClientId != __instance.ownerId && __instance.NetObjectType == Il2CppType.Of<PlayerControl>())
             {
                 Debug("Injecting ReactorHandshakeS2C to WriteSpawnMessage");
                 ReactorHeader.Write(msg);
@@ -285,7 +266,10 @@ internal static class ClientPatches
     {
         public static bool Prefix(InnerNetClient __instance, [HarmonyArgument(0)] MessageReader reader)
         {
-            if (__instance.NetworkMode == NetworkModes.FreePlay) return true;
+            if (__instance.NetworkMode == NetworkModes.FreePlay)
+            {
+                return true;
+            }
 
             var isFirst = false;
 
@@ -338,8 +322,7 @@ internal static class ClientPatches
         }
     }
 
-    // TODO: FIX THIS!!!!
-    //[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
     public static class HandshakePatch
     {
         public static void Prefix(ref bool useDtlsLayout)

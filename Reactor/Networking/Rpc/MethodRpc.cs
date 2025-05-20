@@ -32,13 +32,11 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="id">The id of the rpc.</param>
     /// <param name="option">The send option of the rpc.</param>
     /// <param name="localHandling">The local handling method of the rpc.</param>
-    /// <param name="sendImmediately">The value indicating whether the rpc should be sent immediately.</param>
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately) : base(plugin, id)
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling) : base(plugin, id)
     {
         Method = method;
         LocalHandling = localHandling;
         SendOption = option;
-        SendImmediately = sendImmediately;
 
         var parameters = method.GetParameters();
 
@@ -88,11 +86,6 @@ public class MethodRpc : UnsafeCustomRpc
     /// <inheritdoc />
     public override SendOption SendOption { get; }
 
-    /// <summary>
-    /// Gets a value indicating whether the method rpc should be sent immediately.
-    /// </summary>
-    public bool SendImmediately { get; }
-
     /// <inheritdoc />
     public override void UnsafeWrite(MessageWriter writer, object? data)
     {
@@ -134,7 +127,7 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="args">The arguments to serialize and send.</param>
     public void Send(InnerNetObject innerNetObject, object[] args)
     {
-        UnsafeSend(innerNetObject, args, SendImmediately);
+        UnsafeSend(innerNetObject, args);
     }
 
     private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));

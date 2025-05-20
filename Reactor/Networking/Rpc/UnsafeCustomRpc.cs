@@ -91,10 +91,9 @@ public abstract class UnsafeCustomRpc
     /// </summary>
     /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
     /// <param name="data">The data to send.</param>
-    /// <param name="immediately">Whether to send it immediately.</param>
     /// <param name="targetClientId">Target client id, defaults to broadcast.</param>
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
-    public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1, Action? ackCallback = null)
+    public void UnsafeSend(InnerNetObject innerNetObject, object? data, int targetClientId = -1, Action? ackCallback = null)
     {
         ArgumentNullException.ThrowIfNull(innerNetObject);
 
@@ -108,11 +107,7 @@ public abstract class UnsafeCustomRpc
             UnsafeHandle(innerNetObject, data);
         }
 
-        var writer = immediately switch
-        {
-            false => AmongUsClient.Instance.StartRpc(innerNetObject.NetId, CustomRpcManager.CallId, SendOption),
-            true => AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId),
-        };
+        var writer = AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId);
 
         writer.Write(Mod);
         writer.WritePacked(Id);
@@ -127,14 +122,7 @@ public abstract class UnsafeCustomRpc
             AckCallbacks.TryAdd(writer, ackCallback);
         }
 
-        if (immediately)
-        {
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
-        else
-        {
-            writer.EndMessage();
-        }
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
 
         if (LocalHandling == RpcLocalHandling.After)
         {
