@@ -54,7 +54,8 @@ internal static class HttpPatches
 
         public static void Prefix(UnityWebRequest __instance)
         {
-            var path = __instance.uri.AbsolutePath;
+            // new Uri() is necessary because uri property got stripped.
+            var path = new Uri(__instance.url).AbsolutePath;
             // Innersloth changed /api/games to /api/games/filtered
             // We may want to keep support for /api/games though.
             if (path.Contains("/api/games"))
@@ -66,7 +67,8 @@ internal static class HttpPatches
 
         public static void Postfix(UnityWebRequest __instance, UnityWebRequestAsyncOperation __result)
         {
-            var path = __instance.uri.AbsolutePath;
+            // new Uri() is necessary because uri property got stripped.
+            var path = new Uri(__instance.url).AbsolutePath;
             // Innersloth changed /api/games to /api/games/filtered
             // We may want to keep support for /api/games though.
             if (path.Contains("/api/games"))

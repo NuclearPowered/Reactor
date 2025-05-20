@@ -34,11 +34,6 @@ public sealed class MethodRpcAttribute : Attribute
     public RpcLocalHandling LocalHandling { get; set; } = RpcLocalHandling.Before;
 
     /// <summary>
-    /// Gets or sets a value indicating whether the rpc should be sent immediately.
-    /// </summary>
-    public bool SendImmediately { get; set; }
-
-    /// <summary>
     /// Initializes a new instance of the <see cref="MethodRpcAttribute"/> class.
     /// </summary>
     /// <param name="id">The id of the rpc.</param>
@@ -71,7 +66,7 @@ public sealed class MethodRpcAttribute : Attribute
 
             try
             {
-                var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.SendOption, attribute.LocalHandling, attribute.SendImmediately);
+                var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.SendOption, attribute.LocalHandling);
                 PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
             }
             catch (Exception e)
