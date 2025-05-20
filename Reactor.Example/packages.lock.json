@@ -4,9 +4,9 @@
     "net6.0": {
       "AmongUs.GameLibs.Steam": {
         "type": "Direct",
-        "requested": "[2025.3.25, )",
-        "resolved": "2025.3.25",
-        "contentHash": "2QxQXgZDcQOdAIDXrNLrQ7veEzD6EBzuaRjzSbHptWUPUsuVc3I5Ur3xMkPPwmSGsDHjLuAGE84yRjV6oJxGxw=="
+        "requested": "[2025.4.15, )",
+        "resolved": "2025.4.15",
+        "contentHash": "R3RxzHGZOGUJ9nMwrP0cjS6g+sh60QUU506Mo47lh17155enUjH6PtErijihSoU7t3aQpzCIyC67W3XrrHhH4g=="
       },
       "BepInEx.AutoPlugin": {
         "type": "Direct",
@@ -22,19 +22,19 @@
       },
       "BepInEx.Unity.IL2CPP": {
         "type": "Direct",
-        "requested": "[6.0.0-be.733, )",
-        "resolved": "6.0.0-be.733",
-        "contentHash": "lnoGaPHjIdGfEiKtf89knaTdLXe4IUqVLdoYqW8NYhhNqgxa3oNwScjTmuYQpa4Leew3937+slq2WIjvX/DUwQ==",
+        "requested": "[6.0.0-be.735, )",
+        "resolved": "6.0.0-be.735",
+        "contentHash": "2+eFJGKMR1GFPeU9wuF+TVrMANIaWIc/6N9e8x4b7b/fNiY9B6vicYNiMDb2deYQpWZtOei+2btnar5dDE5BPg==",
         "dependencies": {
-          "BepInEx.Core": "6.0.0-be.733",
-          "BepInEx.Unity.Common": "6.0.0-be.733",
+          "BepInEx.Core": "6.0.0-be.735",
+          "BepInEx.Unity.Common": "6.0.0-be.735",
           "HarmonyX": "2.10.2",
           "Iced": "1.21.0",
           "Il2CppInterop.Generator": "1.4.6-ci.426",
           "Il2CppInterop.HarmonySupport": "1.4.6-ci.426",
           "Il2CppInterop.Runtime": "1.4.6-ci.426",
           "MonoMod.RuntimeDetour": "22.7.31.1",
-          "Samboy063.Cpp2IL.Core": "2022.1.0-pre-release.18"
+          "Samboy063.Cpp2IL.Core": "2022.1.0-pre-release.19"
         }
       },
       "StyleCop.Analyzers": {
@@ -77,8 +77,8 @@
       },
       "AssetRipper.CIL": {
         "type": "Transitive",
-        "resolved": "1.1.0",
-        "contentHash": "nSz1cBjgVeKv+esfDtyQGC1mY9b4C4NFStytdoa9DMozDC8uth6930kAsuWZEivj9GqWSqENnaQUGnl23WpmnQ==",
+        "resolved": "1.1.2",
+        "contentHash": "BRPcHORadIzSFkrVOvGkSs54j19mQdXH8dmRTVM51mS8MZLSbTpi9CDPpnWN2IdDsILUrAqbPUFo3zJodYxErw==",
         "dependencies": {
           "AsmResolver.DotNet": "6.0.0-beta.1"
         }
@@ -95,8 +95,8 @@
       },
       "BepInEx.Core": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.733",
-        "contentHash": "uRzpyUdU3L8Y4ZW+ZnF73orq0E40MjGK6XcPzm24CrrWB5bUshwdrtFQfrwZB6jcZVNVV6PXE92hScEI+Jaoqw==",
+        "resolved": "6.0.0-be.735",
+        "contentHash": "FuHm9UCzjSKeiZJc3IF70Fiuqi+FynRn62PwBoOeZcHK3/qm+vl1YwbZyFlmUyf45g+UKxg2Td40iZGx88LVAQ==",
         "dependencies": {
           "HarmonyX": "2.10.2",
           "MonoMod.Utils": "22.7.31.1",
@@ -105,8 +105,8 @@
       },
       "BepInEx.Unity.Common": {
         "type": "Transitive",
-        "resolved": "6.0.0-be.733",
-        "contentHash": "KfdiHVSOPnIbDEF7zLPTSXDjKqIEq7SgffqFFKIxOBkCws7LdtSRQsamUcxdD0H8yopcgdlqobIp6t8e4M/k9Q==",
+        "resolved": "6.0.0-be.735",
+        "contentHash": "vmK//OBSr+jotqTk//HSdvHtMFTKu+NlQkiEsvr0dZApTVmQM2AgpVMhEAakQPmrSsM6LRJIHCBcLFO1ypfMPQ==",
         "dependencies": {
           "AssetRipper.Primitives": "3.1.3",
           "MonoMod.Utils": "22.7.31.1"
@@ -114,8 +114,8 @@
       },
       "Disarm": {
         "type": "Transitive",
-        "resolved": "2022.1.0-master.34",
-        "contentHash": "sxzTci5eSdl+sFoaGsMZIp7X/eB5ZzplM3CppvD1CWoiZ8rSa43XGLC19G5e8n6mjutNBfN9yL+RER5PCspHFg=="
+        "resolved": "2022.1.0-master.57",
+        "contentHash": "/dkg7hg8iPBQN4bTV1lMQacarH6fMpgUXhJuo6iI7Wv7YpH7g5F9hJfje7dSMhqG0YlDacLuyWvcph5GzKUXog=="
       },
       "HarmonyX": {
         "type": "Transitive",
@@ -253,7 +253,7 @@
       "runtime.native.System.Security.Cryptography.Apple": {
         "type": "Transitive",
         "resolved": "4.3.0",
-        "contentHash": "jwjwlEL0Elv6gwoyaokRn12nv/JE+UW/DXJEbzhjCPvGbef36StnHKc9XaZD/rGWqYicrphZ7eumR/jdmNcjRg==",
+        "contentHash": "DloMk88juo0OuOWr56QG7MNchmafTLYWvABy36izkrLI5VledI0rq28KGs1i9wbpeT9NPQrx/wTf8U2vazqQ3Q==",
         "dependencies": {
           "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple": "4.3.0"
         }
@@ -288,7 +288,7 @@
       "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.Apple": {
         "type": "Transitive",
         "resolved": "4.3.0",
-        "contentHash": "Kh9W4agE0r/hK8AX1LvyQI2NrKHBL8pO0gRoDTdDb0LL6Ta1Z2OtFx3lOaAE0ZpCUc/dt9Wzs3rA7a3IsKdOVA=="
+        "contentHash": "kVXCuMTrTlxq4XOOMAysuNwsXWpYeboGddNGpIgNSZmv1b6r/s/DPk0fYMB7Q5Qo4bY68o48jt4T4y5BVecbCQ=="
       },
       "runtime.osx.10.10-x64.runtime.native.System.Security.Cryptography.OpenSsl": {
         "type": "Transitive",
@@ -317,31 +317,31 @@
       },
       "Samboy063.Cpp2IL.Core": {
         "type": "Transitive",
-        "resolved": "2022.1.0-pre-release.18",
-        "contentHash": "eX9d1IK05jWaEaeuMAE0L5WYHT7thtxz+aWLL/CAaCzZ0TzRPD+WFTjJ0KQO0YWBVO300CX3GwmPmf7TNO+wUg==",
+        "resolved": "2022.1.0-pre-release.19",
+        "contentHash": "mAYIrMo0VdOZzh1NS5bZeflg80gtYNY7kZo9q/blEYheUPyLXu5ozQOjX+Bq2yDh40pA+yiE2MXTnN2Is2hjgw==",
         "dependencies": {
           "AsmResolver.DotNet": "6.0.0-beta.1",
-          "AssetRipper.CIL": "1.1.0",
+          "AssetRipper.CIL": "1.1.2",
           "AssetRipper.Gee.External.Capstone": "2.3.2",
-          "Disarm": "2022.1.0-master.34",
+          "Disarm": "2022.1.0-master.57",
           "Iced": "1.21.0",
-          "Samboy063.LibCpp2IL": "2022.1.0-pre-release.18",
-          "StableNameDotNet": "0.1.0-pre-release.15"
+          "Samboy063.LibCpp2IL": "2022.1.0-pre-release.19",
+          "StableNameDotNet": "0.1.0-pre-release.19"
         }
       },
       "Samboy063.LibCpp2IL": {
         "type": "Transitive",
-        "resolved": "2022.1.0-pre-release.18",
-        "contentHash": "9zJdTAeErpwJpYDHYwwI0MAC1OyBEfC1ce7dpAOYRUUYCfeaKVWxnSCcyaoY6HDzIoxPkhbfllbwOe49ZmUYuQ==",
+        "resolved": "2022.1.0-pre-release.19",
+        "contentHash": "/n8p81ltd38BeNNS2xUNPGMSzxk/UGXr9cRNqG1MaLogzANNNrvCAXqWmNMM3tZctjp7vqTxEA+e4J4ngul8Fg==",
         "dependencies": {
-          "AssetRipper.Primitives": "3.1.2",
-          "Samboy063.WasmDisassembler": "2022.1.0-pre-release.15"
+          "AssetRipper.Primitives": "3.1.3",
+          "Samboy063.WasmDisassembler": "2022.1.0-pre-release.19"
         }
       },
       "Samboy063.WasmDisassembler": {
         "type": "Transitive",
-        "resolved": "2022.1.0-pre-release.15",
-        "contentHash": "e6qw81SHS+fS7iZ3qfqZBavVarYbkPElNgDCANF6dNFTYq5+hc80am+4FqQDl+ZVNS47bZDZobxIzHhmriCXGg=="
+        "resolved": "2022.1.0-pre-release.19",
+        "contentHash": "uVQdYm/J6+jJ1xt6GJ3hNhXhciwlX+LmHTPITu9jjZ75T33YJuuTD7pLVYuMymr+4gSVisg7f1wterFSyqJBWA=="
       },
       "SemanticVersioning": {
         "type": "Transitive",
@@ -350,8 +350,8 @@
       },
       "StableNameDotNet": {
         "type": "Transitive",
-        "resolved": "0.1.0-pre-release.15",
-        "contentHash": "aIkEOo8V76vE+9CppHpTFLGXalBw6TAl4/tb6vadmS+gHJMshTVehzQv9cJXy4xZDdANV1uGMRaUFZERcDA2xQ=="
+        "resolved": "0.1.0-pre-release.19",
+        "contentHash": "5BPWtntv3PXeFIg9CuGW6OM3f5GnwvdQJbzRpufPsistFwFyt1xYW1wSDr+QIdDO7vLndr7iNpWD3FyYp9LL4g=="
       },
       "StyleCop.Analyzers.Unstable": {
         "type": "Transitive",
@@ -388,7 +388,7 @@
       "System.Collections.NonGeneric": {
         "type": "Transitive",
         "resolved": "4.3.0",
-        "contentHash": "LE/oChpRvkSi3U25u0KnJcI44JeDZ1QJCyN4qFDx2uusEypdqR24w7lKYw21eYe5esuCBuc862wRmpF63Yy1KQ==",
+        "contentHash": "prtjIEMhGUnQq6RnPEYLpFt8AtLbp9yq2zxOSrY7KJJZrw25Fi97IzBqY7iqssbM61Ek5b8f3MG/sG1N2sN5KA==",
         "dependencies": {
           "System.Diagnostics.Debug": "4.3.0",
           "System.Globalization": "4.3.0",
@@ -903,7 +903,7 @@
       "reactor": {
         "type": "Project",
         "dependencies": {
-          "BepInEx.Unity.IL2CPP": "[6.0.0-be.733, )"
+          "BepInEx.Unity.IL2CPP": "[6.0.0-be.735, )"
         }
       }
     }
