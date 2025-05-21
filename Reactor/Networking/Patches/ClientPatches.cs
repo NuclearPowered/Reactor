@@ -238,13 +238,13 @@ internal static class ClientPatches
     }
 
     [HarmonyPatch(typeof(SpawnGameDataMessage), nameof(SpawnGameDataMessage.SerializeValues))]
-    public static class WriteSpawnMessagePatch
+    public static class SpawnGameDataMessagePatch
     {
-        public static bool Prefix(SpawnGameDataMessage __instance, MessageWriter msg)
+        public static void Postfix(SpawnGameDataMessage __instance, MessageWriter msg)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host)
             {
-                return true;
+                return;
             }
 
             // PATCH - Inject ReactorHandshakeS2C
@@ -254,10 +254,6 @@ internal static class ClientPatches
                 ReactorHeader.Write(msg);
                 ModdedHandshakeS2C.Serialize(msg, "Among Us", Application.version, 0); // TODO
             }
-
-            msg.EndMessage();
-
-            return false;
         }
     }
 
