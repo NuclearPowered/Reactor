@@ -56,10 +56,11 @@ public abstract class CustomRpc<TPlugin, TInnerNetObject, TData> : UnsafeCustomR
     /// </summary>
     /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
     /// <param name="data">The data to send.</param>
+    /// <param name="immediately">Whether to send it immediately.</param>
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
-    public void Send(InnerNetObject innerNetObject, TData data, Action? ackCallback = null)
+    public void Send(InnerNetObject innerNetObject, TData data, bool immediately = false, Action? ackCallback = null)
     {
-        UnsafeSend(innerNetObject, data, ackCallback: ackCallback);
+        UnsafeSend(innerNetObject, data, immediately, ackCallback: ackCallback);
     }
 
     /// <summary>
@@ -71,7 +72,7 @@ public abstract class CustomRpc<TPlugin, TInnerNetObject, TData> : UnsafeCustomR
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
     public void SendTo(InnerNetObject innerNetObject, int targetClientId, TData data, Action? ackCallback = null)
     {
-        UnsafeSend(innerNetObject, data, targetClientId, ackCallback);
+        UnsafeSend(innerNetObject, data, true, targetClientId, ackCallback);
     }
 }
 
@@ -120,10 +121,11 @@ public abstract class CustomRpc<TPlugin, TInnerNetObject> : UnsafeCustomRpc wher
     /// Sends this custom rpc on the specified <paramref name="innerNetObject"/>.
     /// </summary>
     /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
+    /// <param name="immediately">Whether to send it immediately.</param>
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
-    public void Send(InnerNetObject innerNetObject, Action? ackCallback = null)
+    public void Send(InnerNetObject innerNetObject, bool immediately = false, Action? ackCallback = null)
     {
-        UnsafeSend(innerNetObject, ackCallback);
+        UnsafeSend(innerNetObject, immediately, ackCallback: ackCallback);
     }
 
     /// <summary>
@@ -134,6 +136,6 @@ public abstract class CustomRpc<TPlugin, TInnerNetObject> : UnsafeCustomRpc wher
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
     public void SendTo(InnerNetObject innerNetObject, int targetClientId, Action? ackCallback = null)
     {
-        UnsafeSend(innerNetObject, null, targetClientId, ackCallback);
+        UnsafeSend(innerNetObject, null, true, targetClientId, ackCallback);
     }
 }
