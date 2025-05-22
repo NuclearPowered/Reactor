@@ -319,7 +319,7 @@ internal static class ClientPatches
         }
     }
 
-    //[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
+    // [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
     public static class HandshakePatch
     {
         public static void Prefix(Il2CppObjectBase __instance, ref bool useDtlsLayout)
