@@ -36,6 +36,7 @@ public sealed class MethodRpcAttribute : Attribute
     /// <summary>
     /// Gets or sets a value indicating whether the rpc should be sent immediately.
     /// </summary>
+    [Obsolete("Non-immediate RPCs were removed in 2025.5.20. All RPCs are immediate. This property will be removed in a future version.")]
     public bool SendImmediately { get; set; }
 
     /// <summary>

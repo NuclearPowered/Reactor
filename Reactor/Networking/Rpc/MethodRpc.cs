@@ -91,6 +91,7 @@ public class MethodRpc : UnsafeCustomRpc
     /// <summary>
     /// Gets a value indicating whether the method rpc should be sent immediately.
     /// </summary>
+    [Obsolete("Non-immediate RPCs were removed in 2025.5.20. All RPCs are immediate. This property will be removed in a future version.")]
     public bool SendImmediately { get; }
 
     /// <inheritdoc />

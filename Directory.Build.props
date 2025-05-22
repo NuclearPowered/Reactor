@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <LangVersion>latest</LangVersion>
-        <DebugType>embedded</DebugType>
+        <DebugType>portable</DebugType>
         <Nullable>enable</Nullable>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
