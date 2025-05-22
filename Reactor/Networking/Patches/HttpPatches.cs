@@ -56,8 +56,9 @@ internal static class HttpPatches
         {
             // new Uri() is necessary because uri property got stripped.
             var path = new Uri(__instance.url).AbsolutePath;
-            // Innersloth changed /api/games to /api/games/filtered
-            // We may want to keep support for /api/games though.
+            // Public lobby menu uses /api/games/filtered, code requests use /api/games/code,
+            // creating a game uses /api/games.
+            // So we need to match everything that contains /api/games
             if (path.Contains("/api/games"))
             {
                 Debug($"{__instance.method} {path}");
@@ -69,8 +70,9 @@ internal static class HttpPatches
         {
             // new Uri() is necessary because uri property got stripped.
             var path = new Uri(__instance.url).AbsolutePath;
-            // Innersloth changed /api/games to /api/games/filtered
-            // We may want to keep support for /api/games though.
+            // Public lobby menu uses /api/games/filtered, code requests use /api/games/code,
+            // creating a game uses /api/games.
+            // So we need to match everything that contains /api/games
             if (path.Contains("/api/games"))
             {
                 __result.add_completed((Action<AsyncOperation>) (_ =>

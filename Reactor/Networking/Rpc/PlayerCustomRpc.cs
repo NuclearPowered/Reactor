@@ -19,10 +19,11 @@ public abstract class PlayerCustomRpc<TPlugin, TData> : CustomRpc<TPlugin, Playe
     /// Sends this custom rpc on the local player with the specified <paramref name="data"/>.
     /// </summary>
     /// <param name="data">The data to send.</param>
+    /// <param name="immediately">Whether to send it immediately.</param>
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
-    public void Send(TData data, Action? ackCallback = null)
+    public void Send(TData data, bool immediately = false, Action? ackCallback = null)
     {
-        Send(PlayerControl.LocalPlayer, data, ackCallback);
+        Send(PlayerControl.LocalPlayer, data, immediately, ackCallback);
     }
 
     /// <summary>
@@ -51,10 +52,11 @@ public abstract class PlayerCustomRpc<TPlugin> : CustomRpc<TPlugin, PlayerContro
     /// <summary>
     /// Sends this custom rpc on the local player.
     /// </summary>
+    /// <param name="immediately">Whether to send it immediately.</param>
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
-    public void Send(Action? ackCallback = null)
+    public void Send(bool immediately = false, Action? ackCallback = null)
     {
-        Send(PlayerControl.LocalPlayer, ackCallback);
+        Send(PlayerControl.LocalPlayer, immediately, ackCallback);
     }
 
     /// <summary>

@@ -91,9 +91,10 @@ public abstract class UnsafeCustomRpc
     /// </summary>
     /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
     /// <param name="data">The data to send.</param>
+    /// <param name="immediately">Whether to send it immediately.</param>
     /// <param name="targetClientId">Target client id, defaults to broadcast.</param>
     /// <param name="ackCallback">The callback to invoke when this packet is acknowledged.</param>
-    public void UnsafeSend(InnerNetObject innerNetObject, object? data, int targetClientId = -1, Action? ackCallback = null)
+    public void UnsafeSend(InnerNetObject innerNetObject, object? data, bool immediately = false, int targetClientId = -1, Action? ackCallback = null)
     {
         ArgumentNullException.ThrowIfNull(innerNetObject);
 
@@ -107,7 +108,16 @@ public abstract class UnsafeCustomRpc
             UnsafeHandle(innerNetObject, data);
         }
 
-        var writer = AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId);
+        if (immediately == false)
+        {
+            Warning("Non-immediate RPCs were removed in 2025.5.20! Reactor will now always send immediately!");
+        }
+
+        var writer = AmongUsClient.Instance.StartRpcImmediately(
+            innerNetObject.NetId,
+            CustomRpcManager.CallId,
+            SendOption,
+            targetClientId);
 
         writer.Write(Mod);
         writer.WritePacked(Id);
