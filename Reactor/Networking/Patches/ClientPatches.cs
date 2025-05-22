@@ -6,6 +6,7 @@ using BepInEx.Unity.IL2CPP.Utils;
 using HarmonyLib;
 using Hazel;
 using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using Reactor.Networking.Extensions;
@@ -322,15 +323,17 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
+    //[HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.GetConnectionData))]
     public static class HandshakePatch
     {
-        public static void Prefix(ref bool useDtlsLayout)
+        public static void Prefix(Il2CppObjectBase __instance, ref bool useDtlsLayout)
         {
             // Due to reasons currently unknown, the useDtlsLayout parameter sometimes doesn't reflect whether DTLS
             // is actually supposed to be enabled. This causes a bad handshake message and a quick disconnect.
             // The field on AmongUsClient appears to be more reliable, so override this parameter with what it is supposed to be.
             Info($"Currently using dtls: {useDtlsLayout}. Should use dtls: {AmongUsClient.Instance.useDtls}");
+            Info($"InnerNetClient null?: {__instance == null}");
+            Info($"InnerNetClient pointer zero?: {__instance.Pointer == IntPtr.Zero}");
             useDtlsLayout = AmongUsClient.Instance.useDtls;
         }
 
