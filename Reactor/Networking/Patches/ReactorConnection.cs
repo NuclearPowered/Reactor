@@ -23,12 +23,16 @@ public class ReactorConnection
     [HarmonyPatch]
     private static class Patches
     {
-        [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.CoConnect), typeof(string))]
+        // CoConnect(string) was inlined, so we patch the MoveNext method instead.
+        [HarmonyPatch(typeof(InnerNetClient._CoConnect_d__65), nameof(InnerNetClient._CoConnect_d__65.MoveNext))]
         [HarmonyPrefix]
         public static void CoConnect()
         {
-            Debug("New ReactorConnection created");
-            Instance = new ReactorConnection();
+            if (Instance == null)
+            {
+                Debug("New ReactorConnection created");
+                Instance = new ReactorConnection();
+            }
         }
 
         [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal))]
