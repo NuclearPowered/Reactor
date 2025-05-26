@@ -34,9 +34,9 @@
       },
       "BepInEx.IL2CPP.MSBuild": {
         "type": "Direct",
-        "requested": "[2.0.1, )",
-        "resolved": "2.0.1",
-        "contentHash": "hUZjCV0t8dkw/Z/zq4Zl405QP7frBk/LVfMdUmUz+7XOhGd7lYPKrR48A5vbGl2QeHudMxlkXzAr9WM3Duq2SQ=="
+        "requested": "[2.1.0-rc.1, )",
+        "resolved": "2.1.0-rc.1",
+        "contentHash": "WI/7TbJwWl5P4B6UXGtKI1VMe6fA6h3fcbp3ZjJKqOBQ5MJfDMmeVB4fb+RW1tUQdxnlSWV3Ul62PHFyTqp4PA=="
       },
       "BepInEx.Unity.IL2CPP": {
         "type": "Direct",
