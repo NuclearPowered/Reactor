@@ -108,11 +108,16 @@ public abstract class UnsafeCustomRpc
             UnsafeHandle(innerNetObject, data);
         }
 
-        var writer = immediately switch
+        if (immediately == false)
         {
-            false => AmongUsClient.Instance.StartRpc(innerNetObject.NetId, CustomRpcManager.CallId, SendOption),
-            true => AmongUsClient.Instance.StartRpcImmediately(innerNetObject.NetId, CustomRpcManager.CallId, SendOption, targetClientId),
-        };
+            Warning("Non-immediate RPCs were removed in 2025.5.20! Reactor will now always send immediately!");
+        }
+
+        var writer = AmongUsClient.Instance.StartRpcImmediately(
+            innerNetObject.NetId,
+            CustomRpcManager.CallId,
+            SendOption,
+            targetClientId);
 
         writer.Write(Mod);
         writer.WritePacked(Id);
@@ -127,14 +132,7 @@ public abstract class UnsafeCustomRpc
             AckCallbacks.TryAdd(writer, ackCallback);
         }
 
-        if (immediately)
-        {
-            AmongUsClient.Instance.FinishRpcImmediately(writer);
-        }
-        else
-        {
-            writer.EndMessage();
-        }
+        AmongUsClient.Instance.FinishRpcImmediately(writer);
 
         if (LocalHandling == RpcLocalHandling.After)
         {
