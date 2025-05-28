@@ -54,8 +54,12 @@ internal static class HttpPatches
 
         public static void Prefix(UnityWebRequest __instance)
         {
-            var path = __instance.uri.AbsolutePath;
-            if (path == "/api/games")
+            // new Uri() is necessary because uri property got stripped.
+            var path = new Uri(__instance.url).AbsolutePath;
+            // Public lobby menu uses /api/games/filtered, code requests use /api/games/code,
+            // creating a game uses /api/games.
+            // So we need to match everything that contains /api/games
+            if (path.Contains("/api/games"))
             {
                 Debug($"{__instance.method} {path}");
                 __instance.SetRequestHeader("Client-Mods", BuildHeader());
@@ -64,8 +68,12 @@ internal static class HttpPatches
 
         public static void Postfix(UnityWebRequest __instance, UnityWebRequestAsyncOperation __result)
         {
-            var path = __instance.uri.AbsolutePath;
-            if (path == "/api/games")
+            // new Uri() is necessary because uri property got stripped.
+            var path = new Uri(__instance.url).AbsolutePath;
+            // Public lobby menu uses /api/games/filtered, code requests use /api/games/code,
+            // creating a game uses /api/games.
+            // So we need to match everything that contains /api/games
+            if (path.Contains("/api/games"))
             {
                 __result.add_completed((Action<AsyncOperation>) (_ =>
                 {

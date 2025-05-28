@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -52,6 +51,6 @@ public static class CanvasUtilities
     /// <returns>An empty texture of specified size.</returns>
     public static Texture2D CreateEmptyTexture(int width = 0, int height = 0)
     {
-        return new Texture2D(width, height, TextureFormat.RGBA32, Texture.GenerateAllMips, false, IntPtr.Zero);
+        return new Texture2D(width, height, TextureFormat.RGBA32, Texture.GenerateAllMips, false);
     }
 }
