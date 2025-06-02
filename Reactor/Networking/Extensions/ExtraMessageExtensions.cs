@@ -63,19 +63,6 @@ public static class ExtraMessageExtensions
     }
 
     /// <summary>
-    /// Writes a color value to the <paramref name="writer"/>.
-    /// </summary>
-    /// <param name="writer">The <see cref="MessageWriter"/> to write to.</param>
-    /// <param name="value">The <see cref="Color"/> to write.</param>
-    public static void Write(this MessageWriter writer, Color value)
-    {
-        writer.Write(value.r);
-        writer.Write(value.g);
-        writer.Write(value.b);
-        writer.Write(value.a);
-    }
-
-    /// <summary>
     /// Reads a <see cref="Vector2"/> from the <paramref name="reader"/>.
     /// </summary>
     /// <param name="reader">The <see cref="MessageReader"/> to read from.</param>
