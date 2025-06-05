@@ -8,7 +8,7 @@
 
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
 
-        <VersionPrefix>2.4.0</VersionPrefix>
+        <VersionPrefix>2.5.0</VersionPrefix>
         <VersionSuffix>dev</VersionSuffix>
 
         <Authors>NuclearPowered</Authors>
