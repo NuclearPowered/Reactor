@@ -1,5 +1,7 @@
+using System.Reflection;
 using HarmonyLib;
 using InnerNet;
+using Reactor.Utilities;
 
 namespace Reactor.Networking.Patches;
 
@@ -20,13 +22,16 @@ public class ReactorConnection
     /// </summary>
     public static ReactorConnection? Instance { get; private set; }
 
+    // CoConnect(string) was inlined, so we patch the MoveNext method instead.
     [HarmonyPatch]
-    private static class Patches
+    internal static class CoConnectPatch
     {
-        // CoConnect(string) was inlined, so we patch the MoveNext method instead.
-        [HarmonyPatch(typeof(InnerNetClient._CoConnect_d__65), nameof(InnerNetClient._CoConnect_d__65.MoveNext))]
-        [HarmonyPrefix]
-        public static void CoConnect()
+        public static MethodBase TargetMethod()
+        {
+            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoConnect))!;
+        }
+
+        public static void Prefix()
         {
             if (Instance == null)
             {
@@ -34,10 +39,12 @@ public class ReactorConnection
                 Instance = new ReactorConnection();
             }
         }
+    }
 
-        [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal))]
-        [HarmonyPostfix]
-        public static void DisconnectInternalPostfix()
+    [HarmonyPatch(typeof(InnerNetClient), nameof(InnerNetClient.DisconnectInternal))]
+    internal static class InnerNetClientDisconnectPatch
+    {
+        public static void Postfix()
         {
             Debug("ReactorConnection disconnected");
             Instance = null;

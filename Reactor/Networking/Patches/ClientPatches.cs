@@ -1,15 +1,18 @@
 using System;
 using System.Linq;
+using System.Reflection;
 using AmongUs.Data;
 using AmongUs.InnerNet.GameDataMessages;
 using BepInEx.Unity.IL2CPP.Utils;
 using HarmonyLib;
 using Hazel;
 using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using InnerNet;
 using Reactor.Networking.Extensions;
 using Reactor.Networking.Messages;
+using Reactor.Utilities;
 using UnityEngine;
 using IEnumerator = System.Collections.IEnumerator;
 
@@ -30,15 +33,22 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._HandleGameDataInner_d__165), nameof(InnerNetClient._HandleGameDataInner_d__165.MoveNext))]
+    [HarmonyPatch]
     public static class HandleGameDataInnerPatch
     {
-        public static bool Prefix(InnerNetClient._HandleGameDataInner_d__165 __instance, ref bool __result)
+        public static MethodBase TargetMethod()
         {
-            var innerNetClient = __instance.__4__this;
-            var reader = __instance.reader;
+            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.HandleGameDataInner))!;
+        }
 
-            if (__instance.__1__state != 0) return true;
+        public static bool Prefix(Il2CppObjectBase __instance, ref bool __result)
+        {
+            var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
+
+            var innerNetClient = wrapper.Instance;
+            var reader = wrapper.GetParameter<MessageReader>("reader");
+
+            if (wrapper.State != 0) return true;
 
             if (reader.Tag == byte.MaxValue)
             {
@@ -162,14 +172,22 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoSendSceneChange_d__156), nameof(InnerNetClient._CoSendSceneChange_d__156.MoveNext))]
+    [HarmonyPatch]
     public static class CoSendSceneChangePatch
     {
-        public static bool Prefix(InnerNetClient._CoSendSceneChange_d__156 __instance, ref bool __result)
+        public static MethodBase TargetMethod()
         {
+            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoSendSceneChange))!;
+        }
+
+        public static bool Prefix(Il2CppObjectBase __instance, ref bool __result)
+        {
+            var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
+
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return true;
 
-            var innerNetClient = __instance.__4__this;
+            var innerNetClient = wrapper.Instance;
+            var sceneName = wrapper.GetParameter<string>("sceneName");
 
             // Check for the conditions when the scene change message should be sent
             if (!innerNetClient.AmHost &&
@@ -184,7 +202,7 @@ internal static class ClientPatches
                     writer.Write(innerNetClient.GameId);
                     writer.StartMessage((byte) GameDataTypes.SceneChangeFlag);
                     writer.WritePacked(innerNetClient.ClientId);
-                    writer.Write(__instance.sceneName);
+                    writer.Write(sceneName);
 
                     // PATCH - Inject ReactorHandshakeC2S
                     Debug("Injecting ReactorHandshakeC2S to CoSendSceneChange");
@@ -197,10 +215,10 @@ internal static class ClientPatches
                     writer.Recycle();
 
                     // Create a new coroutine to let AmongUsClient handle scene changes too
-                    innerNetClient.StartCoroutine(innerNetClient.CoOnPlayerChangedScene(clientData, __instance.sceneName));
+                    innerNetClient.StartCoroutine(innerNetClient.CoOnPlayerChangedScene(clientData, sceneName));
 
                     // Cancel this coroutine
-                    __instance.__1__state = -1;
+                    wrapper.State = -1;
                     __result = false;
                     return false;
                 }
@@ -210,16 +228,24 @@ internal static class ClientPatches
         }
     }
 
-    [HarmonyPatch(typeof(InnerNetClient._CoHandleSpawn_d__166), nameof(InnerNetClient._CoHandleSpawn_d__166.MoveNext))]
+    [HarmonyPatch]
     public static class CoHandleSpawnPatch
     {
-        public static void Postfix(InnerNetClient._CoHandleSpawn_d__166 __instance, bool __result)
+        public static MethodBase TargetMethod()
+        {
+            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoHandleSpawn))!;
+        }
+
+        public static void Postfix(Il2CppObjectBase __instance, bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return;
 
-            if (!__result && !AmongUsClient.Instance.AmHost && __instance._ownerId_5__2 == AmongUsClient.Instance.ClientId)
+            var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
+            var ownerId = wrapper.GetParameter<int>("ownerId");
+
+            if (!__result && !AmongUsClient.Instance.AmHost && ownerId == AmongUsClient.Instance.ClientId)
             {
-                var reader = __instance.reader;
+                var reader = wrapper.GetParameter<MessageReader>("reader");
                 if (reader.BytesRemaining >= ReactorHeader.Size && ReactorHeader.Read(reader))
                 {
                     ModdedHandshakeS2C.Deserialize(reader, out var serverName, out var serverVersion, out _);
@@ -228,7 +254,7 @@ internal static class ClientPatches
                 else
                 {
                     Debug("Host is not modded");
-                    if (!Mod.Validate(ModList.Current, Array.Empty<Mod>(), out var reason))
+                    if (!Mod.Validate(ModList.Current, [], out var reason))
                     {
                         AmongUsClient.Instance.DisconnectWithReason(reason);
                     }
