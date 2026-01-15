@@ -38,8 +38,7 @@ public sealed class MessageConverterAttribute : Attribute
 
                 try
                 {
-                    var messageConverter = (UnsafeMessageConverter) Activator.CreateInstance(type)!;
-                    MessageSerializer.Register(messageConverter);
+                    MessageSerializer.Register(type);
                 }
                 catch (Exception e)
                 {
@@ -52,5 +51,6 @@ public sealed class MessageConverterAttribute : Attribute
     internal static void Initialize()
     {
         IL2CPPChainloader.Instance.PluginLoad += (_, assembly, _) => Register(assembly);
+        IL2CPPChainloader.Instance.Finished += MessageSerializer.ClearMaps;
     }
 }
