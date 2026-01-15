@@ -241,7 +241,7 @@ internal static class ClientPatches
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return;
 
             var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
-            var ownerId = wrapper.GetParameter<int>("ownerId");
+            var ownerId = wrapper.GetParameter<int>("_ownerId_5__2");
 
             if (!__result && !AmongUsClient.Instance.AmHost && ownerId == AmongUsClient.Instance.ClientId)
             {
