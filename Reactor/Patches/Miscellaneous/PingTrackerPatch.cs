@@ -7,15 +7,22 @@ namespace Reactor.Patches.Miscellaneous;
 [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
 internal static class PingTrackerPatch
 {
+    private static string? _extraText;
+    private static string? ExtraText => _extraText ??= ReactorCredits.GetText(ReactorCredits.Location.PingTracker);
+
     [HarmonyPostfix]
     [HarmonyPriority(Priority.Last)]
     public static void Postfix(PingTracker __instance)
     {
-        var extraText = ReactorCredits.GetText(ReactorCredits.Location.PingTracker);
-        if (extraText != null)
+        if (ExtraText == null)
         {
-            if (!__instance.text.text.EndsWith("\n", StringComparison.InvariantCulture)) __instance.text.text += "\n";
-            __instance.text.text += extraText;
+            return;
         }
+
+        if (!__instance.text.text.EndsWith("\n", StringComparison.InvariantCulture))
+        {
+            __instance.text.text += "\n";
+        }
+        __instance.text.text += ExtraText;
     }
 }
