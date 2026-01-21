@@ -26,6 +26,16 @@ public class CompilerGeneratedObjectWrapper
     protected Dictionary<string, PropertyInfo> PropertyCache { get; }
 
     /// <summary>
+    /// Gets the getter cache for faster property access.
+    /// </summary>
+    protected Dictionary<string, Delegate> GetterCache { get; }
+
+    /// <summary>
+    /// Gets the setter cache for faster property access.
+    /// </summary>
+    protected Dictionary<string, Delegate> SetterCache { get; }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="CompilerGeneratedObjectWrapper"/> class.
     /// </summary>
     /// <param name="generatedObject">An instance of the compiler generated object.</param>
@@ -35,6 +45,31 @@ public class CompilerGeneratedObjectWrapper
         GeneratedType = generatedObject.GetType();
 
         PropertyCache = [];
+        GetterCache = [];
+        SetterCache = [];
+    }
+
+    public PropertyInfo CacheProperty<T>(string fieldName)
+    {
+        var propertyInfo = AccessTools.Property(GeneratedType, fieldName)
+                           ?? throw new MissingMemberException(
+                               $"Could not find field '{fieldName}' in type '{GeneratedType}'.");
+
+        if (propertyInfo.PropertyType != typeof(T))
+        {
+            throw new InvalidCastException(
+                $"Field '{fieldName}' is of type '{propertyInfo.PropertyType}', not '{typeof(T)}'.");
+        }
+
+        PropertyCache[fieldName] = propertyInfo;
+
+        var funcType = typeof(Func<T>);
+        GetterCache[fieldName] = propertyInfo.GetMethod!.CreateDelegate(funcType, GeneratedObject);
+
+        var actionType = typeof(Action<T>);
+        SetterCache[fieldName] = propertyInfo.SetMethod!.CreateDelegate(actionType, GeneratedObject);
+
+        return propertyInfo;
     }
 
     /// <summary>
@@ -48,12 +83,12 @@ public class CompilerGeneratedObjectWrapper
     {
         if (!PropertyCache.TryGetValue(fieldName, out var propertyInfo))
         {
-            propertyInfo = AccessTools.Property(GeneratedType, fieldName);
-            if (propertyInfo == null)
-            {
-                throw new MissingMemberException($"Could not find field '{fieldName}' in type '{GeneratedType}'.");
-            }
-            PropertyCache[fieldName] = propertyInfo;
+            propertyInfo = CacheProperty<TField>(fieldName);
+        }
+
+        if (GetterCache.TryGetValue(fieldName, out var getter))
+        {
+            return ((Func<TField>) getter)();
         }
 
         return (TField) propertyInfo.GetValue(GeneratedObject)!;
@@ -70,14 +105,16 @@ public class CompilerGeneratedObjectWrapper
     {
         if (!PropertyCache.TryGetValue(fieldName, out var propertyInfo))
         {
-            propertyInfo = AccessTools.Property(GeneratedType, fieldName);
-            if (propertyInfo == null)
-            {
-                throw new MissingMemberException($"Could not find field '{fieldName}' in type '{GeneratedType}'.");
-            }
-            PropertyCache[fieldName] = propertyInfo;
+            propertyInfo = CacheProperty<TField>(fieldName);
+        }
+
+        if (SetterCache.TryGetValue(fieldName, out var setter))
+        {
+            ((Action<TField>) setter)(value);
+            return;
         }
 
         propertyInfo.SetValue(GeneratedObject, value);
     }
 }
+
