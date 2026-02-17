@@ -10,6 +10,10 @@ namespace Reactor.Patches.Miscellaneous;
 
 internal static class CustomServersPatch
 {
+    // A code lookup can point to an official game while a custom region is selected.
+    // Keep only the target IP from an official response so later lookups replace stale state.
+    private static string? _officialFindGameIp;
+
     private static bool IsCurrentServerOfficial()
     {
         const string Domain = "among.us";
@@ -17,6 +21,17 @@ internal static class CustomServersPatch
         return ServerManager.Instance.CurrentRegion?.TryCast<StaticHttpRegionInfo>() is { } regionInfo &&
                regionInfo.PingServer.EndsWith(Domain, StringComparison.Ordinal) &&
                regionInfo.Servers.All(serverInfo => serverInfo.Ip.EndsWith(Domain, StringComparison.Ordinal));
+    }
+
+    private static bool IsOfficialFindGameTarget()
+    {
+        return _officialFindGameIp is { Length: > 0 } targetIp &&
+               string.Equals(AmongUsClient.Instance.networkAddress, targetIp, StringComparison.Ordinal);
+    }
+
+    private static bool IsOfficialRegion(StringNames region)
+    {
+        return region is StringNames.ServerNA or StringNames.ServerEU or StringNames.ServerAS;
     }
 
     [HarmonyPatch]
@@ -30,13 +45,25 @@ internal static class CustomServersPatch
 
         public static bool Prefix(ref bool __result)
         {
-            if (IsCurrentServerOfficial())
+            if (IsCurrentServerOfficial() || IsOfficialFindGameTarget())
             {
                 return true;
             }
 
             __result = false;
             return false;
+        }
+    }
+
+    [HarmonyPatch(typeof(EnterCodeManager), nameof(EnterCodeManager.FindGameResult))]
+    public static class CacheFindGameTargetPatch
+    {
+        [HarmonyPostfix]
+        public static void Postfix([HarmonyArgument(0)] HttpMatchmakerManager.FindGameByCodeResponse response)
+        {
+            _officialFindGameIp = response != null && IsOfficialRegion(response.Region)
+                ? response.Game?.IPString
+                : null;
         }
     }
 
