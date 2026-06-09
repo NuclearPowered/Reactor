@@ -12,7 +12,7 @@ internal static class CoFindGamePatch
 {
     public static MethodBase TargetMethod()
     {
-        return StateMachineWrapper<AmongUsClient>.GetStateMachineMoveNext(nameof(AmongUsClient.CoFindGame))!;
+        return Il2CppStateMachineWrapper<AmongUsClient>.GetStateMachineMoveNext(nameof(AmongUsClient.CoFindGame))!;
     }
 
     public static void Prefix()
