@@ -38,12 +38,12 @@ internal static class ClientPatches
     {
         public static MethodBase TargetMethod()
         {
-            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.HandleGameDataInner))!;
+            return Il2CppStateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.HandleGameDataInner))!;
         }
 
         public static bool Prefix(Il2CppObjectBase __instance, ref bool __result)
         {
-            var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
+            var wrapper = new Il2CppStateMachineWrapper<InnerNetClient>(__instance);
 
             var innerNetClient = wrapper.Instance;
             var reader = wrapper.GetParameter<MessageReader>("reader");
@@ -177,12 +177,12 @@ internal static class ClientPatches
     {
         public static MethodBase TargetMethod()
         {
-            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoSendSceneChange))!;
+            return Il2CppStateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoSendSceneChange))!;
         }
 
         public static bool Prefix(Il2CppObjectBase __instance, ref bool __result)
         {
-            var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
+            var wrapper = new Il2CppStateMachineWrapper<InnerNetClient>(__instance);
 
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return true;
 
@@ -233,14 +233,14 @@ internal static class ClientPatches
     {
         public static MethodBase TargetMethod()
         {
-            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoHandleSpawn))!;
+            return Il2CppStateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoHandleSpawn))!;
         }
 
         public static void Postfix(Il2CppObjectBase __instance, bool __result)
         {
             if (ReactorConnection.Instance!.Syncer != Syncer.Host) return;
 
-            var wrapper = new StateMachineWrapper<InnerNetClient>(__instance);
+            var wrapper = new Il2CppStateMachineWrapper<InnerNetClient>(__instance);
             var ownerId = wrapper.GetParameter<int>("_ownerId_5__2");
 
             if (!__result && !AmongUsClient.Instance.AmHost && ownerId == AmongUsClient.Instance.ClientId)

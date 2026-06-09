@@ -6,10 +6,13 @@ using HarmonyLib;
 namespace Reactor.Utilities;
 
 /// <summary>
-/// A wrapper for state machine objects to access their parent instance and state.
+/// A wrapper for IL2CPP state machine objects to access their parent instance and state.
+/// This class is useful for working with IL2CPP state machines across different game versions.
+/// To use it, pass the instance object of the state machine into the constructor. To access the parent class,
+/// use the Instance property. To access the current state of the state machine, use the State property.
 /// </summary>
 /// <typeparam name="T">The type of the parent class that owns the state machine.</typeparam>
-public class StateMachineWrapper<T> : CompilerGeneratedObjectWrapper
+public class Il2CppStateMachineWrapper<T> : Il2CppCompilerGeneratedObjectWrapper
 {
     // normally it is fields, but IL2CPP turns them into properties
     private readonly PropertyInfo _thisProperty;
@@ -33,11 +36,13 @@ public class StateMachineWrapper<T> : CompilerGeneratedObjectWrapper
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="StateMachineWrapper{T}"/> class.
+    /// Initializes a new instance of the <see cref="Il2CppStateMachineWrapper{T}"/> class.
     /// </summary>
-    /// <param name="stateMachine">The state machine instance to wrap.</param>
-    public StateMachineWrapper(object stateMachine) : base(stateMachine)
+    /// <param name="stateMachine">The instance object of the state machine being wrapped.</param>
+    public Il2CppStateMachineWrapper(object stateMachine) : base(stateMachine)
     {
+        // The names of these properties are implementation details of the IL compiler used by Unity.
+        // They should be stable as long as Unity sticks to mono.
         _thisProperty = AccessTools.Property(GeneratedType, "__4__this");
         _stateProperty = AccessTools.Property(GeneratedType, "__1__state");
 
@@ -72,10 +77,9 @@ public class StateMachineWrapper<T> : CompilerGeneratedObjectWrapper
     }
 
     /// <summary>
-    /// Attempts to retrieve the MoveNext method of a state machine for the specified method name in type T.
+    /// Attempts to retrieve the MoveNext method of a state machine for the specified method name.
     /// </summary>
     /// <param name="methodName">The name of the method whose state machine MoveNext method is to be retrieved.</param>
-    /// <typeparam name="T">The type containing the state machine.</typeparam>
     /// <returns>The MoveNext <see cref="MethodBase"/> if found; otherwise, null.</returns>
     public static MethodBase? GetStateMachineMoveNext(string methodName)
     {

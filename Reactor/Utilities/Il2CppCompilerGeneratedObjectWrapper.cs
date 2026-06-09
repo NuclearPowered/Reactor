@@ -6,9 +6,14 @@ using HarmonyLib;
 namespace Reactor.Utilities;
 
 /// <summary>
-/// A safe wrapper around compiler generated classes like DisplayClass or IEnumerator state machines.
+/// A safe wrapper around IL2CPP compiler generated classes like DisplayClass or IEnumerator state machines.
+/// This is useful for gracefully handling changes across different game versions and updates, which may affect
+/// compiler generated names.
+/// To use this class, pass the instance object of the compiler generated class into the constructor.
+/// Then you can use the GetField and SetField methods to access the fields of the compiler generated class
+/// by their original names.
 /// </summary>
-public class CompilerGeneratedObjectWrapper
+public class Il2CppCompilerGeneratedObjectWrapper
 {
     /// <summary>
     /// Gets a reference to the compiler generated object.
@@ -36,10 +41,10 @@ public class CompilerGeneratedObjectWrapper
     protected Dictionary<string, Delegate> SetterCache { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="CompilerGeneratedObjectWrapper"/> class.
+    /// Initializes a new instance of the <see cref="Il2CppCompilerGeneratedObjectWrapper"/> class.
     /// </summary>
     /// <param name="generatedObject">An instance of the compiler generated object.</param>
-    public CompilerGeneratedObjectWrapper(object generatedObject)
+    public Il2CppCompilerGeneratedObjectWrapper(object generatedObject)
     {
         GeneratedObject = generatedObject;
         GeneratedType = generatedObject.GetType();
@@ -49,6 +54,14 @@ public class CompilerGeneratedObjectWrapper
         SetterCache = [];
     }
 
+    /// <summary>
+    /// Caches the property info, getter, and setter for a given field name and type.
+    /// </summary>
+    /// <param name="fieldName">The name of the field to cache.</param>
+    /// <typeparam name="T">The expected type of the field.</typeparam>
+    /// <returns>The cached <see cref="PropertyInfo"/> for the specified field.</returns>
+    /// <exception cref="MissingMemberException">Thrown if the field does not exist in the compiler generated type.</exception>
+    /// <exception cref="InvalidCastException">Thrown if the field exists but is not of the expected type.</exception>
     public PropertyInfo CacheProperty<T>(string fieldName)
     {
         var propertyInfo = AccessTools.Property(GeneratedType, fieldName)
@@ -117,4 +130,3 @@ public class CompilerGeneratedObjectWrapper
         propertyInfo.SetValue(GeneratedObject, value);
     }
 }
-

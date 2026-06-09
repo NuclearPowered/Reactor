@@ -28,7 +28,7 @@ public class ReactorConnection
     {
         public static MethodBase TargetMethod()
         {
-            return StateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoConnect))!;
+            return Il2CppStateMachineWrapper<InnerNetClient>.GetStateMachineMoveNext(nameof(InnerNetClient.CoConnect))!;
         }
 
         public static void Prefix()
