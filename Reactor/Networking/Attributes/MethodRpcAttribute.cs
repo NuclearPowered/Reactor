@@ -49,10 +49,19 @@ public sealed class MethodRpcAttribute : Attribute
     /// </summary>
     /// <param name="id">The id of the rpc.</param>
     /// <param name="targetParam">The parameter to get the target client from, if any.</param>
-    public MethodRpcAttribute(uint id, string? targetParam = null)
+    public MethodRpcAttribute(uint id, string? targetParam)
     {
         Id = id;
         TargetParameter = targetParam;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MethodRpcAttribute"/> class.
+    /// </summary>
+    /// <param name="id">The id of the rpc.</param>
+    public MethodRpcAttribute(uint id)
+        : this(id, null)
+    {
     }
 
     /// <summary>
