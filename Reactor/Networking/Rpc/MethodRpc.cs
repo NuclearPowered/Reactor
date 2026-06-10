@@ -68,6 +68,20 @@ public class MethodRpc : UnsafeCustomRpc
             InnerNetObjectType = method.DeclaringType;
         }
 
+        if (TargetParameter != null)
+        {
+            var param = Array.Find(parameters, p => p.Name == TargetParameter);
+            if (param == null)
+            {
+                throw new ArgumentException("Target Client parameter isn't part of method rpc signature.", nameof(method));
+            }
+            if (!typeof(PlayerControl).IsAssignableFrom(param.ParameterType) ||
+                !typeof(int).IsAssignableFrom(param.ParameterType))
+            {
+                throw new ArgumentException("Target Client parameter has to be a PlayerControl or int", nameof(method));
+            }
+        }
+
         _handle = Hook(method, parameters, method.IsStatic);
     }
 
@@ -155,9 +169,10 @@ public class MethodRpc : UnsafeCustomRpc
     /// </summary>
     /// <param name="innerNetObject">The <see cref="InnerNetObject"/> to send the rpc on.</param>
     /// <param name="args">The arguments to serialize and send.</param>
-    public void Send(InnerNetObject innerNetObject, object[] args)
+    /// <param name="targetClientId">The id of the target client. -1 broadcasts without specific target.</param>
+    public void Send(InnerNetObject innerNetObject, object[] args, int targetClientId = -1)
     {
-        UnsafeSend(innerNetObject, args);
+        UnsafeSend(innerNetObject, args, targetClientId: targetClientId);
     }
 
     private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));
@@ -182,6 +197,12 @@ public class MethodRpc : UnsafeCustomRpc
             foreach (var parameter in parameters)
             {
                 dynamicMethod.DefineParameter(parameter.Position + (isStatic ? 0 : 1), ParameterAttributes.None, parameter.Name);
+            }
+
+            var targetClientIndex = -1;
+            if (TargetParameter != null)
+            {
+                targetClientIndex = Array.FindIndex(parameters, p => p.Name == TargetParameter);
             }
 
             var il = dynamicMethod.GetILGenerator();
@@ -237,6 +258,21 @@ public class MethodRpc : UnsafeCustomRpc
                 }
 
                 il.Emit(OpCodes.Stelem_Ref);
+            }
+
+            if (targetClientIndex >= 0)
+            {
+                il.Emit(OpCodes.Ldarg, targetClientIndex);
+
+                var parameter = parameters[targetClientIndex];
+                if (typeof(PlayerControl).IsAssignableFrom(parameter.ParameterType))
+                {
+                    il.Emit(OpCodes.Ldfld, typeof(PlayerControl).GetField(nameof(PlayerControl.PlayerId), BindingFlags.Instance | BindingFlags.Public)!);
+                }
+            }
+            else
+            {
+                il.Emit(OpCodes.Ldc_I4_M1);
             }
 
             il.Emit(OpCodes.Call, _sendMethod);
