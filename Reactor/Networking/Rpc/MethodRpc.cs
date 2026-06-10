@@ -32,11 +32,13 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="id">The id of the rpc.</param>
     /// <param name="option">The send option of the rpc.</param>
     /// <param name="localHandling">The local handling method of the rpc.</param>
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling) : base(plugin, id)
+    /// <param name="targetParam">The parameter to get the target client from, if any.</param>
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, string? targetParam) : base(plugin, id)
     {
         Method = method;
         LocalHandling = localHandling;
         SendOption = option;
+        TargetParameter = targetParam;
 
         var parameters = method.GetParameters();
 
@@ -78,9 +80,10 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="option">The send option of the rpc.</param>
     /// <param name="localHandling">The local handling method of the rpc.</param>
     /// <param name="sendImmediately">The value indicating whether the rpc should be sent immediately.</param>
+    /// <param name="targetParam">The parameter to get the target client from, if any.</param>
     [Obsolete("Non-immediate RPCs were removed in 2025.5.20. All RPCs are immediate. Remove sendImmediately from the parameter list.")]
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately)
-        : this(plugin, method, id, option, localHandling)
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately, string? targetParam)
+        : this(plugin, method, id, option, localHandling, targetParam)
     {
         SendImmediately = sendImmediately;
     }
@@ -89,6 +92,11 @@ public class MethodRpc : UnsafeCustomRpc
     /// Gets the method of the method rpc.
     /// </summary>
     public MethodInfo Method { get; }
+
+    /// <summary>
+    /// Gets the method's parameter to get the target client, if any.
+    /// </summary>
+    public string? TargetParameter { get; }
 
     /// <inheritdoc />
     protected internal override bool IsSingleton => false;

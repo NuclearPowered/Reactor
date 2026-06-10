@@ -24,6 +24,11 @@ public sealed class MethodRpcAttribute : Attribute
     public uint Id { get; }
 
     /// <summary>
+    /// Gets the method's parameter to get the target client, if any.
+    /// </summary>
+    public string? TargetParameter { get; }
+
+    /// <summary>
     /// Gets or sets the send option of the rpc.
     /// </summary>
     public SendOption SendOption { get; set; } = SendOption.Reliable;
@@ -43,9 +48,11 @@ public sealed class MethodRpcAttribute : Attribute
     /// Initializes a new instance of the <see cref="MethodRpcAttribute"/> class.
     /// </summary>
     /// <param name="id">The id of the rpc.</param>
-    public MethodRpcAttribute(uint id)
+    /// <param name="targetParam">The parameter to get the target client from, if any.</param>
+    public MethodRpcAttribute(uint id, string? targetParam = null)
     {
         Id = id;
+        TargetParameter = targetParam;
     }
 
     /// <summary>
@@ -72,7 +79,7 @@ public sealed class MethodRpcAttribute : Attribute
 
             try
             {
-                var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.SendOption, attribute.LocalHandling);
+                var customRpc = new MethodRpc(plugin, method, attribute.Id, attribute.SendOption, attribute.LocalHandling, attribute.TargetParameter);
                 PluginSingleton<ReactorPlugin>.Instance.CustomRpcManager.Register(customRpc);
             }
             catch (Exception e)
