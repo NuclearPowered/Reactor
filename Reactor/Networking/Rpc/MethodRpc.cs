@@ -1,9 +1,9 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.InteropServices;
 using BepInEx.Unity.IL2CPP;
 using HarmonyLib;
 using Hazel;
@@ -23,6 +23,7 @@ public class MethodRpc : UnsafeCustomRpc
     private delegate object HandleDelegate(InnerNetObject innerNetObject, object[] args);
 
     private readonly HandleDelegate _handle;
+    private readonly uint _senderId;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MethodRpc"/> class.
@@ -42,7 +43,7 @@ public class MethodRpc : UnsafeCustomRpc
 
         if (method.IsStatic)
         {
-            if (method.IsStatic && parameters.Length == 0)
+            if (parameters.Length == 0)
             {
                 throw new ArgumentException("Static method rpc requires at least one argument", nameof(method));
             }
@@ -64,6 +65,13 @@ public class MethodRpc : UnsafeCustomRpc
             }
 
             InnerNetObjectType = method.DeclaringType;
+        }
+
+        lock (_senderCache)
+        {
+            _senderId = _nextSenderId++;
+            System.Diagnostics.Debug.Assert(!_senderCache.ContainsKey(_senderId), $"SenderId {_senderId} collision in MethodRpc for {method.Name}");
+            _senderCache.Add(_senderId, this);
         }
 
         _handle = Hook(method, parameters, method.IsStatic);
@@ -154,6 +162,51 @@ public class MethodRpc : UnsafeCustomRpc
 
     private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));
 
+    private static readonly Dictionary<uint, MethodRpc> _senderCache = new();
+    // 4 billion RPCs before wrap. Not happening.
+    private static uint _nextSenderId;
+    private static readonly MethodInfo _getSenderMethod = AccessTools.Method(typeof(MethodRpc), nameof(GetSender));
+
+    private static MethodRpc? GetSender(uint id)
+    {
+        lock (_senderCache)
+        {
+            return _senderCache.TryGetValue(id, out var rpc) ? rpc : null;
+        }
+    }
+
+    internal static void CleanupDeadReferences()
+    {
+        lock (_senderCache)
+        {
+            _senderCache.Clear();
+        }
+    }
+
+    internal static void UnregisterPlugin(BasePlugin plugin)
+    {
+        lock (_senderCache)
+        {
+            var ids = _senderCache
+                .Where(kvp => kvp.Value.UnsafePlugin == plugin)
+                .Select(kvp => kvp.Key)
+                .ToList();
+
+            foreach (var id in ids)
+            {
+                _senderCache.Remove(id);
+            }
+        }
+    }
+
+    internal void Unregister()
+    {
+        lock (_senderCache)
+        {
+            _senderCache.Remove(_senderId);
+        }
+    }
+
     /// <summary>
     /// Hooks the <paramref name="method"/> rpc with a dynamic method that sends it.
     /// </summary>
@@ -179,33 +232,10 @@ public class MethodRpc : UnsafeCustomRpc
             var il = dynamicMethod.GetILGenerator();
 
             // :yeefuckinhaw:
-            // Black magic from stackoverflow, they also said that you shouldn't do that ;)
-            // Resort to Dictionary<MethodInfo, MethodRpc> if this turns out to be unreliable
-            {
-                var handle = GCHandle.Alloc(this);
-                var ptr = GCHandle.ToIntPtr(handle);
-
-                if (IntPtr.Size == 4)
-                {
-                    il.Emit(OpCodes.Ldc_I4, ptr.ToInt32());
-                }
-                else
-                {
-                    il.Emit(OpCodes.Ldc_I8, ptr.ToInt64());
-                }
-
-                il.Emit(OpCodes.Conv_I);
-
-                // TODO Figure out why this always throws NullReferenceException on mono
-                // il.Emit(OpCodes.Ldobj, typeof(MethodRpc));
-
-                // Workaround for ^, speed seems to be the same
-                il.Emit(OpCodes.Call, AccessTools.Method(typeof(GCHandle), nameof(GCHandle.FromIntPtr)));
-                var temp = il.DeclareLocal(typeof(GCHandle));
-                il.Emit(OpCodes.Stloc, temp);
-                il.Emit(OpCodes.Ldloca, temp);
-                il.Emit(OpCodes.Call, AccessTools.PropertyGetter(typeof(GCHandle), nameof(GCHandle.Target)));
-            }
+            // Replaced GCHandle with dictionary. Mono no longer leaks.
+            // Ldc_I4 takes int, uint bits are identical
+            il.Emit(OpCodes.Ldc_I4, unchecked((int) _senderId));
+            il.Emit(OpCodes.Call, _getSenderMethod);
 
             il.Emit(OpCodes.Ldarg_0);
 
