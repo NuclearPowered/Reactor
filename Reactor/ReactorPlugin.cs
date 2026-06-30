@@ -84,6 +84,7 @@ public partial class ReactorPlugin : BasePlugin
     {
         Harmony.UnpatchSelf();
         RegionInfoWatcher.Dispose();
+        MethodRpc.UnregisterPlugin(this);
 
         return base.Unload();
     }
