@@ -358,16 +358,14 @@ internal static class ClientPatches
 
         public static void Postfix(ref Il2CppStructArray<byte> __result)
         {
-            var handshake = new MessageWriter(1000);
+            var mods = ModList.Current;
+            var handshake = new MessageWriter(__result.Length + ReactorHeader.Size + ModdedHandshakeC2S.GetMaxSerializedSize(mods));
 
             handshake.Write(__result);
 
             ReactorHeader.Write(handshake);
 
-            ModdedHandshakeC2S.Serialize(
-                handshake,
-                ModList.Current
-            );
+            ModdedHandshakeC2S.Serialize(handshake, mods);
 
             __result = handshake.ToByteArray(true);
             handshake.Recycle();
