@@ -19,6 +19,23 @@ internal static class GetStringPatch
         return true;
     }
 
+    [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(string), typeof(string), typeof(Il2CppReferenceArray<Il2CppSystem.Object>))]
+    [HarmonyPrefix]
+    public static bool SystemTypesStringPatch(
+        TranslationController __instance,
+        string id,
+        Il2CppReferenceArray<Il2CppSystem.Object> parts,
+        ref string __result)
+    {
+        if (!int.TryParse(id, out var intId))
+        {
+            return true;
+        }
+
+        var stringName = (StringNames) intId;
+        return !LocalizationManager.TryGetTextFormatted(stringName, parts, out __result);
+    }
+
     [HarmonyPatch(typeof(TranslationController), nameof(TranslationController.GetString), typeof(SystemTypes))]
     [HarmonyPrefix]
     public static bool SystemTypesStringPatch(TranslationController __instance, SystemTypes room, ref string __result)
