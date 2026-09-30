@@ -262,7 +262,7 @@ public class MethodRpc : UnsafeCustomRpc
 
             if (targetClientIndex >= 0)
             {
-                il.Emit(OpCodes.Ldarg, targetClientIndex);
+                il.Emit(OpCodes.Ldarg, targetClientIndex + (isStatic ? 0 : 1));
 
                 var parameter = parameters[targetClientIndex];
                 if (typeof(PlayerControl).IsAssignableFrom(parameter.ParameterType))
