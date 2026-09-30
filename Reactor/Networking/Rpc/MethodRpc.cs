@@ -33,7 +33,7 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="option">The send option of the rpc.</param>
     /// <param name="localHandling">The local handling method of the rpc.</param>
     /// <param name="targetParam">The parameter to get the target client from, if any.</param>
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, string? targetParam) : base(plugin, id)
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, string? targetParam = null) : base(plugin, id)
     {
         Method = method;
         LocalHandling = localHandling;
@@ -96,7 +96,7 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="sendImmediately">The value indicating whether the rpc should be sent immediately.</param>
     /// <param name="targetParam">The parameter to get the target client from, if any.</param>
     [Obsolete("Non-immediate RPCs were removed in 2025.5.20. All RPCs are immediate. Remove sendImmediately from the parameter list.")]
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately, string? targetParam)
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately, string? targetParam = null)
         : this(plugin, method, id, option, localHandling, targetParam)
     {
         SendImmediately = sendImmediately;
