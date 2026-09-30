@@ -267,7 +267,7 @@ public class MethodRpc : UnsafeCustomRpc
                 var parameter = parameters[targetClientIndex];
                 if (typeof(InnerNetObject).IsAssignableFrom(parameter.ParameterType))
                 {
-                    il.Emit(OpCodes.Ldfld, typeof(InnerNetObject).GetField(nameof(InnerNetObject.OwnerId), BindingFlags.Instance | BindingFlags.Public)!);
+                    il.Emit(OpCodes.Callvirt, typeof(InnerNetObject).GetProperty(nameof(InnerNetObject.OwnerId), BindingFlags.Instance | BindingFlags.Public)!.GetMethod!);
                 }
             }
             else
