@@ -75,10 +75,10 @@ public class MethodRpc : UnsafeCustomRpc
             {
                 throw new ArgumentException("Target Client parameter isn't part of method rpc signature.", nameof(method));
             }
-            if (!typeof(PlayerControl).IsAssignableFrom(param.ParameterType) ||
+            if (!typeof(InnerNetObject).IsAssignableFrom(param.ParameterType) ||
                 !typeof(int).IsAssignableFrom(param.ParameterType))
             {
-                throw new ArgumentException("Target Client parameter has to be a PlayerControl or int", nameof(method));
+                throw new ArgumentException("Target Client parameter has to be an InnerNetObject or int", nameof(method));
             }
         }
 
@@ -265,9 +265,9 @@ public class MethodRpc : UnsafeCustomRpc
                 il.Emit(OpCodes.Ldarg, targetClientIndex + (isStatic ? 0 : 1));
 
                 var parameter = parameters[targetClientIndex];
-                if (typeof(PlayerControl).IsAssignableFrom(parameter.ParameterType))
+                if (typeof(InnerNetObject).IsAssignableFrom(parameter.ParameterType))
                 {
-                    il.Emit(OpCodes.Ldfld, typeof(PlayerControl).GetField(nameof(PlayerControl.PlayerId), BindingFlags.Instance | BindingFlags.Public)!);
+                    il.Emit(OpCodes.Ldfld, typeof(InnerNetObject).GetField(nameof(InnerNetObject.OwnerId), BindingFlags.Instance | BindingFlags.Public)!);
                 }
             }
             else
