@@ -275,8 +275,8 @@ public class MethodRpc : UnsafeCustomRpc
 
             if (HostOnly)
             {
-                il.Emit(OpCodes.Call, typeof(AmongUsClient).GetProperty(nameof(AmongUsClient.Instance), BindingFlags.Static | BindingFlags.Public)!.GetMethod!);
-                il.Emit(OpCodes.Call, typeof(InnerNetClient).GetProperty(nameof(InnerNetClient.HostId), BindingFlags.Instance | BindingFlags.Public)!.GetMethod!);
+                il.Emit(OpCodes.Callvirt, typeof(AmongUsClient).GetProperty(nameof(AmongUsClient.Instance), BindingFlags.Static | BindingFlags.Public)!.GetMethod!);
+                il.Emit(OpCodes.Callvirt, typeof(InnerNetClient).GetProperty(nameof(InnerNetClient.HostId), BindingFlags.Instance | BindingFlags.Public)!.GetMethod!);
             }
             else if (targetClientIndex >= 0)
             {
