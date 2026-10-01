@@ -5,4 +5,5 @@ public enum CustomRpcCalls : uint
     Example,
     MethodRpcExample,
     TargetRpcExample,
+    HostRpcExample,
 }
