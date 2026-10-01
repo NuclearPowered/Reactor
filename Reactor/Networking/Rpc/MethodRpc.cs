@@ -70,8 +70,13 @@ public class MethodRpc : UnsafeCustomRpc
             InnerNetObjectType = method.DeclaringType;
         }
 
-        if (!HostOnly && TargetParameter != null)
+        if (TargetParameter != null)
         {
+            if (HostOnly)
+            {
+                throw new ArgumentException("Cannot define rpc both addressed to host and define a Target Client.");
+            }
+
             var param = Array.Find(parameters, p => p.Name == TargetParameter);
             if (param == null)
             {
