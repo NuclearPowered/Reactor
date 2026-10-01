@@ -33,12 +33,14 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="option">The send option of the rpc.</param>
     /// <param name="localHandling">The local handling method of the rpc.</param>
     /// <param name="targetParam">The parameter to get the target client from, if any.</param>
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, string? targetParam = null) : base(plugin, id)
+    /// <param name="hostOnly">Whether to send the RPC only to the host.</param>
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, string? targetParam = null, bool hostOnly = false) : base(plugin, id)
     {
         Method = method;
         LocalHandling = localHandling;
         SendOption = option;
         TargetParameter = targetParam;
+        HostOnly = hostOnly;
 
         var parameters = method.GetParameters();
 
@@ -68,7 +70,7 @@ public class MethodRpc : UnsafeCustomRpc
             InnerNetObjectType = method.DeclaringType;
         }
 
-        if (TargetParameter != null)
+        if (!HostOnly && TargetParameter != null)
         {
             var param = Array.Find(parameters, p => p.Name == TargetParameter);
             if (param == null)
@@ -95,9 +97,10 @@ public class MethodRpc : UnsafeCustomRpc
     /// <param name="localHandling">The local handling method of the rpc.</param>
     /// <param name="sendImmediately">The value indicating whether the rpc should be sent immediately.</param>
     /// <param name="targetParam">The parameter to get the target client from, if any.</param>
+    /// <param name="hostOnly">Whether to send the RPC only to the host.</param>
     [Obsolete("Non-immediate RPCs were removed in 2025.5.20. All RPCs are immediate. Remove sendImmediately from the parameter list.")]
-    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately, string? targetParam = null)
-        : this(plugin, method, id, option, localHandling, targetParam)
+    public MethodRpc(BasePlugin plugin, MethodInfo method, uint id, SendOption option, RpcLocalHandling localHandling, bool sendImmediately, string? targetParam = null, bool hostOnly = false)
+        : this(plugin, method, id, option, localHandling, targetParam, hostOnly)
     {
         SendImmediately = sendImmediately;
     }
@@ -111,6 +114,11 @@ public class MethodRpc : UnsafeCustomRpc
     /// Gets the method's parameter to get the target client, if any.
     /// </summary>
     public string? TargetParameter { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether the RPC is only sent to the host.
+    /// </summary>
+    public bool HostOnly { get; }
 
     /// <inheritdoc />
     protected internal override bool IsSingleton => false;
@@ -200,7 +208,7 @@ public class MethodRpc : UnsafeCustomRpc
             }
 
             var targetClientIndex = -1;
-            if (TargetParameter != null)
+            if (!HostOnly && TargetParameter != null)
             {
                 targetClientIndex = Array.FindIndex(parameters, p => p.Name == TargetParameter);
             }
@@ -260,7 +268,12 @@ public class MethodRpc : UnsafeCustomRpc
                 il.Emit(OpCodes.Stelem_Ref);
             }
 
-            if (targetClientIndex >= 0)
+            if (HostOnly)
+            {
+                il.Emit(OpCodes.Call, typeof(AmongUsClient).GetProperty(nameof(AmongUsClient.Instance), BindingFlags.Static | BindingFlags.Public)!.GetMethod!);
+                il.Emit(OpCodes.Call, typeof(InnerNetClient).GetProperty(nameof(InnerNetClient.HostId), BindingFlags.Instance | BindingFlags.Public)!.GetMethod!);
+            }
+            else if (targetClientIndex >= 0)
             {
                 il.Emit(OpCodes.Ldarg, targetClientIndex + (isStatic ? 0 : 1));
 
