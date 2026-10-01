@@ -99,4 +99,16 @@ public partial class ExamplePlugin : BasePlugin
     {
         Logger<ExamplePlugin>.Info($"{player.Data.PlayerName} text: {text} number: {number} testPlayer: {testPlayer.NetId}");
     }
+
+    [MethodRpc((uint) CustomRpcCalls.TargetRpcExample, nameof(target))]
+    public static void RpcSayTo(PlayerControl player, PlayerControl target, string text)
+    {
+        Logger<ExamplePlugin>.Info($"{player.Data.PlayerName} text: {text} sentOnlyTo: {target.NetId}");
+    }
+
+    [MethodRpc((uint) CustomRpcCalls.HostRpcExample, true)]
+    public static void RpcSayToHost(PlayerControl player, string text)
+    {
+        Logger<ExamplePlugin>.Info($"{player.Data.PlayerName} text: {text} amHost: {AmongUsClient.Instance.AmHost} (should always be true)");
+    }
 }
