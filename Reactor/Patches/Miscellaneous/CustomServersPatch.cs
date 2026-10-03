@@ -29,11 +29,6 @@ internal static class CustomServersPatch
                string.Equals(AmongUsClient.Instance.networkAddress, targetIp, StringComparison.Ordinal);
     }
 
-    private static bool IsOfficialRegion(StringNames region)
-    {
-        return region is StringNames.ServerNA or StringNames.ServerEU or StringNames.ServerAS;
-    }
-
     [HarmonyPatch]
     public static class DisableAuthServerPatch
     {
@@ -61,7 +56,7 @@ internal static class CustomServersPatch
         [HarmonyPostfix]
         public static void Postfix([HarmonyArgument(0)] HttpMatchmakerManager.FindGameByCodeResponse response)
         {
-            _officialFindGameIp = response != null && IsOfficialRegion(response.Region)
+            _officialFindGameIp = response != null && IsCurrentServerOfficial()
                 ? response.Game?.IPString
                 : null;
         }
