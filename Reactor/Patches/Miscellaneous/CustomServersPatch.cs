@@ -50,15 +50,23 @@ internal static class CustomServersPatch
         }
     }
 
-    [HarmonyPatch(typeof(EnterCodeManager), nameof(EnterCodeManager.FindGameResult))]
+    [HarmonyPatch(typeof(HttpMatchmakerManager), nameof(HttpMatchmakerManager.CoFindGameInfo))]
     public static class CacheFindGameTargetPatch
     {
-        [HarmonyPostfix]
-        public static void Postfix([HarmonyArgument(0)] HttpMatchmakerManager.FindGameByCodeResponse response)
+        public static void Prefix([HarmonyArgument(1)] ref Il2CppSystem.Action<HttpMatchmakerManager.FindGameByCodeResponse, string> onGameInfo)
         {
-            _officialFindGameIp = response != null && IsCurrentServerOfficial()
-                ? response.Game?.IPString
-                : null;
+            // Failed lookups do not invoke the callback, so clear the previous target up front.
+            _officialFindGameIp = null;
+            var originalCallback = onGameInfo;
+            onGameInfo = (Action<HttpMatchmakerManager.FindGameByCodeResponse, string>) ((response, matchmakerToken) =>
+            {
+                // The queried region is still selected here. Cache before invoking the callback,
+                // because invitation callbacks can start joining the game immediately.
+                _officialFindGameIp = response != null && IsCurrentServerOfficial()
+                    ? response.Game?.IPString
+                    : null;
+                originalCallback.Invoke(response!, matchmakerToken);
+            });
         }
     }
 
