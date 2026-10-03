@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using AmongUs.HTTP;
 using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes;
 using Reactor.Utilities;
@@ -13,6 +14,9 @@ internal static class CustomServersPatch
     // A code lookup can point to an official game while a custom region is selected.
     // Keep only the target IP from an official response so later lookups replace stale state.
     private static string? _officialFindGameIp;
+
+    [ThreadStatic]
+    private static RetryableWebRequest? _findGameResponseRequest;
 
     private static bool IsCurrentServerOfficial()
     {
@@ -88,9 +92,63 @@ internal static class CustomServersPatch
                 _officialFindGameIp = officialRegion ? targetIp : null;
                 Info($"Code lookup completed: official region: {officialRegion}, target: {targetIp ?? "<none>"}");
 
+                // A 401 retry updates the request header, but the game's callback still
+                // captures the token obtained before that retry. Forward the accepted token.
+                if (_findGameResponseRequest?.requestHeaders.TryGetValue("Authorization", out var authorization) == true &&
+                    authorization.StartsWith("Bearer ", StringComparison.Ordinal) && authorization.Length > 7)
+                {
+                    var acceptedToken = authorization[7..];
+                    if (!string.Equals(matchmakerToken, acceptedToken, StringComparison.Ordinal))
+                    {
+                        Info("Using refreshed matchmaking token from the successful code lookup request");
+                    }
+
+                    matchmakerToken = acceptedToken;
+                }
+
                 // Invitation callbacks can start joining immediately, so cache first.
                 originalCallback.Invoke(response!, matchmakerToken);
             });
+        }
+    }
+
+    [HarmonyPatch]
+    public static class CaptureFindGameResponsePatch
+    {
+        public static MethodBase TargetMethod()
+        {
+            return Il2CppStateMachineWrapper<HttpMatchmakerManager>.GetStateMachineMoveNext(nameof(HttpMatchmakerManager.CoSendRequest))!;
+        }
+
+        public static void Prefix(Il2CppObjectBase __instance)
+        {
+            var stateMachine = new Il2CppStateMachineWrapper<HttpMatchmakerManager>(__instance);
+            if (stateMachine.State != 0) return;
+
+            var request = stateMachine.GetParameter<RetryableWebRequest>("request");
+            const string LookupPath = "/api/games/";
+            if (request.Method != "GET" || !Uri.TryCreate(request.Url, UriKind.Absolute, out var uri) ||
+                !uri.AbsolutePath.StartsWith(LookupPath, StringComparison.Ordinal) ||
+                !int.TryParse(uri.AbsolutePath[LookupPath.Length..], out _)) return;
+
+            var originalCallback = request.successCallback;
+            if (originalCallback == null) return;
+
+            request.SetOrReplaceSuccessCallback((Action<string>) (response =>
+            {
+                // Keep the successful request in scope only during its synchronous callback.
+                // Saving/restoring the context also handles nested callbacks and exceptions.
+                var previousRequest = _findGameResponseRequest;
+                _findGameResponseRequest = request;
+                try
+                {
+                    originalCallback.Invoke(response);
+                }
+                finally
+                {
+                    _findGameResponseRequest = previousRequest;
+                }
+            }));
         }
     }
 
