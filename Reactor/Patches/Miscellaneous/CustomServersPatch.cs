@@ -16,9 +16,14 @@ internal static class CustomServersPatch
 
     private static bool IsCurrentServerOfficial()
     {
+        return IsOfficialRegion(ServerManager.Instance.CurrentRegion);
+    }
+
+    private static bool IsOfficialRegion(IRegionInfo? region)
+    {
         const string Domain = "among.us";
 
-        return ServerManager.Instance.CurrentRegion?.TryCast<StaticHttpRegionInfo>() is { } regionInfo &&
+        return region?.TryCast<StaticHttpRegionInfo>() is { } regionInfo &&
                regionInfo.PingServer.EndsWith(Domain, StringComparison.Ordinal) &&
                regionInfo.Servers.All(serverInfo => serverInfo.Ip.EndsWith(Domain, StringComparison.Ordinal));
     }
@@ -38,9 +43,18 @@ internal static class CustomServersPatch
             Il2CppStateMachineWrapper<AuthManager>.GetStateMachineMoveNext(nameof(AuthManager.CoWaitForNonce))!
         ];
 
-        public static bool Prefix(ref bool __result)
+        public static bool Prefix(Il2CppObjectBase __instance, ref bool __result)
         {
-            if (IsCurrentServerOfficial() || IsOfficialFindGameTarget())
+            var officialRegion = IsCurrentServerOfficial();
+            var officialTarget = IsOfficialFindGameTarget();
+            var allowAuth = officialRegion || officialTarget;
+            var stateMachine = new Il2CppStateMachineWrapper<AuthManager>(__instance);
+            if (stateMachine.State == 0)
+            {
+                Info($"Authentication {__instance.GetType().Name}: {(allowAuth ? "running" : "skipped")} for {AmongUsClient.Instance.networkAddress} (official region: {officialRegion}, code lookup target: {officialTarget})");
+            }
+
+            if (allowAuth)
             {
                 return true;
             }
@@ -57,14 +71,24 @@ internal static class CustomServersPatch
         {
             // Failed lookups do not invoke the callback, so clear the previous target up front.
             _officialFindGameIp = null;
+            // The game puts the queried region's Name in UntranslatedRegion. Snapshot its
+            // domain classification because region-file reloads can replace CurrentRegion
+            // and AvailableRegions while the HTTP request is pending.
+            var officialRegionNames = ServerManager.Instance.AvailableRegions
+                .Where(IsOfficialRegion)
+                .Select(region => region.Name)
+                .ToHashSet(StringComparer.Ordinal);
+            Info($"Code lookup started with {officialRegionNames.Count} official regions");
+
             var originalCallback = onGameInfo;
             onGameInfo = (Action<HttpMatchmakerManager.FindGameByCodeResponse, string>) ((response, matchmakerToken) =>
             {
-                // The queried region is still selected here. Cache before invoking the callback,
-                // because invitation callbacks can start joining the game immediately.
-                _officialFindGameIp = response != null && IsCurrentServerOfficial()
-                    ? response.Game?.IPString
-                    : null;
+                var officialRegion = response?.UntranslatedRegion is { } regionName && officialRegionNames.Contains(regionName);
+                var targetIp = response?.Game?.IPString;
+                _officialFindGameIp = officialRegion ? targetIp : null;
+                Info($"Code lookup completed: official region: {officialRegion}, target: {targetIp ?? "<none>"}");
+
+                // Invitation callbacks can start joining immediately, so cache first.
                 originalCallback.Invoke(response!, matchmakerToken);
             });
         }
