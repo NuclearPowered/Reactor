@@ -11,13 +11,4 @@ internal static class SplashSkipPatch
     {
         __instance.minimumSecondsBeforeSceneChange = 0;
     }
-
-    [HarmonyPatch(typeof(SplashManager), nameof(SplashManager.Update))]
-    [HarmonyPrefix]
-    private static bool WaitForLogin(SplashManager __instance)
-    {
-        if (__instance.startedSceneLoad) return true;
-
-        return true;
-    }
 }
