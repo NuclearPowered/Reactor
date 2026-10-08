@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using Hazel;
 using Reactor.Networking.Extensions;
 using UnityEngine;
@@ -12,10 +15,16 @@ namespace Reactor.Networking.Serialization;
 /// </summary>
 public static class MessageSerializer
 {
-    private static List<UnsafeMessageConverter> MessageConverters { get; } = new();
-
     private static Dictionary<Type, UnsafeMessageConverter?> MessageConverterMap { get; } = new();
-    private static Dictionary<Type, Type> GenericConvertersMap { get; } = new();
+    private static List<UnsafeMessageConverter> MessageConverters { get; } = new();
+    private static List<Type> GenericConverters { get; } = new();
+
+    private enum SearchMode
+    {
+        Basic,
+        Generic,
+        Combined,
+    }
 
     internal static void ClearMaps()
     {
@@ -30,68 +39,197 @@ public static class MessageSerializer
     {
         if (type.IsGenericTypeDefinition)
         {
-            var baseType = type.BaseType!;
+            var baseType = type.BaseType;
+            var isUnsafeConverter = baseType == typeof(UnsafeMessageConverter);
+            var isMessageConverterT = baseType != null && baseType.IsGenericType && baseType.GetGenericTypeDefinition() == typeof(MessageConverter<>);
 
-            if (!baseType.Name.Contains("MessageConverter"))
-                throw new InvalidOperationException($"{type.Name} should directly inherit from MessageConverter<T>");
+            if (!isMessageConverterT && !isUnsafeConverter)
+                throw new InvalidOperationException($"{type.Name} must directly inherit from either MessageConverter<T> or UnsafeMessageConverter.");
 
-            var generics = baseType.GetGenericArguments();
-            var param = generics[0];
-
-            GenericConvertersMap.Add(param.GetGenericTypeDefinition(), type);
+            GenericConverters.Add(type);
         }
         else
         {
-            var messageConverter = (UnsafeMessageConverter) Activator.CreateInstance(type)!;
+            var messageConverter = (UnsafeMessageConverter) CreateObject(type)!;
             MessageConverters.Add(messageConverter);
         }
     }
 
     /// <summary>
-    /// Finds a MessageConverter for the specified <paramref name="type"/>.
+    /// Finds a MessageConverter for the specified <paramref name="type"/> by checking generic converters first, then basic converters.
     /// </summary>
-    /// <param name="type">The type of an object.</param>
+    /// <param name="type">The type of the object.</param>
     /// <returns>A MessageConverter that can convert the specified <see cref="Type"/>.</returns>
     public static UnsafeMessageConverter? FindConverter(Type type)
-    {
-        if (!MessageConverterMap.TryGetValue(type, out var value))
-        {
-            value = MessageConverters.SingleOrDefault(x => x.CanConvert(type));
+        => ResolveAndCache(type, SearchMode.Combined);
 
-            if (value == null)
-                return null;
-
-            MessageConverterMap.Add(type, value);
-        }
-
-        return value;
-    }
+    /// <summary>
+    /// Finds a MessageConverter for the specified <paramref name="type"/> using basic converters.
+    /// </summary>
+    /// <param name="type">The type of the object.</param>
+    /// <returns>A MessageConverter that can convert the specified <see cref="Type"/>.</returns>
+    public static UnsafeMessageConverter? FindBasicConverter(Type type)
+        => ResolveAndCache(type, SearchMode.Basic);
 
     /// <summary>
     /// Finds and builds a MessageConverter for the specified <paramref name="type"/> using a registered generic converter.
     /// </summary>
-    /// <param name="type">The type of an object.</param>
+    /// <param name="type">The type of the object.</param>
     /// <returns>A MessageConverter that can convert the specified <see cref="Type"/>.</returns>
     public static UnsafeMessageConverter? FindGenericConverter(Type type)
+        => ResolveAndCache(type, SearchMode.Generic);
+
+    private static UnsafeMessageConverter? ResolveAndCache(Type type, SearchMode mode)
     {
         if (MessageConverterMap.TryGetValue(type, out var value))
             return value;
 
-        if (!type.IsGenericType)
-            return null;
+        value = mode switch
+        {
+            SearchMode.Basic => FindBasicConverterInternal(type),
+            SearchMode.Generic => FindGenericConverterInternal(type),
+            SearchMode.Combined => FindBasicConverterInternal(type) ?? FindGenericConverterInternal(type),
+            _ => null,
+        };
 
-        var typeDef = type.GetGenericTypeDefinition();
-
-        if (!GenericConvertersMap.TryGetValue(typeDef, out var builder))
-            return null;
-
-        var generic = builder.MakeGenericType(type.GetGenericArguments());
-        value = (UnsafeMessageConverter) Activator.CreateInstance(generic)!;
-
-        MessageConverters.Add(value);
-        MessageConverterMap.Add(type, value);
+        MessageConverterMap[type] = value;
 
         return value;
+    }
+
+    private static UnsafeMessageConverter? FindBasicConverterInternal(Type type)
+    {
+        return MessageConverters.SingleOrDefault(x => x.CanConvert(type));
+    }
+
+    private static UnsafeMessageConverter? FindGenericConverterInternal(Type type)
+    {
+        foreach (var converterTypeDef in GenericConverters)
+        {
+            var mappedArgs = MapGenericArguments(converterTypeDef, type);
+
+            if (mappedArgs == null)
+                continue;
+
+            var converterParams = converterTypeDef.GetGenericArguments();
+            var allSatisfy = true;
+
+            for (var i = 0; i < mappedArgs.Length; i++)
+            {
+                if (SatisfiesConstraints(mappedArgs[i], converterParams[i]))
+                    continue;
+
+                allSatisfy = false;
+                break;
+            }
+
+            if (!allSatisfy)
+                continue;
+
+            var genericConverterType = converterTypeDef.MakeGenericType(mappedArgs);
+            var converterInstance = (UnsafeMessageConverter) CreateObject(genericConverterType)!;
+
+            MessageConverters.Add(converterInstance);
+
+            return converterInstance;
+        }
+
+        return null;
+    }
+
+    private static Type[]? MapGenericArguments(Type converterTypeDef, Type targetType)
+    {
+        var baseType = converterTypeDef.BaseType;
+
+        if (baseType == null)
+            return null;
+
+        if (baseType == typeof(UnsafeMessageConverter))
+        {
+            var converterParams = converterTypeDef.GetGenericArguments();
+
+            if (converterParams.Length == 1)
+                return new[] { targetType };
+
+            if (targetType.IsGenericType && converterParams.Length == targetType.GetGenericArguments().Length)
+                return targetType.GetGenericArguments();
+
+            return null;
+        }
+
+        if (!baseType.IsGenericType)
+            return null;
+
+        var templateType = baseType.GetGenericArguments()[0];
+
+        if (templateType.IsGenericParameter)
+            return new[] { targetType };
+
+        if (!templateType.IsGenericType || !targetType.IsGenericType)
+        {
+            return null;
+        }
+
+        var templateArgs = templateType.GetGenericArguments();
+        var targetArgs = targetType.GetGenericArguments();
+
+        if (templateArgs.Length != targetArgs.Length)
+            return null;
+
+        var mappedArgs = new Type[converterTypeDef.GetGenericArguments().Length];
+
+        for (var i = 0; i < templateArgs.Length; i++)
+        {
+            var templateArg = templateArgs[i];
+            var targetArg = targetArgs[i];
+
+            if (templateArg.IsGenericParameter)
+                mappedArgs[templateArg.GenericParameterPosition] = targetArg;
+            else if (templateArg != targetArg)
+                return null;
+        }
+
+        return mappedArgs.Any(t => t == null) ? null : mappedArgs;
+    }
+
+    private static bool SatisfiesConstraints(Type targetType, Type genericParam)
+    {
+        var attributes = genericParam.GenericParameterAttributes;
+        var constraints = genericParam.GetGenericParameterConstraints();
+
+        // struct constraint
+        if (attributes.HasFlag(GenericParameterAttributes.NotNullableValueTypeConstraint) && !targetType.IsValueType)
+            return false;
+
+        // class constraint
+        if (attributes.HasFlag(GenericParameterAttributes.ReferenceTypeConstraint) && targetType.IsValueType)
+            return false;
+
+        // new() constraint
+        if (attributes.HasFlag(GenericParameterAttributes.DefaultConstructorConstraint) && !targetType.IsValueType && targetType.GetConstructor(Type.EmptyTypes) == null)
+            return false;
+
+        // notnull constraint
+        if (genericParam.CustomAttributes.Any(a => a.AttributeType.Name == "NullableAttribute"))
+        {
+            if (Nullable.GetUnderlyingType(targetType) != null)
+                return false;
+
+            // Nullable reference types cannot be distinguished, so we let them through here
+        }
+
+        // Explicit type constraints
+        foreach (var constraint in constraints)
+        {
+            var check = constraint == typeof(Enum)
+                ? !targetType.IsEnum
+                : !constraint.IsAssignableFrom(targetType);
+
+            if (check)
+                return false;
+        }
+
+        return true;
     }
 
     /// <summary>
@@ -138,10 +276,10 @@ public static class MessageSerializer
                 writer.Write(i);
                 break;
             case ulong i:
-                writer.Write(i);
+                writer.WritePacked(i);
                 break;
             case long i:
-                ExtraMessageExtensions.Write(writer, i); // For some reason this insists on referring the to float write method, so this is me taking precautions
+                writer.WritePacked(i);
                 break;
             case Vector2 i:
                 writer.Write(i);
@@ -158,9 +296,12 @@ public static class MessageSerializer
             case Enum i:
                 writer.Write(i);
                 break;
+            case INetSerializable i:
+                i.WriteTo(writer);
+                break;
             default:
                 var type = @object.GetType();
-                var converter = FindGenericConverter(type) ?? FindConverter(type);
+                var converter = FindConverter(type);
 
                 if (converter != null)
                     converter.UnsafeWrite(writer, @object);
@@ -179,6 +320,24 @@ public static class MessageSerializer
     /// <returns>A generic <typeparamref name="T"/> value from the <paramref name="reader"/>.</returns>
     public static T Deserialize<T>(this MessageReader reader) => (T) reader.Deserialize(typeof(T));
 
+    private static readonly Dictionary<Type, Func<MessageReader, object>> _basicReaders = new()
+    {
+        [typeof(int)] = reader => reader.ReadPackedInt32(),
+        [typeof(uint)] = reader => reader.ReadPackedUInt32(),
+        [typeof(byte)] = reader => reader.ReadByte(),
+        [typeof(float)] = reader => reader.ReadSingle(),
+        [typeof(sbyte)] = reader => reader.ReadSByte(),
+        [typeof(ushort)] = reader => reader.ReadUInt16(),
+        [typeof(short)] = reader => reader.ReadInt16(),
+        [typeof(bool)] = reader => reader.ReadBoolean(),
+        [typeof(Vector2)] = reader => reader.ReadVector2(),
+        [typeof(string)] = reader => reader.ReadString(),
+        [typeof(ulong)] = reader => reader.ReadPackedUInt64(),
+        [typeof(long)] = reader => reader.ReadPackedInt64(),
+        [typeof(Color)] = reader => reader.ReadColor(),
+        [typeof(Color32)] = reader => reader.ReadColor32(),
+    };
+
     /// <summary>
     /// Deserializes an <see cref="object"/> of <paramref name="objectType"/> from the <paramref name="reader"/>.
     /// </summary>
@@ -187,69 +346,9 @@ public static class MessageSerializer
     /// <returns>An <see cref="object"/> from the <paramref name="reader"/>.</returns>
     public static object Deserialize(this MessageReader reader, Type objectType)
     {
-        if (objectType == typeof(int))
+        if (_basicReaders.TryGetValue(objectType, out var readDel))
         {
-            return reader.ReadPackedInt32();
-        }
-
-        if (objectType == typeof(uint))
-        {
-            return reader.ReadPackedUInt32();
-        }
-
-        if (objectType == typeof(byte))
-        {
-            return reader.ReadByte();
-        }
-
-        if (objectType == typeof(float))
-        {
-            return reader.ReadSingle();
-        }
-
-        if (objectType == typeof(sbyte))
-        {
-            return reader.ReadSByte();
-        }
-
-        if (objectType == typeof(ushort))
-        {
-            return reader.ReadUInt16();
-        }
-
-        if (objectType == typeof(bool))
-        {
-            return reader.ReadBoolean();
-        }
-
-        if (objectType == typeof(Vector2))
-        {
-            return reader.ReadVector2();
-        }
-
-        if (objectType == typeof(string))
-        {
-            return reader.ReadString();
-        }
-
-        if (objectType == typeof(ulong))
-        {
-            return reader.ReadUInt64();
-        }
-
-        if (objectType == typeof(long))
-        {
-            return reader.ReadInt64();
-        }
-
-        if (objectType == typeof(Color))
-        {
-            return reader.ReadColor();
-        }
-
-        if (objectType == typeof(Color32))
-        {
-            return reader.ReadColor32();
+            return readDel(reader);
         }
 
         if (objectType.IsEnum)
@@ -257,7 +356,14 @@ public static class MessageSerializer
             return reader.ReadEnum(objectType);
         }
 
-        var converter = FindGenericConverter(objectType) ?? FindConverter(objectType);
+        if (objectType.IsAssignableTo(typeof(INetSerializable)))
+        {
+            var instance = (INetSerializable) CreateObject(objectType);
+            instance.ReadFrom(reader);
+            return instance;
+        }
+
+        var converter = FindConverter(objectType);
 
         if (converter != null)
         {
@@ -266,4 +372,19 @@ public static class MessageSerializer
 
         throw new NotSupportedException("Couldn't deserialize " + objectType);
     }
+
+    private static readonly ConcurrentDictionary<Type, ConstructorInfo?> _constructors = new();
+
+    private static object CreateObject(Type objectType)
+    {
+        var construct = _constructors.GetOrAdd(objectType, GetConstruct);
+
+        if (construct != null)
+            return construct.Invoke(null);
+
+        Warning($"{objectType.Name} does not have a parameterless constructor. It is highly recommended that one is added so that field initialisers are not skipped.");
+        return RuntimeHelpers.GetUninitializedObject(objectType);
+    }
+
+    private static ConstructorInfo? GetConstruct(Type type) => type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance, Type.EmptyTypes);
 }
