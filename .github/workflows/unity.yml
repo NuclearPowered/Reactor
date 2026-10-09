@@ -22,8 +22,11 @@ jobs:
       - name: Setup Unity
         uses: getsentry/setup-unity@master
         with:
-          project-path: ./Reactor.Assets
-          unity-modules: windows-mono android
+          unity-version: 2020.3.45f1
+          unity-version-changeset: 660cd1701bd5
+          unity-modules: |
+            windows-mono
+            android
 
       - name: Activate Unity
         env:
