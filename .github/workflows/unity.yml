@@ -27,6 +27,8 @@ jobs:
           unity-modules: |
             windows-mono
             android
+        env:
+          DISPLAY: :99
 
       - name: Activate Unity
         env:
