@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +20,7 @@ jobs:
           key: unity-${{ hashFiles('./Reactor.Assets/ProjectSettings/ProjectVersion.txt') }}
 
       - name: Setup Unity
-        uses: js6pak/setup-unity@master
+        uses: getsentry/setup-unity@master
         with:
           project-path: ./Reactor.Assets
           unity-modules: windows-mono android
