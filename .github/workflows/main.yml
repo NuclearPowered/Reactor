@@ -7,11 +7,11 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           submodules: true
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: |
             ~/.nuget/packages
@@ -26,32 +26,32 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Run the Cake script
-        uses: cake-build/cake-action@v3
+        uses: cake-build/cake-action@v4
         with:
           verbosity: Diagnostic
           cake-version: tool-manifest
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Reactor.dll
           path: Reactor/bin/Release/net6.0/Reactor.dll
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Reactor.nupkg
           path: Reactor/bin/Release/Reactor.*.nupkg
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Reactor.Networking.Shared.nupkg
           path: Reactor.Networking.Shared/bin/Release/*.nupkg
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: Reactor.Debugger.dll
           path: Reactor.Debugger/bin/Release/net6.0/Reactor.Debugger.dll
 
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         if: github.ref_type == 'tag'
         with:
           draft: true
