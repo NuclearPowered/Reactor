@@ -195,7 +195,6 @@ public static class MessageSerializer
     private static bool SatisfiesConstraints(Type targetType, Type genericParam)
     {
         var attributes = genericParam.GenericParameterAttributes;
-        var constraints = genericParam.GetGenericParameterConstraints();
 
         // struct constraint
         if (attributes.HasFlag(GenericParameterAttributes.NotNullableValueTypeConstraint) && !targetType.IsValueType)
@@ -219,7 +218,7 @@ public static class MessageSerializer
         }
 
         // Explicit type constraints
-        foreach (var constraint in constraints)
+        foreach (var constraint in genericParam.GetGenericParameterConstraints())
         {
             var check = constraint == typeof(Enum)
                 ? !targetType.IsEnum
