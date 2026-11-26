@@ -18,7 +18,7 @@ namespace Reactor.Networking.Rpc;
 /// <summary>
 /// Provides a custom rpc for method rpc.
 /// </summary>
-public class MethodRpc : UnsafeCustomRpc
+public class MethodRpc : UnsafeCustomRpc, IDisposable
 {
     private delegate object HandleDelegate(InnerNetObject innerNetObject, object[] args);
 
@@ -154,12 +154,29 @@ public class MethodRpc : UnsafeCustomRpc
 
     private static readonly MethodInfo _sendMethod = AccessTools.Method(typeof(MethodRpc), nameof(Send));
 
+    // ReSharper disable once NotAccessedField.Local
+    private Hook? _hook;
+
     /// <summary>
     /// Hooks the <paramref name="method"/> rpc with a dynamic method that sends it.
     /// </summary>
     private HandleDelegate Hook(MethodInfo method, ParameterInfo[] parameters, bool isStatic)
     {
-        var detour = new Detour(method, GenerateSender());
+        // MonoMod Hook is used instead of Detour because Starlight
+        // uses the "reorg" branch which no longer includes Detour.
+        // Hook is still present with the same signature.
+        // DMD is a workaround since reorganized Hook doesn't contain a
+        // function to make a trampoline.
+
+        // Create a copy of the original method with DMD
+        var dmd = new DynamicMethodDefinition(method);
+        var originalTrampoline = dmd.Generate();
+
+        // Hook the method to send the RPC
+        _hook = new Hook(method, GenerateSender());
+
+        // Return the generated Handler method
+        return GenerateHandler(originalTrampoline);
 
         // Used as target when hooking, sends the method rpc
         DynamicMethod GenerateSender()
@@ -244,7 +261,7 @@ public class MethodRpc : UnsafeCustomRpc
         }
 
         // Proxy translating object array to trampoline method args, used by MethodRpc to invoke original handling
-        HandleDelegate GenerateHandler(DynamicMethod trampoline)
+        HandleDelegate GenerateHandler(MethodInfo trampoline)
         {
             var dynamicMethod = new DynamicMethod($"Handler<{method.GetID(simple: true)}>", typeof(object), new[] { typeof(InnerNetObject), typeof(object[]) });
             dynamicMethod.DefineParameter(0, ParameterAttributes.None, "innerNetObject");
@@ -280,7 +297,12 @@ public class MethodRpc : UnsafeCustomRpc
 
             return dynamicMethod.CreateDelegate<HandleDelegate>();
         }
+    }
 
-        return GenerateHandler((DynamicMethod) detour.GenerateTrampoline());
+    /// <inheritdoc />
+    public void Dispose()
+    {
+        GC.SuppressFinalize(this);
+        _hook?.Dispose();
     }
 }

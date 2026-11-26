@@ -27,11 +27,11 @@ internal static class StandaloneSteamPatch
 
     public static bool Prefix(out bool __result)
     {
-        const string file = "steam_appid.txt";
+        const string AppIdFile = "steam_appid.txt";
 
-        if (!File.Exists(file))
+        if (!File.Exists(AppIdFile))
         {
-            File.WriteAllText(file, "945360");
+            File.WriteAllText(AppIdFile, "945360");
         }
 
         return __result = false;
