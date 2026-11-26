@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-using System.Text;
 using HarmonyLib;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -10,30 +8,6 @@ namespace Reactor.Networking.Patches;
 
 internal static class HttpPatches
 {
-    public const int Version = 1;
-
-    public static string BuildHeader()
-    {
-        var stringBuilder = new StringBuilder();
-
-        stringBuilder.Append(Version);
-        stringBuilder.Append(';');
-
-        var mods = ModList.Current.Where(m => m.IsRequiredOnAllClients).ToArray();
-
-        stringBuilder.Append(mods.Length);
-
-        foreach (var mod in mods)
-        {
-            stringBuilder.Append(';');
-            stringBuilder.Append(mod.Id);
-            stringBuilder.Append('=');
-            stringBuilder.Append(mod.Version);
-        }
-
-        return stringBuilder.ToString();
-    }
-
     internal static bool IsCurrentRegionModded()
     {
         var currentRegion = ServerManager.Instance.CurrentRegion;
@@ -62,7 +36,7 @@ internal static class HttpPatches
             if (path.Contains("/api/games"))
             {
                 Debug($"{__instance.method} {path}");
-                __instance.SetRequestHeader("Client-Mods", BuildHeader());
+                __instance.SetRequestHeader("Client-Mods", ModList.GetModListHeader());
             }
         }
 

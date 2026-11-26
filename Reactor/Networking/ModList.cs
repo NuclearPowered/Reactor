@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using BepInEx;
 using BepInEx.Unity.IL2CPP;
@@ -23,6 +24,11 @@ public static class ModList
 
     private static readonly Dictionary<string, Mod> _modById = new();
     private static readonly Dictionary<Type, Mod> _modByPluginType = new();
+
+    /// <summary>
+    /// Version of the HTTP/AMCI header.
+    /// </summary>
+    public const int HeaderVersion = 1;
 
     /// <summary>
     /// Gets a mod by it's id.
@@ -93,6 +99,49 @@ public static class ModList
         }
     }
 
+    /// <summary>
+    /// Get a canonical list of mods in use.
+    /// </summary>
+    /// <returns>An ordered list of RequiredOnAllClients mods loaded in the client.</returns>
+    public static string GetModListHeader()
+    {
+        var stringBuilder = new StringBuilder();
+
+        stringBuilder.Append(HeaderVersion);
+        stringBuilder.Append(';');
+
+        var mods = ModList.Current.Where(m => m.IsRequiredOnAllClients).ToArray();
+
+        stringBuilder.Append(mods.Length);
+
+        foreach (var mod in mods)
+        {
+            stringBuilder.Append(';');
+            stringBuilder.Append(mod.Id);
+            stringBuilder.Append('=');
+            stringBuilder.Append(mod.Version);
+        }
+
+        return stringBuilder.ToString();
+    }
+
+    /// <summary>
+    /// Hash the current mandatory mods into a composite GUID.
+    /// </summary>
+    /// <returns>A GUID that is composed of all mandatory mods in alphabetical order.</returns>
+    public static Guid GetCompositeGuid()
+    {
+        // Re-use the HTTP header for AMCI
+        var header = GetModListHeader();
+        var hash = SHA256.HashData(Encoding.UTF8.GetBytes(header));
+        var guidBytes = new byte[16];
+        Array.Copy(hash, 0, guidBytes, 0, 16);
+        guidBytes[7] = (byte) ((guidBytes[7] & 0x0F) | 0x50); // version 5 (SHA1-namespace derived)
+        guidBytes[8] = (byte) ((guidBytes[8] & 0x3F) | 0x80); // variant RFC 4122
+
+        return new Guid(guidBytes);
+    }
+
     private static void Refresh()
     {
         if (ReactorConnection.Instance != null) throw new InvalidOperationException("Can't refresh the mod list during a connection");
@@ -128,6 +177,18 @@ public static class ModList
         }
 
         Debug(debug.ToString());
+
+        if (IsAnyModRequiredOnAllClients)
+        {
+            if (CurrentModRegistration.ModRegistrationGuidString != string.Empty)
+            {
+                Warning($"Another mod has registered a GUID already: {CurrentModRegistration.ModRegistrationGuidString}. This shouldn't occur: Reactor automatically handles AMCI as part of the Reactor handshake");
+            }
+
+            var guid = GetCompositeGuid();
+            Debug($"Registering for AMCI with GUID {guid} based on this header: {GetModListHeader()}");
+            CurrentModRegistration.ModRegistrationGuidString = guid.ToString();
+        }
     }
 
     private static void OnPluginLoad(PluginInfo pluginInfo, BasePlugin plugin)
