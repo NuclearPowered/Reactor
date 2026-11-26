@@ -92,7 +92,7 @@ internal static class HttpPatches
 
                     if (__instance.GetMethod() == UnityWebRequest.UnityWebRequestMethod.Get)
                     {
-                        if (responseHeader == null && ModList.IsAnyModRequiredOnAllClients)
+                        if (responseHeader == null && !AmciMods.IsEnabled && ModList.IsAnyModRequiredOnAllClients)
                         {
                             HandshakePopup.Show();
                         }
@@ -110,6 +110,7 @@ internal static class HttpPatches
         public static void Postfix(GameStartManager __instance)
         {
             if (AmongUsClient.Instance.NetworkMode != NetworkModes.OnlineGame) return;
+            if (AmciMods.IsEnabled) return;
             if (ModList.IsAnyModRequiredOnAllClients && !IsCurrentRegionModded())
             {
                 Warning("Vanilla region, locking public toggle");

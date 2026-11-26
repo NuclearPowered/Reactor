@@ -47,6 +47,7 @@ public partial class ReactorPlugin : BasePlugin
 
         RegisterInIl2CppAttribute.Initialize();
         ModList.Initialize();
+        AmciMods.Initialize();
 
         RegisterCustomRpcAttribute.Initialize();
         MessageConverterAttribute.Initialize();
